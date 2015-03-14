@@ -27,11 +27,11 @@ CPPFLAGS = $(INCDIR)
 
 PATH = $(GCCDIR):/lib:/usr/bin:/bin
 
-CC = $(GCCDIR)gcc -B../../../gnu-decstation-ultrix/
+CC = $(GCCDIR)gcc -m32 -B../../../gnu-decstation-ultrix/
 AS = $(GCCDIR)as
 LD = $(GCCDIR)ld
 
-CPP = gcc -E
+CPP = gcc -E -m32
 INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR)
 
