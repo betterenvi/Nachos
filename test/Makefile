@@ -27,7 +27,7 @@ CPPFLAGS = $(INCDIR)
 
 PATH = $(GCCDIR):/lib:/usr/bin:/bin
 
-CC = $(GCCDIR)gcc -m32 -B../../../gnu-decstation-ultrix/
+CC = $(GCCDIR)gcc -B../../../gnu-decstation-ultrix/
 AS = $(GCCDIR)as
 LD = $(GCCDIR)ld
 
