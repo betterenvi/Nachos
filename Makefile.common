@@ -30,8 +30,8 @@ CFLAGS = -g -Wall -Wshadow -fwritable-strings $(INCPATH) $(DEFINES) $(HOST) -DCH
 # These definitions may change as the software is updated.
 # Some of them are also system dependent
 CPP= gcc -E -m32
-CC = g++
-LD = g++
+CC = g++ -m32
+LD = g++ -m32
 AS = as
 
 PROGRAM = nachos
