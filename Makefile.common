@@ -34,7 +34,7 @@ CFLAGS = -g -Wall -Wshadow -m32 $(INCPATH) $(DEFINES) $(HOST) -DCHANGED
 CPP= gcc -E -m32
 CC = g++ -m32
 LD = g++ -m32
-AS = as
+AS = as -m32
 
 PROGRAM = nachos
 
