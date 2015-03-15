@@ -66,6 +66,7 @@ ThreadTest()
 	break;
     default:
 	printf("No test specified.\n");
+    printf("CQY added a test.\n");
 	break;
     }
 }
