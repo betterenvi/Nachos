@@ -88,6 +88,7 @@ main(int argc, char **argv)
     (void) Initialize(argc, argv);
     
 #ifdef THREADS
+    printf("CQY' note: THREADS.\n");
     for (argc--, argv++; argc > 0; argc -= argCount, argv += argCount) {
       argCount = 1;
       switch (argv[0][1]) {
@@ -103,7 +104,7 @@ main(int argc, char **argv)
 
     ThreadTest();
 #endif
-
+    printf("CQY' note: INNER\n");
     for (argc--, argv++; argc > 0; argc -= argCount, argv += argCount) {
 	argCount = 1;
         if (!strcmp(*argv, "-z"))               // print copyright
@@ -127,6 +128,7 @@ main(int argc, char **argv)
 	}
 #endif // USER_PROGRAM
 #ifdef FILESYS
+    printf("CQY' note: FILESYS\n");
 	if (!strcmp(*argv, "-cp")) { 		// copy from UNIX to Nachos
 	    ASSERT(argc > 2);
 	    Copy(*(argv + 1), *(argv + 2));
@@ -148,6 +150,7 @@ main(int argc, char **argv)
 	}
 #endif // FILESYS
 #ifdef NETWORK
+        printf("CQY' note: FILESYS\n");
         if (!strcmp(*argv, "-o")) {
 	    ASSERT(argc > 1);
             Delay(2); 				// delay for 2 seconds
