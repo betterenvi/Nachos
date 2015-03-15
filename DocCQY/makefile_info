@@ -1,0 +1,27 @@
+Nachos:- Makefiles
+
+Etching by Dr.Ravi Mukkamala.
+
+Makefiles compile the Nachos project. There are Makefiles in the main directory as well as in the individual directories. You have a makefile for each subdirectory.
+
+Makefile: This file enters each assignment subdirectory and performs a gmake depend and a gmake nachos.
+
+Makefile.common: This file lists all the files that are to be compiled, which header files are used for each assignment, and the object files that will be produced. Depending upon the assignment interdependencies, the files for more than one assignment would use files for both Thread management and Multiprogramming. if you add any files you may need to add them here.
+
+Makefile.dep: This file contains machine dependencies for the hardware on which Nachos will be compiled and run. You should not need to modify this file.
+
+The Makefile in each subdirectory is made up of two sections. Any lines including or after
+
+       include ../Makefile.common
+       include ../Makefile.dep
+       # DO NOT DELETE THIS LINE -- make depend uses it
+       #DEPENDENCIES MUST END AT END OF FILE
+should not be modified. These are used when a gmake depend is run. However, those preceding can be modified at your own risk.
+Using Gmake
+
+When using gmake, there are four cases that will occur. Those are
+
+gmake from the main nachos directory, the system will change to each assignment directory and attempt to run gmake depend and then gmake within the directory.
+gmake clean from the main nachos directory will cause all .o, nachos, core, DISK, and other files created by compiling nachos.
+gmake when run from one of the assignment directories will compile and build the nachos executable for that assignment.
+gmake depend run from one of the assignment directories will rebuild the file dependencies (determine which .h files are required by each .cc file) for that assignment. This is useful when the #include files have been added to or removed from source files.
