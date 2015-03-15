@@ -1,0 +1,107 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Add	directory.cc	/^Directory::Add(char *name, int newSector)$/;"	f	class:Directory
+Allocate	filehdr.cc	/^FileHeader::Allocate(BitMap *freeMap, int fileSize)$/;"	f	class:FileHeader
+ByteToSector	filehdr.cc	/^FileHeader::ByteToSector(int offset)$/;"	f	class:FileHeader
+CFILES	Makefile	/^CFILES = $(THREAD_C) $(USERPROG_C) $(VM_C) $(FILESYS_C)$/;"	m
+C_OFILES	Makefile	/^C_OFILES = $(THREAD_O) $(USERPROG_O) $(VM_O) $(FILESYS_O)$/;"	m
+ContentSize	fstest.cc	113;"	d	file:
+Contents	fstest.cc	112;"	d	file:
+Copy	fstest.cc	/^Copy(char *from, char *to)$/;"	f
+Create	filesys.cc	/^FileSystem::Create(char *name, int initialSize)$/;"	f	class:FileSystem
+Create	filesys.h	/^    bool Create(char *name, int initialSize) { $/;"	f	class:FileSystem
+DEFINES	Makefile	/^DEFINES =-DTHREADS -DUSER_PROGRAM -DVM -DFILESYS_NEEDED -DFILESYS$/;"	m
+DIRECTORY_H	directory.h	18;"	d
+Deallocate	filehdr.cc	/^FileHeader::Deallocate(BitMap *freeMap)$/;"	f	class:FileHeader
+Directory	directory.cc	/^Directory::Directory(int size)$/;"	f	class:Directory
+Directory	directory.h	/^class Directory {$/;"	c
+DirectoryEntry	directory.h	/^class DirectoryEntry {$/;"	c
+DirectoryFileSize	filesys.cc	65;"	d	file:
+DirectorySector	filesys.cc	58;"	d	file:
+DiskRequestDone	synchdisk.cc	/^DiskRequestDone (int arg)$/;"	f	file:
+FILEHDR_H	filehdr.h	15;"	d
+FS_H	filesys.h	36;"	d
+FetchFrom	directory.cc	/^Directory::FetchFrom(OpenFile *file)$/;"	f	class:Directory
+FetchFrom	filehdr.cc	/^FileHeader::FetchFrom(int sector)$/;"	f	class:FileHeader
+FileHeader	filehdr.h	/^class FileHeader {$/;"	c
+FileLength	filehdr.cc	/^FileHeader::FileLength()$/;"	f	class:FileHeader
+FileName	fstest.cc	111;"	d	file:
+FileNameMaxLen	directory.h	22;"	d
+FileRead	fstest.cc	/^FileRead()$/;"	f	file:
+FileSize	fstest.cc	114;"	d	file:
+FileSystem	filesys.cc	/^FileSystem::FileSystem(bool format)$/;"	f	class:FileSystem
+FileSystem	filesys.h	/^    FileSystem(bool format) {}$/;"	f	class:FileSystem
+FileSystem	filesys.h	/^class FileSystem {$/;"	c
+FileWrite	fstest.cc	/^FileWrite()$/;"	f	file:
+Find	directory.cc	/^Directory::Find(char *name)$/;"	f	class:Directory
+FindIndex	directory.cc	/^Directory::FindIndex(char *name)$/;"	f	class:Directory
+FreeMapFileSize	filesys.cc	63;"	d	file:
+FreeMapSector	filesys.cc	57;"	d	file:
+HFILES	Makefile	/^HFILES = $(THREAD_H) $(USERPROG_H) $(VM_H) $(FILESYS_H)$/;"	m
+INCPATH	Makefile	/^INCPATH = -I..\/filesys -I..\/bin -I..\/vm -I..\/userprog -I..\/threads -I..\/machine$/;"	m
+Length	openfile.cc	/^OpenFile::Length() $/;"	f	class:OpenFile
+Length	openfile.h	/^    int Length() { Lseek(file, 0, 2); return Tell(file); }$/;"	f	class:OpenFile
+List	directory.cc	/^Directory::List()$/;"	f	class:Directory
+List	filesys.cc	/^FileSystem::List()$/;"	f	class:FileSystem
+MaxFileSize	filehdr.h	21;"	d
+NumDirEntries	filesys.cc	64;"	d	file:
+NumDirect	filehdr.h	20;"	d
+OPENFILE_H	openfile.h	21;"	d
+Open	filesys.cc	/^FileSystem::Open(char *name)$/;"	f	class:FileSystem
+Open	filesys.h	/^    OpenFile* Open(char *name) {$/;"	f	class:FileSystem
+OpenFile	openfile.cc	/^OpenFile::OpenFile(int sector)$/;"	f	class:OpenFile
+OpenFile	openfile.h	/^    OpenFile(int f) { file = f; currentOffset = 0; }	\/\/ open the file$/;"	f	class:OpenFile
+OpenFile	openfile.h	/^class OpenFile {$/;"	c
+PerformanceTest	fstest.cc	/^PerformanceTest()$/;"	f
+Print	directory.cc	/^Directory::Print()$/;"	f	class:Directory
+Print	filehdr.cc	/^FileHeader::Print()$/;"	f	class:FileHeader
+Print	filesys.cc	/^FileSystem::Print()$/;"	f	class:FileSystem
+Print	fstest.cc	/^Print(char *name)$/;"	f
+Read	openfile.cc	/^OpenFile::Read(char *into, int numBytes)$/;"	f	class:OpenFile
+Read	openfile.h	/^    int Read(char *into, int numBytes) {$/;"	f	class:OpenFile
+ReadAt	openfile.cc	/^OpenFile::ReadAt(char *into, int numBytes, int position)$/;"	f	class:OpenFile
+ReadAt	openfile.h	/^    int ReadAt(char *into, int numBytes, int position) { $/;"	f	class:OpenFile
+ReadSector	synchdisk.cc	/^SynchDisk::ReadSector(int sectorNumber, char* data)$/;"	f	class:SynchDisk
+Remove	directory.cc	/^Directory::Remove(char *name)$/;"	f	class:Directory
+Remove	filesys.cc	/^FileSystem::Remove(char *name)$/;"	f	class:FileSystem
+Remove	filesys.h	/^    bool Remove(char *name) { return Unlink(name) == 0; }$/;"	f	class:FileSystem
+RequestDone	synchdisk.cc	/^SynchDisk::RequestDone()$/;"	f	class:SynchDisk
+SWITCH	swtch.s	/^SWITCH:$/;"	l
+SYNCHDISK_H	synchdisk.h	12;"	d
+Seek	openfile.cc	/^OpenFile::Seek(int position)$/;"	f	class:OpenFile
+SynchDisk	synchdisk.cc	/^SynchDisk::SynchDisk(char* name)$/;"	f	class:SynchDisk
+SynchDisk	synchdisk.h	/^class SynchDisk {$/;"	c
+ThreadRoot	swtch.s	/^ThreadRoot:$/;"	l
+TransferSize	fstest.cc	24;"	d	file:
+Write	openfile.cc	/^OpenFile::Write(char *into, int numBytes)$/;"	f	class:OpenFile
+Write	openfile.h	/^    int Write(char *from, int numBytes) {$/;"	f	class:OpenFile
+WriteAt	openfile.cc	/^OpenFile::WriteAt(char *from, int numBytes, int position)$/;"	f	class:OpenFile
+WriteAt	openfile.h	/^    int WriteAt(char *from, int numBytes, int position) { $/;"	f	class:OpenFile
+WriteBack	directory.cc	/^Directory::WriteBack(OpenFile *file)$/;"	f	class:Directory
+WriteBack	filehdr.cc	/^FileHeader::WriteBack(int sector)$/;"	f	class:FileHeader
+WriteSector	synchdisk.cc	/^SynchDisk::WriteSector(int sectorNumber, char* data)$/;"	f	class:SynchDisk
+currentOffset	openfile.h	/^    int currentOffset;$/;"	m	class:OpenFile
+dataSectors	filehdr.h	/^    int dataSectors[NumDirect];		\/\/ Disk sector numbers for each data $/;"	m	class:FileHeader
+directoryFile	filesys.h	/^   OpenFile* directoryFile;		\/\/ "Root" directory -- list of $/;"	m	class:FileSystem
+disk	synchdisk.h	/^    Disk *disk;		  		\/\/ Raw disk device$/;"	m	class:SynchDisk
+file	openfile.h	/^    int file;$/;"	m	class:OpenFile
+freeMapFile	filesys.h	/^   OpenFile* freeMapFile;		\/\/ Bit map of free disk blocks,$/;"	m	class:FileSystem
+hdr	openfile.h	/^    FileHeader *hdr;			\/\/ Header for this file $/;"	m	class:OpenFile
+inUse	directory.h	/^    bool inUse;				\/\/ Is this directory entry in use?$/;"	m	class:DirectoryEntry
+lock	synchdisk.h	/^    Lock *lock;		  		\/\/ Only one read\/write request$/;"	m	class:SynchDisk
+name	directory.h	/^    char name[FileNameMaxLen + 1];	\/\/ Text name for file, with +1 for $/;"	m	class:DirectoryEntry
+numBytes	filehdr.h	/^    int numBytes;			\/\/ Number of bytes in the file$/;"	m	class:FileHeader
+numSectors	filehdr.h	/^    int numSectors;			\/\/ Number of data sectors in the file$/;"	m	class:FileHeader
+sector	directory.h	/^    int sector;				\/\/ Location on disk to find the $/;"	m	class:DirectoryEntry
+seekPosition	openfile.h	/^    int seekPosition;			\/\/ Current position within the file$/;"	m	class:OpenFile
+semaphore	synchdisk.h	/^    Semaphore *semaphore; 		\/\/ To synchronize requesting thread $/;"	m	class:SynchDisk
+table	directory.h	/^    DirectoryEntry *table;		\/\/ Table of pairs: $/;"	m	class:Directory
+tableSize	directory.h	/^    int tableSize;			\/\/ Number of directory entries$/;"	m	class:Directory
+~Directory	directory.cc	/^Directory::~Directory()$/;"	f	class:Directory
+~OpenFile	openfile.cc	/^OpenFile::~OpenFile()$/;"	f	class:OpenFile
+~OpenFile	openfile.h	/^    ~OpenFile() { Close(file); }			\/\/ close the file$/;"	f	class:OpenFile
+~SynchDisk	synchdisk.cc	/^SynchDisk::~SynchDisk()$/;"	f	class:SynchDisk

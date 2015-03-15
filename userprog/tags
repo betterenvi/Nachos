@@ -1,0 +1,65 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ADDRSPACE_H	addrspace.h	14;"	d
+AddrSpace	addrspace.cc	/^AddrSpace::AddrSpace(OpenFile *executable)$/;"	f	class:AddrSpace
+AddrSpace	addrspace.h	/^class AddrSpace {$/;"	c
+BITMAP_H	bitmap.h	16;"	d
+BitMap	bitmap.cc	/^BitMap::BitMap(int nitems) $/;"	f	class:BitMap
+BitMap	bitmap.h	/^class BitMap {$/;"	c
+BitsInByte	bitmap.h	23;"	d
+BitsInWord	bitmap.h	24;"	d
+CFILES	Makefile	/^CFILES = $(THREAD_C) $(USERPROG_C)$/;"	m
+C_OFILES	Makefile	/^C_OFILES = $(THREAD_O) $(USERPROG_O)$/;"	m
+Clear	bitmap.cc	/^BitMap::Clear(int which) $/;"	f	class:BitMap
+ConsoleInput	syscall.h	86;"	d
+ConsoleOutput	syscall.h	87;"	d
+ConsoleTest	progtest.cc	/^ConsoleTest (char *in, char *out)$/;"	f
+DEFINES	Makefile	/^DEFINES = -DUSER_PROGRAM -DFILESYS_NEEDED -DFILESYS_STUB$/;"	m
+ExceptionHandler	exception.cc	/^ExceptionHandler(ExceptionType which)$/;"	f
+FetchFrom	bitmap.cc	/^BitMap::FetchFrom(OpenFile *file) $/;"	f	class:BitMap
+Find	bitmap.cc	/^BitMap::Find() $/;"	f	class:BitMap
+HFILES	Makefile	/^HFILES = $(THREAD_H) $(USERPROG_H)$/;"	m
+INCPATH	Makefile	/^INCPATH = -I..\/bin -I..\/filesys -I..\/userprog -I..\/threads -I..\/machine$/;"	m
+InitRegisters	addrspace.cc	/^AddrSpace::InitRegisters()$/;"	f	class:AddrSpace
+Mark	bitmap.cc	/^BitMap::Mark(int which) $/;"	f	class:BitMap
+NumClear	bitmap.cc	/^BitMap::NumClear() $/;"	f	class:BitMap
+OpenFileId	syscall.h	/^typedef int OpenFileId;	$/;"	t
+Print	bitmap.cc	/^BitMap::Print() $/;"	f	class:BitMap
+ReadAvail	progtest.cc	/^static void ReadAvail(int arg) { readAvail->V(); }$/;"	f	file:
+RestoreState	addrspace.cc	/^void AddrSpace::RestoreState() $/;"	f	class:AddrSpace
+SC_Close	syscall.h	29;"	d
+SC_Create	syscall.h	25;"	d
+SC_Exec	syscall.h	23;"	d
+SC_Exit	syscall.h	22;"	d
+SC_Fork	syscall.h	30;"	d
+SC_Halt	syscall.h	21;"	d
+SC_Join	syscall.h	24;"	d
+SC_Open	syscall.h	26;"	d
+SC_Read	syscall.h	27;"	d
+SC_Write	syscall.h	28;"	d
+SC_Yield	syscall.h	31;"	d
+SWITCH	swtch.s	/^SWITCH:$/;"	l
+SYSCALLS_H	syscall.h	14;"	d
+SaveState	addrspace.cc	/^void AddrSpace::SaveState() $/;"	f	class:AddrSpace
+SpaceId	syscall.h	/^typedef int SpaceId;	$/;"	t
+StartProcess	progtest.cc	/^StartProcess(char *filename)$/;"	f
+SwapHeader	addrspace.cc	/^SwapHeader (NoffHeader *noffH)$/;"	f	file:
+Test	bitmap.cc	/^BitMap::Test(int which)$/;"	f	class:BitMap
+ThreadRoot	swtch.s	/^ThreadRoot:$/;"	l
+UserStackSize	addrspace.h	19;"	d
+WriteBack	bitmap.cc	/^BitMap::WriteBack(OpenFile *file)$/;"	f	class:BitMap
+WriteDone	progtest.cc	/^static void WriteDone(int arg) { writeDone->V(); }$/;"	f	file:
+console	progtest.cc	/^static Console *console;$/;"	v	file:
+map	bitmap.h	/^    unsigned int *map;			\/\/ bit storage$/;"	m	class:BitMap
+numBits	bitmap.h	/^    int numBits;			\/\/ number of bits in the bitmap$/;"	m	class:BitMap
+numPages	addrspace.h	/^    unsigned int numPages;		\/\/ Number of pages in the virtual $/;"	m	class:AddrSpace
+numWords	bitmap.h	/^    int numWords;			\/\/ number of words of bitmap storage$/;"	m	class:BitMap
+pageTable	addrspace.h	/^    TranslationEntry *pageTable;	\/\/ Assume linear page table translation$/;"	m	class:AddrSpace
+readAvail	progtest.cc	/^static Semaphore *readAvail;$/;"	v	file:
+writeDone	progtest.cc	/^static Semaphore *writeDone;$/;"	v	file:
+~AddrSpace	addrspace.cc	/^AddrSpace::~AddrSpace()$/;"	f	class:AddrSpace
+~BitMap	bitmap.cc	/^BitMap::~BitMap()$/;"	f	class:BitMap

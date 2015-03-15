@@ -1,0 +1,52 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+$0	start.c	/^	addiu $2,$0,SC_Close$/;"	v
+$0	start.c	/^	addiu $2,$0,SC_Create$/;"	v
+$0	start.c	/^	addiu $2,$0,SC_Exec$/;"	v
+$0	start.c	/^	addiu $2,$0,SC_Exit$/;"	v
+$0	start.c	/^	addiu $2,$0,SC_Fork$/;"	v
+$0	start.c	/^	addiu $2,$0,SC_Halt$/;"	v
+$0	start.c	/^	addiu $2,$0,SC_Join$/;"	v
+$0	start.c	/^	addiu $2,$0,SC_Open$/;"	v
+$0	start.c	/^	addiu $2,$0,SC_Read$/;"	v
+$0	start.c	/^	addiu $2,$0,SC_Write$/;"	v
+$0	start.c	/^	addiu $2,$0,SC_Yield$/;"	v
+A	matmult.c	/^int A[Dim][Dim];$/;"	v
+A	sort.c	/^int A[1024];	\/* size of physical memory; with code, we'll run out of space!*\/$/;"	v
+AS	Makefile	/^AS = $(GCCDIR)as$/;"	m
+ASFLAGS	Makefile	/^ASFLAGS = -mips2$/;"	m
+B	matmult.c	/^int B[Dim][Dim];$/;"	v
+C	matmult.c	/^int C[Dim][Dim];$/;"	v
+CC	Makefile	/^CC = $(GCCDIR)gcc -B..\/..\/..\/gnu-decstation-ultrix\/$/;"	m
+CFLAGS	Makefile	/^CFLAGS = -G 0 -c $(INCDIR)$/;"	m
+CPP	Makefile	/^CPP = gcc -E -m32$/;"	m
+CPPFLAGS	Makefile	/^CPPFLAGS = $(INCDIR)$/;"	m
+Close	start.s	/^Close:$/;"	l
+Create	start.s	/^Create:$/;"	l
+Dim	matmult.c	12;"	d	file:
+Exec	start.s	/^Exec:$/;"	l
+Exit	start.s	/^Exit:$/;"	l
+Fork	start.s	/^Fork:$/;"	l
+GCCDIR	Makefile	/^GCCDIR = ..\/..\/..\/gnu-decstation-ultrix\/decstation-ultrix\/2.95.3\/$/;"	m
+Halt	start.s	/^Halt:$/;"	l
+INCDIR	Makefile	/^INCDIR =-I..\/userprog -I..\/threads$/;"	m
+IN_ASM	start.c	9;"	d	file:
+IN_ASM	start.s	/^#define IN_ASM$/;"	d
+Join	start.s	/^Join:$/;"	l
+LD	Makefile	/^LD = $(GCCDIR)ld$/;"	m
+LDFLAGS	Makefile	/^LDFLAGS = -T script -N$/;"	m
+Open	start.s	/^Open:$/;"	l
+PATH	Makefile	/^PATH = $(GCCDIR):\/lib:\/usr\/bin:\/bin$/;"	m
+Read	start.s	/^Read:$/;"	l
+Write	start.s	/^Write:$/;"	l
+Yield	start.s	/^Yield:$/;"	l
+__main	start.s	/^__main:$/;"	l
+__start	start.s	/^__start:$/;"	l
+main	halt.c	/^main()$/;"	f
+main	matmult.c	/^main()$/;"	f
+main	shell.c	/^main()$/;"	f
+main	sort.c	/^main()$/;"	f

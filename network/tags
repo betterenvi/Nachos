@@ -1,0 +1,51 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+CFILES	Makefile	/^CFILES = $(THREAD_C) $(USERPROG_C) $(VM_C) $(FILESYS_C) $(NETWORK_C)$/;"	m
+C_OFILES	Makefile	/^C_OFILES = $(THREAD_O) $(USERPROG_O) $(VM_O) $(FILESYS_O) $(NETWORK_O)$/;"	m
+DEFINES	Makefile	/^DEFINES = -DUSER_PROGRAM -DVM -DFILESYS_NEEDED -DFILESYS -DNETWORK$/;"	m
+Get	post.cc	/^MailBox::Get(PacketHeader *pktHdr, MailHeader *mailHdr, char *data) $/;"	f	class:MailBox
+HFILES	Makefile	/^HFILES = $(THREAD_H) $(USERPROG_H) $(VM_H) $(FILESYS_H) $(NETWORK_H)$/;"	m
+INCPATH	Makefile	/^INCPATH = -I..\/network -I..\/bin -I..\/filesys -I..\/vm -I..\/userprog -I..\/threads -I..\/machine$/;"	m
+IncomingPacket	post.cc	/^PostOffice::IncomingPacket()$/;"	f	class:PostOffice
+Mail	post.cc	/^Mail::Mail(PacketHeader pktH, MailHeader mailH, char *msgData)$/;"	f	class:Mail
+Mail	post.h	/^class Mail {$/;"	c
+MailBox	post.cc	/^MailBox::MailBox()$/;"	f	class:MailBox
+MailBox	post.h	/^class MailBox {$/;"	c
+MailBoxAddress	post.h	/^typedef int MailBoxAddress;$/;"	t
+MailHeader	post.h	/^class MailHeader {$/;"	c
+MailTest	nettest.cc	/^MailTest(int farAddr)$/;"	f
+MaxMailSize	post.h	53;"	d
+POST_H	post.h	29;"	d
+PacketSent	post.cc	/^PostOffice::PacketSent()$/;"	f	class:PostOffice
+PostOffice	post.cc	/^PostOffice::PostOffice(NetworkAddress addr, double reliability, int nBoxes)$/;"	f	class:PostOffice
+PostOffice	post.h	/^class PostOffice {$/;"	c
+PostalDelivery	post.cc	/^PostOffice::PostalDelivery()$/;"	f	class:PostOffice
+PostalHelper	post.cc	/^static void PostalHelper(int arg)$/;"	f	file:
+PrintHeader	post.cc	/^PrintHeader(PacketHeader pktHdr, MailHeader mailHdr)$/;"	f	file:
+Put	post.cc	/^MailBox::Put(PacketHeader pktHdr, MailHeader mailHdr, char *data)$/;"	f	class:MailBox
+ReadAvail	post.cc	/^static void ReadAvail(int arg)$/;"	f	file:
+Receive	post.cc	/^PostOffice::Receive(int box, PacketHeader *pktHdr, $/;"	f	class:PostOffice
+SWITCH	swtch.s	/^SWITCH:$/;"	l
+Send	post.cc	/^PostOffice::Send(PacketHeader pktHdr, MailHeader mailHdr, char* data)$/;"	f	class:PostOffice
+ThreadRoot	swtch.s	/^ThreadRoot:$/;"	l
+WriteDone	post.cc	/^static void WriteDone(int arg)$/;"	f	file:
+boxes	post.h	/^    MailBox *boxes;		\/\/ Table of mail boxes to hold incoming mail$/;"	m	class:PostOffice
+data	post.h	/^     char data[MaxMailSize];	\/\/ Payload -- message data$/;"	m	class:Mail
+from	post.h	/^    MailBoxAddress from;	\/\/ Mail box to reply to$/;"	m	class:MailHeader
+length	post.h	/^    unsigned length;		\/\/ Bytes of message data (excluding the $/;"	m	class:MailHeader
+mailHdr	post.h	/^     MailHeader mailHdr;	\/\/ Header appended by PostOffice$/;"	m	class:Mail
+messageAvailable	post.h	/^    Semaphore *messageAvailable;\/\/ V'ed when message has arrived from network$/;"	m	class:PostOffice
+messageSent	post.h	/^    Semaphore *messageSent;	\/\/ V'ed when next message can be sent to network$/;"	m	class:PostOffice
+messages	post.h	/^    SynchList *messages;	\/\/ A mailbox is just a list of arrived messages$/;"	m	class:MailBox
+netAddr	post.h	/^    NetworkAddress netAddr;	\/\/ Network address of this machine$/;"	m	class:PostOffice
+network	post.h	/^    Network *network;		\/\/ Physical network connection$/;"	m	class:PostOffice
+numBoxes	post.h	/^    int numBoxes;		\/\/ Number of mail boxes$/;"	m	class:PostOffice
+pktHdr	post.h	/^     PacketHeader pktHdr;	\/\/ Header appended by Network$/;"	m	class:Mail
+sendLock	post.h	/^    Lock *sendLock;		\/\/ Only one outgoing message at a time$/;"	m	class:PostOffice
+to	post.h	/^    MailBoxAddress to;		\/\/ Destination mail box$/;"	m	class:MailHeader
+~MailBox	post.cc	/^MailBox::~MailBox()$/;"	f	class:MailBox
+~PostOffice	post.cc	/^PostOffice::~PostOffice()$/;"	f	class:PostOffice

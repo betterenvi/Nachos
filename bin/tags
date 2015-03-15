@@ -1,0 +1,309 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+AOUTHDR	coff.h	/^      } AOUTHDR;$/;"	t	typeref:struct:aouthdr
+AOUTHSZ	coff.h	34;"	d
+ASSOC	disasm.c	/^int NROWS=64, ASSOC=1, LINESIZE=4, RAND=0, LRD=0;$/;"	v
+ASSOC	main.c	/^int NROWS=64, ASSOC=1, LINESIZE=4, RAND=0, LRD=0;$/;"	v
+CC	Makefile	/^CC=gcc -m32$/;"	m
+CFLAGS	Makefile	/^CFLAGS=-I.\/ -I..\/threads -g$/;"	m
+FAST	execute.c	14;"	d	file:
+HI	execute.c	/^int HI, LO;			\/* mul\/div machine registers *\/$/;"	v
+IM	execute.c	/^IM(i)$/;"	f
+IOCPARM_MASK	system.c	89;"	d	file:
+I_ADD	encode.h	84;"	d
+I_ADDI	encode.h	20;"	d
+I_ADDIU	encode.h	21;"	d
+I_ADDU	encode.h	85;"	d
+I_AND	encode.h	88;"	d
+I_ANDI	encode.h	24;"	d
+I_BCOND	encode.h	13;"	d
+I_BEQ	encode.h	16;"	d
+I_BGEZ	encode.h	100;"	d
+I_BGEZAL	encode.h	103;"	d
+I_BGTZ	encode.h	19;"	d
+I_BLEZ	encode.h	18;"	d
+I_BLTZ	encode.h	99;"	d
+I_BLTZAL	encode.h	102;"	d
+I_BNE	encode.h	17;"	d
+I_BREAK	encode.h	72;"	d
+I_COP0	encode.h	28;"	d
+I_COP1	encode.h	29;"	d
+I_COP2	encode.h	30;"	d
+I_COP3	encode.h	31;"	d
+I_DIV	encode.h	81;"	d
+I_DIVU	encode.h	82;"	d
+I_J	encode.h	14;"	d
+I_JAL	encode.h	15;"	d
+I_JALR	encode.h	69;"	d
+I_JR	encode.h	68;"	d
+I_LB	encode.h	33;"	d
+I_LBU	encode.h	37;"	d
+I_LH	encode.h	34;"	d
+I_LHU	encode.h	38;"	d
+I_LUI	encode.h	27;"	d
+I_LW	encode.h	36;"	d
+I_LWC0	encode.h	48;"	d
+I_LWC1	encode.h	49;"	d
+I_LWC2	encode.h	50;"	d
+I_LWC3	encode.h	51;"	d
+I_LWL	encode.h	35;"	d
+I_LWR	encode.h	39;"	d
+I_MFHI	encode.h	74;"	d
+I_MFLO	encode.h	76;"	d
+I_MTHI	encode.h	75;"	d
+I_MTLO	encode.h	77;"	d
+I_MULT	encode.h	79;"	d
+I_MULTU	encode.h	80;"	d
+I_NOP	encode.h	107;"	d
+I_NOR	encode.h	91;"	d
+I_OR	encode.h	89;"	d
+I_ORI	encode.h	25;"	d
+I_SB	encode.h	41;"	d
+I_SH	encode.h	42;"	d
+I_SLL	encode.h	60;"	d
+I_SLLV	encode.h	64;"	d
+I_SLT	encode.h	93;"	d
+I_SLTI	encode.h	22;"	d
+I_SLTIU	encode.h	23;"	d
+I_SLTU	encode.h	94;"	d
+I_SPECIAL	encode.h	12;"	d
+I_SRA	encode.h	63;"	d
+I_SRAV	encode.h	67;"	d
+I_SRL	encode.h	62;"	d
+I_SRLV	encode.h	66;"	d
+I_SUB	encode.h	86;"	d
+I_SUBU	encode.h	87;"	d
+I_SW	encode.h	44;"	d
+I_SWC0	encode.h	53;"	d
+I_SWC1	encode.h	54;"	d
+I_SWC2	encode.h	55;"	d
+I_SWC3	encode.h	56;"	d
+I_SWL	encode.h	43;"	d
+I_SWR	encode.h	46;"	d
+I_SYSCALL	encode.h	71;"	d
+I_XOR	encode.h	90;"	d
+I_XORI	encode.h	26;"	d
+LD	Makefile	/^LD=gcc -m32$/;"	m
+LINESIZE	disasm.c	/^int NROWS=64, ASSOC=1, LINESIZE=4, RAND=0, LRD=0;$/;"	v
+LINESIZE	main.c	/^int NROWS=64, ASSOC=1, LINESIZE=4, RAND=0, LRD=0;$/;"	v
+LO	execute.c	/^int HI, LO;			\/* mul\/div machine registers *\/$/;"	v
+LOADSECTION	disasm.c	69;"	d	file:
+LOADSECTION	main.c	112;"	d	file:
+LRD	disasm.c	/^int NROWS=64, ASSOC=1, LINESIZE=4, RAND=0, LRD=0;$/;"	v
+LRD	main.c	/^int NROWS=64, ASSOC=1, LINESIZE=4, RAND=0, LRD=0;$/;"	v
+MAIN	coff2flat.c	15;"	d	file:
+MAIN	coff2flat.c	17;"	d	file:
+MAIN	coff2noff.c	23;"	d	file:
+MAIN	coff2noff.c	25;"	d	file:
+MAIN	out.c	7;"	d	file:
+MAIN	out.c	9;"	d	file:
+MAXDATA	out.c	34;"	d	file:
+MAXRELOCS	out.c	31;"	d	file:
+MAXSCNS	out.c	43;"	d	file:
+MAXSSPACE	out.c	45;"	d	file:
+MAXSYMS	out.c	44;"	d	file:
+MEMSIZE	int.h	11;"	d
+MIPSELMAGIC	coff.h	15;"	d
+NH	execute.c	465;"	d	file:
+NNN	execute.c	466;"	d	file:
+NNNN	execute.c	555;"	d	file:
+NOFFMAGIC	noff.h	8;"	d
+NROWS	disasm.c	/^int NROWS=64, ASSOC=1, LINESIZE=4, RAND=0, LRD=0;$/;"	v
+NROWS	main.c	/^int NROWS=64, ASSOC=1, LINESIZE=4, RAND=0, LRD=0;$/;"	v
+NULL	d.c	11;"	d	file:
+NoffHeader	noff.h	/^} NoffHeader;$/;"	t	typeref:struct:noffHeader
+OMAGIC	coff.h	17;"	d
+R	d.c	27;"	d	file:
+RAND	disasm.c	/^int NROWS=64, ASSOC=1, LINESIZE=4, RAND=0, LRD=0;$/;"	v
+RAND	main.c	/^int NROWS=64, ASSOC=1, LINESIZE=4, RAND=0, LRD=0;$/;"	v
+RD	execute.c	/^RD(i)$/;"	f
+RS	execute.c	/^RS(i)$/;"	f
+RT	execute.c	/^RT(i)$/;"	f
+Read	coff2flat.c	/^void Read(int fd, char *buf, int nBytes)$/;"	f
+Read	coff2noff.c	/^void Read(int fd, char *buf, int nBytes)$/;"	f
+ReadStruct	coff2flat.c	32;"	d	file:
+ReadStruct	coff2noff.c	67;"	d	file:
+Reg	execute.c	/^int Reg[32];			\/* GPR's *\/$/;"	v
+Regtrace	disasm.c	/^int TRACE, Traptrace, Regtrace;$/;"	v
+Regtrace	main.c	/^int TRACE, Traptrace, Regtrace;$/;"	v
+SOMAGIC	coff.h	18;"	d
+Segment	noff.h	/^} Segment;$/;"	t	typeref:struct:segment
+ShortToHost	coff2noff.c	/^ShortToHost(unsigned short shortword) {$/;"	f
+StackSize	coff2flat.c	31;"	d	file:
+TRACE	disasm.c	/^int TRACE, Traptrace, Regtrace;$/;"	v
+TRACE	main.c	/^int TRACE, Traptrace, Regtrace;$/;"	v
+Traptrace	disasm.c	/^int TRACE, Traptrace, Regtrace;$/;"	v
+Traptrace	main.c	/^int TRACE, Traptrace, Regtrace;$/;"	v
+WordToHost	coff2noff.c	/^WordToHost(unsigned int word) {$/;"	f
+Write	coff2flat.c	/^void Write(int fd, char *buf, int nBytes)$/;"	f
+Write	coff2noff.c	/^void Write(int fd, char *buf, int nBytes)$/;"	f
+addtable	execute.c	/^int addtable[33][33];$/;"	v
+amark	int.h	15;"	d
+aouthdr	coff.h	/^typedef struct aouthdr {$/;"	s
+aouthdr	out.c	/^struct aouthdr aouthdr;$/;"	v	typeref:struct:aouthdr
+arch1cycles	execute.c	/^int arch1cycles;$/;"	v
+b31	execute.c	31;"	d	file:
+bsize	coff.h	/^        long    bsize;          \/* uninitialized data "   "             *\/$/;"	m	struct:aouthdr
+bss_start	coff.h	/^        long    bss_start;      \/* base of bss used for this file       *\/$/;"	m	struct:aouthdr
+bsshead	disasm.c	/^static SCNHDR texthead, rdatahead, datahead, sdatahead, sbsshead, bsshead;$/;"	v	file:
+bsshead	main.c	/^static SCNHDR texthead, rdatahead, datahead, sdatahead, sbsshead, bsshead;$/;"	v	file:
+cc_add	execute.c	34;"	d	file:
+cc_logic	execute.c	48;"	d	file:
+cc_mulscc	execute.c	54;"	d	file:
+cc_sub	execute.c	40;"	d	file:
+cfetch	int.h	22;"	d
+code	noff.h	/^   Segment code;		\/* executable code segment *\/ $/;"	m	struct:noffHeader
+column	out.c	/^static column = 1;$/;"	v	file:
+cprmask	coff.h	/^        long    cprmask[4];     \/* co-processor register masks          *\/$/;"	m	struct:aouthdr
+cstore	int.h	29;"	d
+data	out.c	/^  long data[MAXDATA];$/;"	m	struct:data	file:
+data	out.c	/^struct data {$/;"	s	file:
+data_start	coff.h	/^        long    data_start;     \/* base of data used for this file      *\/$/;"	m	struct:aouthdr
+datahead	disasm.c	/^static SCNHDR texthead, rdatahead, datahead, sdatahead, sbsshead, bsshead;$/;"	v	file:
+datahead	main.c	/^static SCNHDR texthead, rdatahead, datahead, sdatahead, sbsshead, bsshead;$/;"	v	file:
+dis1	disasm.c	/^dis1(xpc)$/;"	f
+disasm	disasm.c	/^disasm(startpc, argc, argv)$/;"	f
+dsize	coff.h	/^        long    dsize;          \/* initialized data "  "                *\/$/;"	m	struct:aouthdr
+dump_ascii	d.c	/^dump_ascii(instruction, pc)$/;"	f
+dump_reg	execute.c	/^dump_reg()$/;"	f
+entry	coff.h	/^        long    entry;          \/* entry pt.                            *\/$/;"	m	struct:aouthdr
+extend	instr.h	21;"	d
+f_flags	coff.h	/^        unsigned short  f_flags;        \/* flags *\/$/;"	m	struct:filehdr
+f_magic	coff.h	/^        unsigned short  f_magic;        \/* magic number *\/$/;"	m	struct:filehdr
+f_nscns	coff.h	/^        unsigned short  f_nscns;        \/* number of sections *\/$/;"	m	struct:filehdr
+f_nsyms	coff.h	/^        long            f_nsyms;        \/* sizeof(symbolic hdr) *\/$/;"	m	struct:filehdr
+f_opthdr	coff.h	/^        unsigned short  f_opthdr;       \/* sizeof(optional hdr) *\/$/;"	m	struct:filehdr
+f_symptr	coff.h	/^        long            f_symptr;       \/* file pointer to symbolic header *\/$/;"	m	struct:filehdr
+f_timdat	coff.h	/^        long            f_timdat;       \/* time & date stamp *\/$/;"	m	struct:filehdr
+false	execute.c	16;"	d	file:
+fetch	int.h	19;"	d
+filehdr	coff.h	/^struct filehdr {$/;"	s
+filehdr	out.c	/^struct filehdr filehdr;$/;"	v	typeref:struct:filehdr
+filename	disasm.c	/^static char filename[1000] = "a.out";	\/* default a.out file *\/$/;"	v	file:
+filename	main.c	/^static char filename[1000] = "a.out";	\/* default a.out file *\/$/;"	v	file:
+fmt	execute.c	/^char fmt[] = "%6d";$/;"	v
+fmt2	execute.c	/^char fmt2[] = "------";$/;"	v
+fp	disasm.c	/^static FILE *fp;$/;"	v	file:
+fp	main.c	/^static FILE *fp;$/;"	v	file:
+gp_value	coff.h	/^        long    gp_value;       \/* the gp value used for this object    *\/$/;"	m	struct:aouthdr
+gprmask	coff.h	/^        long    gprmask;        \/* general purpose register mask        *\/$/;"	m	struct:aouthdr
+henter	execute.c	/^henter(n)$/;"	f
+henters	execute.c	/^void henters(n, hist)$/;"	f
+hist	execute.c	/^static int hist[NNNN];$/;"	v	file:
+hists	execute.c	/^static int hists[NH][NNN];$/;"	v	file:
+hoflo	execute.c	/^int hoflo[NH], htotal[NH];$/;"	v
+hprint	execute.c	/^hprint()$/;"	f
+htotal	execute.c	/^int hoflo[NH], htotal[NH];$/;"	v
+ifetch	int.h	18;"	d
+ilog2	execute.c	/^ilog2(i)$/;"	f
+imark	int.h	16;"	d
+immed	instr.h	15;"	d
+inFileAddr	noff.h	/^  int inFileAddr;		\/* location of segment in this file *\/$/;"	m	struct:segment
+initData	noff.h	/^   Segment initData;		\/* initialized data segment *\/$/;"	m	struct:noffHeader
+ldptr	disasm.c	/^static LDFILE *ldptr;$/;"	v	file:
+ldptr	main.c	/^static LDFILE *ldptr;$/;"	v	file:
+length	out.c	/^  int length;$/;"	m	struct:data	file:
+load_program	disasm.c	/^load_program(filename)$/;"	f
+load_program	main.c	/^load_program(filename)$/;"	f
+load_section	disasm.c	/^load_section(hd)$/;"	f
+longdis	d.c	/^int longdis = 1;$/;"	v
+m_alloc	disasm.c	/^int *m_alloc(n)$/;"	f
+m_alloc	main.c	/^int *m_alloc(n)$/;"	f
+magic	coff.h	/^        short   magic;          \/* see above                            *\/$/;"	m	struct:aouthdr
+main	coff2flat.c	/^main (int argc, char **argv)$/;"	f
+main	coff2noff.c	/^main (int argc, char **argv)$/;"	f
+main	disasm.c	/^main(argc, argv)$/;"	f
+main	main.c	/^main(argc, argv)$/;"	f
+main	out.c	/^main(argc,argv)$/;"	f
+mem	disasm.c	/^char mem[MEMSIZE];		\/* main memory. use malloc later *\/$/;"	v
+mem	main.c	/^char mem[MEMSIZE];		\/* main memory. use malloc later *\/$/;"	v
+memoffset	int.h	12;"	d
+myprintf	out.c	/^myprintf(va_alist)$/;"	f
+mysetfile	out.c	/^mysetfile(f)$/;"	f
+mytab	out.c	/^mytab(n)$/;"	f
+noffFileName	coff2noff.c	/^char *noffFileName = NULL;$/;"	v
+noffHeader	noff.h	/^typedef struct noffHeader {$/;"	s
+noffMagic	noff.h	/^   int noffMagic;		\/* should be NOFFMAGIC *\/$/;"	m	struct:noffHeader
+normalops	opstrings.c	/^char *normalops[] = {$/;"	v
+numadds	execute.c	/^int numadds=1, numsubs=1, numsuccesses, numcarries;$/;"	v
+numcarries	execute.c	/^int numadds=1, numsubs=1, numsuccesses, numcarries;$/;"	v
+numjmpls	execute.c	/^int numjmpls;$/;"	v
+numsubs	execute.c	/^int numadds=1, numsubs=1, numsuccesses, numcarries;$/;"	v
+numsuccesses	execute.c	/^int numadds=1, numsubs=1, numsuccesses, numcarries;$/;"	v
+ny	execute.c	/^ny()$/;"	f
+off16	instr.h	19;"	d
+off26	instr.h	17;"	d
+outfile	out.c	/^static FILE *outfile = stdout;$/;"	v	file:
+patable	execute.c	/^patable(tab)$/;"	f
+pc	disasm.c	/^int pc;$/;"	v
+print_reloc	out.c	/^print_reloc(vaddr,i,j)$/;"	f
+print_section	out.c	/^print_section(i)$/;"	f
+printf	out.c	190;"	d	file:
+printhist	execute.c	/^printhist()$/;"	f
+printstatistics	execute.c	/^printstatistics()$/;"	f
+rd	instr.h	11;"	d
+rdatahead	disasm.c	/^static SCNHDR texthead, rdatahead, datahead, sdatahead, sbsshead, bsshead;$/;"	v	file:
+rdatahead	main.c	/^static SCNHDR texthead, rdatahead, datahead, sdatahead, sbsshead, bsshead;$/;"	v	file:
+read_struct	out.c	29;"	d	file:
+regstrings	d.c	/^char *regstrings[] =$/;"	v
+reloc	out.c	/^  struct reloc reloc[MAXRELOCS];$/;"	m	struct:data	typeref:struct:data::reloc	file:
+reloc_type	out.c	/^char *reloc_type[] = {$/;"	v
+relocs	out.c	/^  int relocs;$/;"	m	struct:data	file:
+rs	instr.h	13;"	d
+rt	instr.h	12;"	d
+runprogram	execute.c	/^runprogram(startpc, argc, argv)$/;"	f
+s_flags	coff.h	/^        long            s_flags;        \/* flags *\/$/;"	m	struct:scnhdr
+s_lnnoptr	coff.h	/^        long            s_lnnoptr;      \/* file ptr to gp histogram *\/$/;"	m	struct:scnhdr
+s_name	coff.h	/^        char            s_name[8];      \/* section name *\/$/;"	m	struct:scnhdr
+s_nlnno	coff.h	/^        unsigned short  s_nlnno;        \/* number of gp histogram entries *\/$/;"	m	struct:scnhdr
+s_nreloc	coff.h	/^        unsigned short  s_nreloc;       \/* number of relocation entries *\/$/;"	m	struct:scnhdr
+s_paddr	coff.h	/^        long            s_paddr;        \/* physical address, aliased s_nlib *\/$/;"	m	struct:scnhdr
+s_relptr	coff.h	/^        long            s_relptr;       \/* file ptr to relocation *\/$/;"	m	struct:scnhdr
+s_scnptr	coff.h	/^        long            s_scnptr;       \/* file ptr to raw data for section *\/$/;"	m	struct:scnhdr
+s_size	coff.h	/^        long            s_size;         \/* section size *\/$/;"	m	struct:scnhdr
+s_vaddr	coff.h	/^        long            s_vaddr;        \/* virtual address *\/$/;"	m	struct:scnhdr
+sbsshead	disasm.c	/^static SCNHDR texthead, rdatahead, datahead, sdatahead, sbsshead, bsshead;$/;"	v	file:
+sbsshead	main.c	/^static SCNHDR texthead, rdatahead, datahead, sdatahead, sbsshead, bsshead;$/;"	v	file:
+scnhdr	coff.h	/^struct scnhdr {$/;"	s
+scnhdr	out.c	/^struct scnhdr scnhdr[MAXSCNS];$/;"	v	typeref:struct:scnhdr
+sdatahead	disasm.c	/^static SCNHDR texthead, rdatahead, datahead, sdatahead, sbsshead, bsshead;$/;"	v	file:
+sdatahead	main.c	/^static SCNHDR texthead, rdatahead, datahead, sdatahead, sbsshead, bsshead;$/;"	v	file:
+section	out.c	/^struct data section[MAXSCNS];$/;"	v	typeref:struct:data
+section_name	out.c	/^char *section_name[] = {$/;"	v
+segment	noff.h	/^typedef struct segment {$/;"	s
+self	disasm.c	/^static char self[256];			\/* name of invoking program *\/$/;"	v	file:
+self	main.c	/^static char self[256];			\/* name of invoking program *\/$/;"	v	file:
+sfetch	int.h	20;"	d
+shamt	instr.h	14;"	d
+size	noff.h	/^  int size;			\/* size of segment *\/$/;"	m	struct:segment
+specialops	opstrings.c	/^char *specialops[] = {$/;"	v
+sptr	d.c	/^int sptr;$/;"	v
+sspace	out.c	/^char sspace[20000];$/;"	v
+sstore	int.h	27;"	d
+storage_class	out.c	/^char *storage_class[] = {$/;"	v
+store	int.h	25;"	d
+string	main.c	/^char *string(s)$/;"	f
+subtable	execute.c	/^int subtable[33][33];$/;"	v
+symbol_type	out.c	/^char *symbol_type[] = {$/;"	v
+symbols	out.c	/^EXTR symbols[MAXSYMS];$/;"	v
+symhdr	out.c	/^HDRR symhdr;$/;"	v
+system_break	system.c	/^system_break()$/;"	f
+system_trap	system.c	/^system_trap()$/;"	f
+text_start	coff.h	/^        long    text_start;     \/* base of text used for this file      *\/$/;"	m	struct:aouthdr
+texthead	disasm.c	/^static SCNHDR texthead, rdatahead, datahead, sdatahead, sbsshead, bsshead;$/;"	v	file:
+texthead	main.c	/^static SCNHDR texthead, rdatahead, datahead, sdatahead, sbsshead, bsshead;$/;"	v	file:
+top4	instr.h	18;"	d
+true	execute.c	15;"	d	file:
+tsize	coff.h	/^        long    tsize;          \/* text size in bytes, padded to DW bdry*\/$/;"	m	struct:aouthdr
+u	execute.c	/^u()				\/* unimplemented *\/$/;"	f
+u_to_int_addr	system.c	/^char *u_to_int_addr(ptr)$/;"	f
+u_to_int_fd	system.c	/^u_to_int_fd(fd)$/;"	f
+ucfetch	int.h	23;"	d
+uninitData	noff.h	/^   Segment uninitData;		\/* uninitialized data segment --$/;"	m	struct:noffHeader
+usfetch	int.h	21;"	d
+virtualAddr	noff.h	/^  int virtualAddr;		\/* location of segment in virt addr space *\/$/;"	m	struct:segment
+vstamp	coff.h	/^        short   vstamp;         \/* version stamp                        *\/$/;"	m	struct:aouthdr

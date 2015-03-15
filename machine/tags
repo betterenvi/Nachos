@@ -1,0 +1,338 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Abort	sysdep.cc	/^Abort()$/;"	f
+AddressErrorException	machine.h	/^		     AddressErrorException, \/\/ Unaligned reference or one that$/;"	e	enum:ExceptionType
+AllocBoundedArray	sysdep.cc	/^AllocBoundedArray(int size)$/;"	f
+AssignNameToSocket	sysdep.cc	/^AssignNameToSocket(char *socketName, int sockID)$/;"	f
+BCOND	mipssim.h	106;"	d
+BadVAddrReg	machine.h	70;"	d
+BusErrorException	machine.h	/^		     BusErrorException,     \/\/ Translation resulted in an $/;"	e	enum:ExceptionType
+CONSOLE_H	console.h	24;"	d
+CallOnUserAbort	sysdep.cc	/^CallOnUserAbort(VoidNoArgFunctionPtr func)$/;"	f
+ChangeLevel	interrupt.cc	/^Interrupt::ChangeLevel(IntStatus old, IntStatus now)$/;"	f	class:Interrupt
+CheckCharAvail	console.cc	/^Console::CheckCharAvail()$/;"	f	class:Console
+CheckEndian	machine.cc	/^void CheckEndian()$/;"	f	file:
+CheckIfDue	interrupt.cc	/^Interrupt::CheckIfDue(bool advanceClock)$/;"	f	class:Interrupt
+CheckPktAvail	network.cc	/^Network::CheckPktAvail()$/;"	f	class:Network
+Close	sysdep.cc	/^Close(int fd)$/;"	f
+CloseSocket	sysdep.cc	/^CloseSocket(int sockID)$/;"	f
+ComputeLatency	disk.cc	/^Disk::ComputeLatency(int newSector, bool writing)$/;"	f	class:Disk
+Console	console.cc	/^Console::Console(char *readFile, char *writeFile, VoidFunctionPtr readAvail, $/;"	f	class:Console
+Console	console.h	/^class Console {$/;"	c
+ConsoleReadInt	interrupt.h	/^enum IntType { TimerInt, DiskInt, ConsoleWriteInt, ConsoleReadInt, $/;"	e	enum:IntType
+ConsoleReadPoll	console.cc	/^static void ConsoleReadPoll(int c) $/;"	f	file:
+ConsoleTime	stats.h	56;"	d
+ConsoleWriteDone	console.cc	/^static void ConsoleWriteDone(int c)$/;"	f	file:
+ConsoleWriteInt	interrupt.h	/^enum IntType { TimerInt, DiskInt, ConsoleWriteInt, ConsoleReadInt, $/;"	e	enum:IntType
+DISK_H	disk.h	18;"	d
+DeAssignNameToSocket	sysdep.cc	/^DeAssignNameToSocket(char *socketName)$/;"	f
+DeallocBoundedArray	sysdep.cc	/^DeallocBoundedArray(char *ptr, int size)$/;"	f
+Debugger	machine.cc	/^void Machine::Debugger()$/;"	f	class:Machine
+Decode	mipssim.cc	/^Instruction::Decode()$/;"	f	class:Instruction
+Delay	sysdep.cc	/^Delay(int seconds)$/;"	f
+DelayedLoad	mipssim.cc	/^Machine::DelayedLoad(int nextReg, int nextValue)$/;"	f	class:Machine
+Disk	disk.cc	/^Disk::Disk(char* name, VoidFunctionPtr callWhenDone, int callArg)$/;"	f	class:Disk
+Disk	disk.h	/^class Disk {$/;"	c
+DiskDone	disk.cc	/^static void DiskDone(int arg) { ((Disk *)arg)->HandleInterrupt(); }$/;"	f	file:
+DiskInt	interrupt.h	/^enum IntType { TimerInt, DiskInt, ConsoleWriteInt, ConsoleReadInt, $/;"	e	enum:IntType
+DiskSize	disk.cc	26;"	d	file:
+DumpState	interrupt.cc	/^Interrupt::DumpState()$/;"	f	class:Interrupt
+DumpState	machine.cc	/^Machine::DumpState()$/;"	f	class:Machine
+EXTRA	mipssim.h	/^enum RegType { NONE, RS, RT, RD, EXTRA }; $/;"	e	enum:RegType
+Enable	interrupt.cc	/^Interrupt::Enable()$/;"	f	class:Interrupt
+ExceptionType	machine.h	/^enum ExceptionType { NoException,           \/\/ Everything ok!$/;"	g
+Exit	sysdep.cc	/^Exit(int exitCode)$/;"	f
+GetChar	console.cc	/^Console::GetChar()$/;"	f	class:Console
+Halt	interrupt.cc	/^Interrupt::Halt()$/;"	f	class:Interrupt
+HandleInterrupt	disk.cc	/^Disk::HandleInterrupt ()$/;"	f	class:Disk
+HiReg	machine.h	63;"	d
+IFMT	mipssim.h	108;"	d
+INTERRUPT_H	interrupt.h	36;"	d
+Idle	interrupt.cc	/^Interrupt::Idle()$/;"	f	class:Interrupt
+IdleMode	interrupt.h	/^enum MachineStatus {IdleMode, SystemMode, UserMode};$/;"	e	enum:MachineStatus
+IllegalInstrException	machine.h	/^		     IllegalInstrException, \/\/ Unimplemented or reserved instr.$/;"	e	enum:ExceptionType
+IndexToAddr	mipssim.h	94;"	d
+InitSocketName	sysdep.cc	/^InitSocketName(struct sockaddr_un *uname, char *name)$/;"	f	file:
+Instruction	machine.h	/^class Instruction {$/;"	c
+IntOff	interrupt.h	/^enum IntStatus { IntOff, IntOn };$/;"	e	enum:IntStatus
+IntOn	interrupt.h	/^enum IntStatus { IntOff, IntOn };$/;"	e	enum:IntStatus
+IntStatus	interrupt.h	/^enum IntStatus { IntOff, IntOn };$/;"	g
+IntType	interrupt.h	/^enum IntType { TimerInt, DiskInt, ConsoleWriteInt, ConsoleReadInt, $/;"	g
+Interrupt	interrupt.cc	/^Interrupt::Interrupt()$/;"	f	class:Interrupt
+Interrupt	interrupt.h	/^class Interrupt {$/;"	c
+JFMT	mipssim.h	109;"	d
+LoReg	machine.h	64;"	d
+LoadReg	machine.h	68;"	d
+LoadValueReg	machine.h	69;"	d
+Lseek	sysdep.cc	/^Lseek(int fd, int offset, int whence)$/;"	f
+MACHINE_H	machine.h	22;"	d
+MIPSSIM_H	mipssim.h	11;"	d
+Machine	machine.cc	/^Machine::Machine(bool debug)$/;"	f	class:Machine
+Machine	machine.h	/^class Machine {$/;"	c
+MachineStatus	interrupt.h	/^enum MachineStatus {IdleMode, SystemMode, UserMode};$/;"	g
+MagicNumber	disk.cc	23;"	d	file:
+MagicSize	disk.cc	24;"	d	file:
+MaxOpcode	mipssim.h	88;"	d
+MaxPacketSize	network.h	41;"	d
+MaxWireSize	network.h	40;"	d
+MemorySize	machine.h	36;"	d
+ModuloDiff	disk.cc	/^Disk::ModuloDiff(int to, int from)$/;"	f	class:Disk
+Mult	mipssim.cc	/^Mult(int a, int b, bool signedArith, int* hiPtr, int* loPtr)$/;"	f	file:
+NETWORK_H	network.h	16;"	d
+NONE	mipssim.h	/^enum RegType { NONE, RS, RT, RD, EXTRA }; $/;"	e	enum:RegType
+Network	network.cc	/^Network::Network(NetworkAddress addr, double reliability,$/;"	f	class:Network
+Network	network.h	/^class Network {$/;"	c
+NetworkAddress	network.h	/^typedef int NetworkAddress;	 $/;"	t
+NetworkReadPoll	network.cc	/^static void NetworkReadPoll(int arg)$/;"	f	file:
+NetworkRecvInt	interrupt.h	/^				NetworkSendInt, NetworkRecvInt};$/;"	e	enum:IntType
+NetworkSendDone	network.cc	/^static void NetworkSendDone(int arg)$/;"	f	file:
+NetworkSendInt	interrupt.h	/^				NetworkSendInt, NetworkRecvInt};$/;"	e	enum:IntType
+NetworkTime	stats.h	57;"	d
+NextPCReg	machine.h	66;"	d
+NoException	machine.h	/^enum ExceptionType { NoException,           \/\/ Everything ok!$/;"	e	enum:ExceptionType
+NumExceptionTypes	machine.h	/^		     NumExceptionTypes$/;"	e	enum:ExceptionType
+NumGPRegs	machine.h	62;"	d
+NumPhysPages	machine.h	35;"	d
+NumSectors	disk.h	52;"	d
+NumTotalRegs	machine.h	72;"	d
+NumTracks	disk.h	51;"	d
+OP_ADD	mipssim.h	25;"	d
+OP_ADDI	mipssim.h	26;"	d
+OP_ADDIU	mipssim.h	27;"	d
+OP_ADDU	mipssim.h	28;"	d
+OP_AND	mipssim.h	29;"	d
+OP_ANDI	mipssim.h	30;"	d
+OP_BEQ	mipssim.h	31;"	d
+OP_BGEZ	mipssim.h	32;"	d
+OP_BGEZAL	mipssim.h	33;"	d
+OP_BGTZ	mipssim.h	34;"	d
+OP_BLEZ	mipssim.h	35;"	d
+OP_BLTZ	mipssim.h	36;"	d
+OP_BLTZAL	mipssim.h	37;"	d
+OP_BNE	mipssim.h	38;"	d
+OP_DIV	mipssim.h	40;"	d
+OP_DIVU	mipssim.h	41;"	d
+OP_J	mipssim.h	42;"	d
+OP_JAL	mipssim.h	43;"	d
+OP_JALR	mipssim.h	44;"	d
+OP_JR	mipssim.h	45;"	d
+OP_LB	mipssim.h	46;"	d
+OP_LBU	mipssim.h	47;"	d
+OP_LH	mipssim.h	48;"	d
+OP_LHU	mipssim.h	49;"	d
+OP_LUI	mipssim.h	50;"	d
+OP_LW	mipssim.h	51;"	d
+OP_LWL	mipssim.h	52;"	d
+OP_LWR	mipssim.h	53;"	d
+OP_MFHI	mipssim.h	55;"	d
+OP_MFLO	mipssim.h	56;"	d
+OP_MTHI	mipssim.h	58;"	d
+OP_MTLO	mipssim.h	59;"	d
+OP_MULT	mipssim.h	60;"	d
+OP_MULTU	mipssim.h	61;"	d
+OP_NOR	mipssim.h	62;"	d
+OP_OR	mipssim.h	63;"	d
+OP_ORI	mipssim.h	64;"	d
+OP_RES	mipssim.h	87;"	d
+OP_RFE	mipssim.h	65;"	d
+OP_SB	mipssim.h	66;"	d
+OP_SH	mipssim.h	67;"	d
+OP_SLL	mipssim.h	68;"	d
+OP_SLLV	mipssim.h	69;"	d
+OP_SLT	mipssim.h	70;"	d
+OP_SLTI	mipssim.h	71;"	d
+OP_SLTIU	mipssim.h	72;"	d
+OP_SLTU	mipssim.h	73;"	d
+OP_SRA	mipssim.h	74;"	d
+OP_SRAV	mipssim.h	75;"	d
+OP_SRL	mipssim.h	76;"	d
+OP_SRLV	mipssim.h	77;"	d
+OP_SUB	mipssim.h	78;"	d
+OP_SUBU	mipssim.h	79;"	d
+OP_SW	mipssim.h	80;"	d
+OP_SWL	mipssim.h	81;"	d
+OP_SWR	mipssim.h	82;"	d
+OP_SYSCALL	mipssim.h	85;"	d
+OP_UNIMP	mipssim.h	86;"	d
+OP_XOR	mipssim.h	83;"	d
+OP_XORI	mipssim.h	84;"	d
+OneInstruction	mipssim.cc	/^Machine::OneInstruction(Instruction *instr)$/;"	f	class:Machine
+OneTick	interrupt.cc	/^Interrupt::OneTick()$/;"	f	class:Interrupt
+OpInfo	mipssim.h	/^struct OpInfo {$/;"	s
+OpString	mipssim.h	/^struct OpString {$/;"	s
+OpenForReadWrite	sysdep.cc	/^OpenForReadWrite(char *name, bool crashOnError)$/;"	f
+OpenForWrite	sysdep.cc	/^OpenForWrite(char *name)$/;"	f
+OpenSocket	sysdep.cc	/^OpenSocket()$/;"	f
+OverflowException	machine.h	/^		     OverflowException,     \/\/ Integer overflow in add or sub.$/;"	e	enum:ExceptionType
+PCReg	machine.h	65;"	d
+PacketHeader	network.h	/^class PacketHeader {$/;"	c
+PageFaultException	machine.h	/^		     PageFaultException,    \/\/ No valid translation found$/;"	e	enum:ExceptionType
+PageSize	machine.h	31;"	d
+PendingInterrupt	interrupt.cc	/^PendingInterrupt::PendingInterrupt(VoidFunctionPtr func, int param, int time, $/;"	f	class:PendingInterrupt
+PendingInterrupt	interrupt.h	/^class PendingInterrupt {$/;"	c
+PollFile	sysdep.cc	/^PollFile(int fd)$/;"	f
+PollSocket	sysdep.cc	/^PollSocket(int sockID)$/;"	f
+PrevPCReg	machine.h	67;"	d
+Print	stats.cc	/^Statistics::Print()$/;"	f	class:Statistics
+PrintPending	interrupt.cc	/^PrintPending(int arg)$/;"	f	file:
+PrintSector	disk.cc	/^PrintSector (bool writing, int sector, char *data)$/;"	f	file:
+PutChar	console.cc	/^Console::PutChar(char ch)$/;"	f	class:Console
+R31	mipssim.h	97;"	d
+RD	mipssim.h	/^enum RegType { NONE, RS, RT, RD, EXTRA }; $/;"	e	enum:RegType
+RFMT	mipssim.h	110;"	d
+RS	mipssim.h	/^enum RegType { NONE, RS, RT, RD, EXTRA }; $/;"	e	enum:RegType
+RT	mipssim.h	/^enum RegType { NONE, RS, RT, RD, EXTRA }; $/;"	e	enum:RegType
+RaiseException	machine.cc	/^Machine::RaiseException(ExceptionType which, int badVAddr)$/;"	f	class:Machine
+Random	sysdep.cc	/^Random()$/;"	f
+RandomInit	sysdep.cc	/^RandomInit(unsigned seed)$/;"	f
+Read	sysdep.cc	/^Read(int fd, char *buffer, int nBytes)$/;"	f
+ReadFromSocket	sysdep.cc	/^ReadFromSocket(int sockID, char *buffer, int packetSize)$/;"	f
+ReadMem	translate.cc	/^Machine::ReadMem(int addr, int size, int *value)$/;"	f	class:Machine
+ReadOnlyException	machine.h	/^		     ReadOnlyException,     \/\/ Write attempted to page marked $/;"	e	enum:ExceptionType
+ReadPartial	sysdep.cc	/^ReadPartial(int fd, char *buffer, int nBytes)$/;"	f
+ReadRegister	machine.cc	/^int Machine::ReadRegister(int num)$/;"	f	class:Machine
+ReadRequest	disk.cc	/^Disk::ReadRequest(int sectorNumber, char* data)$/;"	f	class:Disk
+Receive	network.cc	/^Network::Receive(char* data)$/;"	f	class:Network
+RegType	mipssim.h	/^enum RegType { NONE, RS, RT, RD, EXTRA }; $/;"	g
+RetAddrReg	machine.h	61;"	d
+RotationTime	stats.h	54;"	d
+Run	mipssim.cc	/^Machine::Run()$/;"	f	class:Machine
+SIGN_BIT	mipssim.h	96;"	d
+SPECIAL	mipssim.h	105;"	d
+STATS_H	stats.h	12;"	d
+SYSDEP_H	sysdep.h	12;"	d
+Schedule	interrupt.cc	/^Interrupt::Schedule(VoidFunctionPtr handler, int arg, int fromNow, IntType type)$/;"	f	class:Interrupt
+SectorSize	disk.h	49;"	d
+SectorsPerTrack	disk.h	50;"	d
+SeekTime	stats.h	55;"	d
+Send	network.cc	/^Network::Send(PacketHeader hdr, char* data)$/;"	f	class:Network
+SendDone	network.cc	/^Network::SendDone()$/;"	f	class:Network
+SendToSocket	sysdep.cc	/^SendToSocket(int sockID, char *buffer, int packetSize, char *toName)$/;"	f
+SetLevel	interrupt.cc	/^Interrupt::SetLevel(IntStatus now)$/;"	f	class:Interrupt
+ShortToHost	translate.cc	/^ShortToHost(unsigned short shortword) {$/;"	f
+ShortToMachine	translate.cc	/^ShortToMachine(unsigned short shortword) { return ShortToHost(shortword); }$/;"	f
+StackReg	machine.h	60;"	d
+Statistics	stats.cc	/^Statistics::Statistics()$/;"	f	class:Statistics
+Statistics	stats.h	/^class Statistics {$/;"	c
+SyscallException	machine.h	/^		     SyscallException,      \/\/ A program executed a system call.$/;"	e	enum:ExceptionType
+SystemMode	interrupt.h	/^enum MachineStatus {IdleMode, SystemMode, UserMode};$/;"	e	enum:MachineStatus
+SystemTick	stats.h	53;"	d
+TIMER_H	timer.h	21;"	d
+TLBSize	machine.h	37;"	d
+TLB_H	translate.h	19;"	d
+Tell	sysdep.cc	/^Tell(int fd)$/;"	f
+TimeOfNextInterrupt	timer.cc	/^Timer::TimeOfNextInterrupt() $/;"	f	class:Timer
+TimeToSeek	disk.cc	/^Disk::TimeToSeek(int newSector, int *rotation) $/;"	f	class:Disk
+Timer	timer.cc	/^Timer::Timer(VoidFunctionPtr timerHandler, int callArg, bool doRandom)$/;"	f	class:Timer
+Timer	timer.h	/^class Timer {$/;"	c
+TimerExpired	timer.cc	/^Timer::TimerExpired() $/;"	f	class:Timer
+TimerHandler	timer.cc	/^static void TimerHandler(int arg)$/;"	f	file:
+TimerInt	interrupt.h	/^enum IntType { TimerInt, DiskInt, ConsoleWriteInt, ConsoleReadInt, $/;"	e	enum:IntType
+TimerTicks	stats.h	58;"	d
+Translate	translate.cc	/^Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)$/;"	f	class:Machine
+TranslationEntry	translate.h	/^class TranslationEntry {$/;"	c
+TypeToReg	mipssim.cc	/^TypeToReg(RegType reg, Instruction *instr)$/;"	f	file:
+Unlink	sysdep.cc	/^Unlink(char *name)$/;"	f
+UpdateLast	disk.cc	/^Disk::UpdateLast(int newSector)$/;"	f	class:Disk
+UserMode	interrupt.h	/^enum MachineStatus {IdleMode, SystemMode, UserMode};$/;"	e	enum:MachineStatus
+UserTick	stats.h	52;"	d
+WordToHost	translate.cc	/^WordToHost(unsigned int word) {$/;"	f
+WordToMachine	translate.cc	/^WordToMachine(unsigned int word) { return WordToHost(word); }$/;"	f
+WriteDone	console.cc	/^Console::WriteDone()$/;"	f	class:Console
+WriteFile	sysdep.cc	/^WriteFile(int fd, char *buffer, int nBytes)$/;"	f
+WriteMem	translate.cc	/^Machine::WriteMem(int addr, int size, int value)$/;"	f	class:Machine
+WriteRegister	machine.cc	/^void Machine::WriteRegister(int num, int value)$/;"	f	class:Machine
+WriteRequest	disk.cc	/^Disk::WriteRequest(int sectorNumber, char* data)$/;"	f	class:Disk
+YieldOnReturn	interrupt.cc	/^Interrupt::YieldOnReturn()$/;"	f	class:Interrupt
+active	disk.h	/^    bool active;     			\/\/ Is a disk operation in progress?$/;"	m	class:Disk
+arg	interrupt.h	/^    int arg;                    \/\/ The argument to the function.$/;"	m	class:PendingInterrupt
+arg	timer.h	/^    int arg;			\/\/ argument to pass to interrupt handler$/;"	m	class:Timer
+args	mipssim.h	/^    RegType args[3];$/;"	m	struct:OpString
+bufferInit	disk.h	/^    int bufferInit;			\/\/ When the track buffer started $/;"	m	class:Disk
+chanceToWork	network.h	/^    double chanceToWork;	\/\/ Likelihood packet will be dropped$/;"	m	class:Network
+dirty	translate.h	/^    bool dirty;         \/\/ This bit is set by the hardware every time the$/;"	m	class:TranslationEntry
+exceptionNames	machine.cc	/^static char* exceptionNames[] = { "no exception", "syscall", $/;"	v	file:
+extra	machine.h	/^    int extra;       \/\/ Immediate or target or shamt field or offset.$/;"	m	class:Instruction
+fileno	disk.h	/^    int fileno;				\/\/ UNIX file number for simulated disk $/;"	m	class:Disk
+format	mipssim.h	/^    int format;		\/* Format type (IFMT or JFMT or RFMT) *\/$/;"	m	struct:OpInfo
+from	network.h	/^    NetworkAddress from;	\/\/ source machine ID$/;"	m	class:PacketHeader
+getLevel	interrupt.h	/^    IntStatus getLevel() {return level;}\/\/ Return whether interrupts$/;"	f	class:Interrupt
+getStatus	interrupt.h	/^    MachineStatus getStatus() { return status; } \/\/ idle, kernel, user$/;"	f	class:Interrupt
+handler	disk.h	/^    VoidFunctionPtr handler;		\/\/ Interrupt handler, to be invoked $/;"	m	class:Disk
+handler	interrupt.h	/^    VoidFunctionPtr handler;    \/\/ The function (in the hardware device$/;"	m	class:PendingInterrupt
+handler	timer.h	/^    VoidFunctionPtr handler;	\/\/ timer interrupt handler $/;"	m	class:Timer
+handlerArg	console.h	/^    int handlerArg;			\/\/ argument to be passed to the $/;"	m	class:Console
+handlerArg	disk.h	/^    int handlerArg;			\/\/ Argument to interrupt handler $/;"	m	class:Disk
+handlerArg	network.h	/^    int handlerArg;		\/\/ Argument to be passed to interrupt handler$/;"	m	class:Network
+ident	network.h	/^    NetworkAddress ident;	\/\/ This machine's network address$/;"	m	class:Network
+idleTicks	stats.h	/^    int idleTicks;       	\/\/ Time spent idle (no threads to run)$/;"	m	class:Statistics
+inHandler	interrupt.h	/^    bool inHandler;		\/\/ TRUE if we are running an interrupt handler$/;"	m	class:Interrupt
+inHdr	network.h	/^    PacketHeader inHdr;		\/\/ Information about arrived packet$/;"	m	class:Network
+inbox	network.h	/^    char inbox[MaxPacketSize];  \/\/ Data for arrived packet$/;"	m	class:Network
+incoming	console.h	/^    char incoming;    			\/\/ Contains the character to be read,$/;"	m	class:Console
+intLevelNames	interrupt.cc	/^static char *intLevelNames[] = { "off", "on"};$/;"	v	file:
+intTypeNames	interrupt.cc	/^static char *intTypeNames[] = { "timer", "disk", "console write", $/;"	v	file:
+lastSector	disk.h	/^    int lastSector;			\/\/ The previous disk request $/;"	m	class:Disk
+length	network.h	/^    unsigned length;	 	\/\/ bytes of packet data, excluding the $/;"	m	class:PacketHeader
+level	interrupt.h	/^    IntStatus level;		\/\/ are interrupts enabled or disabled?$/;"	m	class:Interrupt
+mainMemory	machine.h	/^    char *mainMemory;		\/\/ physical memory to store user program,$/;"	m	class:Machine
+numConsoleCharsRead	stats.h	/^    int numConsoleCharsRead;	\/\/ number of characters read from the keyboard$/;"	m	class:Statistics
+numConsoleCharsWritten	stats.h	/^    int numConsoleCharsWritten; \/\/ number of characters written to the display$/;"	m	class:Statistics
+numDiskReads	stats.h	/^    int numDiskReads;		\/\/ number of disk read requests$/;"	m	class:Statistics
+numDiskWrites	stats.h	/^    int numDiskWrites;		\/\/ number of disk write requests$/;"	m	class:Statistics
+numPacketsRecvd	stats.h	/^    int numPacketsRecvd;	\/\/ number of packets received over the network$/;"	m	class:Statistics
+numPacketsSent	stats.h	/^    int numPacketsSent;		\/\/ number of packets sent over the network$/;"	m	class:Statistics
+numPageFaults	stats.h	/^    int numPageFaults;		\/\/ number of virtual memory page faults$/;"	m	class:Statistics
+opCode	machine.h	/^    char opCode;     \/\/ Type of instruction.  This is NOT the same as the$/;"	m	class:Instruction
+opCode	mipssim.h	/^    int opCode;		\/* Translated op code. *\/$/;"	m	struct:OpInfo
+opStrings	mipssim.h	/^static struct OpString opStrings[] = {$/;"	v	typeref:struct:OpString
+opTable	mipssim.h	/^static OpInfo opTable[] = {$/;"	v
+packetAvail	network.h	/^    bool packetAvail;		\/\/ Packet has arrived, can be pulled off of$/;"	m	class:Network
+pageTable	machine.h	/^    TranslationEntry *pageTable;$/;"	m	class:Machine
+pageTableSize	machine.h	/^    unsigned int pageTableSize;$/;"	m	class:Machine
+pending	interrupt.h	/^    List *pending;		\/\/ the list of interrupts scheduled$/;"	m	class:Interrupt
+physicalPage	translate.h	/^    int physicalPage;  	\/\/ The page number in real memory (relative to the$/;"	m	class:TranslationEntry
+putBusy	console.h	/^    bool putBusy;    			\/\/ Is a PutChar operation in progress?$/;"	m	class:Console
+randomize	timer.h	/^    bool randomize;		\/\/ set if we need to use a random timeout delay$/;"	m	class:Timer
+rd	machine.h	/^    char rs, rt, rd; \/\/ Three registers from instruction.$/;"	m	class:Instruction
+readFileNo	console.h	/^    int readFileNo;			\/\/ UNIX file emulating the keyboard $/;"	m	class:Console
+readHandler	console.h	/^    VoidFunctionPtr readHandler; 	\/\/ Interrupt handler to call when $/;"	m	class:Console
+readHandler	network.h	/^    VoidFunctionPtr readHandler;  \/\/ Interrupt handler, signalling packet has $/;"	m	class:Network
+readOnly	translate.h	/^    bool readOnly;	\/\/ If this bit is set, the user program is not allowed$/;"	m	class:TranslationEntry
+registers	machine.h	/^    int registers[NumTotalRegs]; \/\/ CPU registers, for executing user programs$/;"	m	class:Machine
+rs	machine.h	/^    char rs, rt, rd; \/\/ Three registers from instruction.$/;"	m	class:Instruction
+rt	machine.h	/^    char rs, rt, rd; \/\/ Three registers from instruction.$/;"	m	class:Instruction
+runUntilTime	machine.h	/^    int runUntilTime;		\/\/ drop back into the debugger when simulated$/;"	m	class:Machine
+sendBusy	network.h	/^    bool sendBusy;		\/\/ Packet is being sent.$/;"	m	class:Network
+setStatus	interrupt.h	/^    void setStatus(MachineStatus st) { status = st; }$/;"	f	class:Interrupt
+singleStep	machine.h	/^    bool singleStep;		\/\/ drop back into the debugger after each$/;"	m	class:Machine
+sock	network.h	/^    int sock;			\/\/ UNIX socket number for incoming packets$/;"	m	class:Network
+sockName	network.h	/^    char sockName[32];		\/\/ File name corresponding to UNIX socket$/;"	m	class:Network
+specialTable	mipssim.h	/^static int specialTable[] = {$/;"	v
+status	interrupt.h	/^    MachineStatus status;	\/\/ idle, kernel mode, user mode$/;"	m	class:Interrupt
+string	mipssim.h	/^    char *string;	\/\/ Printed version of instruction$/;"	m	struct:OpString
+systemTicks	stats.h	/^    int systemTicks;	 	\/\/ Time spent executing system code$/;"	m	class:Statistics
+tlb	machine.h	/^    TranslationEntry *tlb;		\/\/ this pointer should be considered $/;"	m	class:Machine
+to	network.h	/^    NetworkAddress to;		\/\/ Destination machine ID$/;"	m	class:PacketHeader
+totalTicks	stats.h	/^    int totalTicks;      	\/\/ Total time running Nachos$/;"	m	class:Statistics
+type	interrupt.h	/^    IntType type;		\/\/ for debugging$/;"	m	class:PendingInterrupt
+use	translate.h	/^    bool use;           \/\/ This bit is set by the hardware every time the$/;"	m	class:TranslationEntry
+userTicks	stats.h	/^    int userTicks;       	\/\/ Time spent executing user code$/;"	m	class:Statistics
+valid	translate.h	/^    bool valid;         \/\/ If this bit is set, the translation is ignored.$/;"	m	class:TranslationEntry
+value	machine.h	/^    unsigned int value; \/\/ binary representation of the instruction$/;"	m	class:Instruction
+virtualPage	translate.h	/^    int virtualPage;  	\/\/ The page number in virtual memory.$/;"	m	class:TranslationEntry
+when	interrupt.h	/^    int when;			\/\/ When the interrupt is supposed to fire$/;"	m	class:PendingInterrupt
+writeFileNo	console.h	/^    int writeFileNo;			\/\/ UNIX file emulating the display$/;"	m	class:Console
+writeHandler	console.h	/^    VoidFunctionPtr writeHandler; 	\/\/ Interrupt handler to call when $/;"	m	class:Console
+writeHandler	network.h	/^    VoidFunctionPtr writeHandler; \/\/ Interrupt handler, signalling next packet $/;"	m	class:Network
+yieldOnReturn	interrupt.h	/^    bool yieldOnReturn; 	\/\/ TRUE if we are to context switch$/;"	m	class:Interrupt
+~Console	console.cc	/^Console::~Console()$/;"	f	class:Console
+~Disk	disk.cc	/^Disk::~Disk()$/;"	f	class:Disk
+~Interrupt	interrupt.cc	/^Interrupt::~Interrupt()$/;"	f	class:Interrupt
+~Machine	machine.cc	/^Machine::~Machine()$/;"	f	class:Machine
+~Network	network.cc	/^Network::~Network()$/;"	f	class:Network
+~Timer	timer.h	/^    ~Timer() {}$/;"	f	class:Timer
