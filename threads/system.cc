@@ -7,7 +7,6 @@
 
 #include "copyright.h"
 #include "system.h"
-
 // This defines *all* of the global data structures used by Nachos.
 // These are all initialized and de-allocated by this file.
 
@@ -18,6 +17,8 @@ Interrupt *interrupt;			// interrupt status
 Statistics *stats;			// performance metrics
 Timer *timer;				// the hardware timer device,
 					// for invoking context switches
+
+TidManager *tidManager;// = TidManager();
 
 #ifdef FILESYS_NEEDED
 FileSystem  *fileSystem;
@@ -141,7 +142,12 @@ Initialize(int argc, char **argv)
     // We didn't explicitly allocate the current thread we are running in.
     // But if it ever tries to give up the CPU, we better have a Thread
     // object to save its state. 
-    currentThread = new Thread("main");		
+    tidManager = new TidManager();
+    currentThread = createThread("main");
+    if (currentThread == NULL){
+        return;
+    }
+    tidManager->addThread(currentThread);
     currentThread->setStatus(RUNNING);
 
     interrupt->Enable();
@@ -172,6 +178,7 @@ void
 Cleanup()
 {
     printf("\nCleaning up...\n");
+    delete tidManager;
 #ifdef NETWORK
     delete postOffice;
 #endif
@@ -195,3 +202,11 @@ Cleanup()
     Exit(0);
 }
 
+Thread* createThread(char* name){
+    Thread* t = new Thread(name);
+    int tid = tidManager->genId();
+    if (tid == -1)
+        return NULL;
+    t->setTid(tid);
+    return t;
+}

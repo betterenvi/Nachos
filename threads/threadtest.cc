@@ -29,8 +29,8 @@ SimpleThread(int which)
 {
     int num;
     
-    for (num = 0; num < 5; num++) {
-	printf("*** thread %d looped %d times\n", which, num);
+    for (num = 0; num < 3; num++) {
+	printf("*** thread %d(tid %d, uid %d) looped %d times\n", which, currentThread->getTid(), currentThread->getUid(), num);
         currentThread->Yield();
     }
 }
@@ -46,12 +46,27 @@ ThreadTest1()
 {
     DEBUG('t', "Entering ThreadTest1");
 
-    Thread *t = new Thread("forked thread");
-
+    //Thread *t = new Thread("forked thread");
+    Thread *t = createThread("forked thread");
+    if (t == NULL)
+        return;
     t->Fork(SimpleThread, 1);
     SimpleThread(0);
 }
 
+//Test TidManager
+void
+ThreadTest2ForTid(){
+    for (int i = 0; i < 3; ++i){
+        Thread *t = createThread("Tid");
+        if (t == NULL)
+            return;
+        tidManager->addThread(t);
+        t->Fork(SimpleThread, 0);
+    }
+    tidManager->ts();
+//    t->Fork(SimpleThread, 1);
+}
 //----------------------------------------------------------------------
 // ThreadTest
 // 	Invoke a test routine.
@@ -62,7 +77,8 @@ ThreadTest()
 {
     switch (testnum) {
     case 1:
-	ThreadTest1();
+//	ThreadTest1();
+    ThreadTest2ForTid();
 	break;
     default:
 	printf("No test specified.\n");

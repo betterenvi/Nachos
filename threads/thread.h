@@ -36,7 +36,8 @@
 
 #ifndef THREAD_H
 #define THREAD_H
-
+//#include <vector>
+#include <unistd.h>
 #include "copyright.h"
 #include "utility.h"
 
@@ -55,9 +56,11 @@
 // WATCH OUT IF THIS ISN'T BIG ENOUGH!!!!!
 #define StackSize	(4 * 1024)	// in words
 
-
+//using namespace std;
 // Thread state
 enum ThreadStatus { JUST_CREATED, RUNNING, READY, BLOCKED };
+//extern char ** nameOfStatus;//[4] = {"CREATE", "RUNNING", "READY", "BLOCKED"};
+//extern vector<char*> statusName;
 
 // external function, dummy routine whose sole job is to call Thread::Print
 extern void ThreadPrint(int arg);	 
@@ -99,9 +102,12 @@ class Thread {
     void CheckOverflow();   			// Check if thread has 
 						// overflowed its stack
     void setStatus(ThreadStatus st) { status = st; }
+    char* getStatus();//{return statusName[status];}
     char* getName() { return (name); }
     void Print() { printf("%s, ", name); }
-
+    void setTid(int tid_v) {tid = tid_v;}    
+    int getUid() { return uid; }
+    int getTid() {return tid;}
   private:
     // some of the private data for this class is listed above
     
@@ -110,7 +116,8 @@ class Thread {
 					// (If NULL, don't deallocate stack)
     ThreadStatus status;		// ready, running or blocked
     char* name;
-
+    int uid; 
+    int tid;
     void StackAllocate(VoidFunctionPtr func, int arg);
     					// Allocate a stack for thread.
 					// Used internally by Fork()

@@ -13,7 +13,7 @@
 // Copyright (c) 1992-1993 The Regents of the University of California.
 // All rights reserved.  See copyright.h for copyright notice and limitation 
 // of liability and disclaimer of warranty provisions.
-
+//#include<vector>
 #include "copyright.h"
 #include "thread.h"
 #include "switch.h"
@@ -32,6 +32,13 @@
 //	"threadName" is an arbitrary string, useful for debugging.
 //----------------------------------------------------------------------
 
+//char* nameOfStatus[4] = {"CREATE", "RUNNING", "READY", "BLOCKED"};
+//vector<char*> statusName("sa");
+//statusName.insert("CREATE");
+//statusName.insert("RUNNING");
+//statusName.insert("READY");
+//statusName.insert("BLOCKED");
+
 Thread::Thread(char* threadName)
 {
     name = threadName;
@@ -40,6 +47,7 @@ Thread::Thread(char* threadName)
     status = JUST_CREATED;
 #ifdef USER_PROGRAM
     space = NULL;
+    uid = getuid();
 #endif
 }
 
@@ -64,7 +72,20 @@ Thread::~Thread()
 	DeallocBoundedArray((char *) stack, StackSize * sizeof(int));
 }
 
+char* Thread::getStatus(){
+    switch(status){
+        case JUST_CREATED:
+            return "CREATED";
+        case RUNNING:
+            return "RUNNING";
+        case READY:
+            return "READY";
+        case BLOCKED:
+            return "BLOCKED";
+    }
+}
 //----------------------------------------------------------------------
+//
 // Thread::Fork
 // 	Invoke (*func)(arg), allowing caller and callee to execute 
 //	concurrently.
