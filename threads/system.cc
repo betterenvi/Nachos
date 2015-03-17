@@ -147,7 +147,6 @@ Initialize(int argc, char **argv)
     if (currentThread == NULL){
         return;
     }
-    tidManager->addThread(currentThread);
     currentThread->setStatus(RUNNING);
 
     interrupt->Enable();
@@ -208,5 +207,6 @@ Thread* createThread(char* name){
     if (tid == -1)
         return NULL;
     t->setTid(tid);
+    tidManager->addThread(t);
     return t;
 }
