@@ -84,7 +84,7 @@ class Thread {
     int machineState[MachineStateSize];  // all registers except for stackTop
 
   public:
-    Thread(char* debugName);		// initialize a Thread 
+    Thread(char* debugName, int priorityVal = 4);		// initialize a Thread 
     ~Thread(); 				// deallocate a Thread
 					// NOTE -- thread being deleted
 					// must not be running when delete 
@@ -108,6 +108,8 @@ class Thread {
     void setTid(int tid_v) {tid = tid_v;}    
     int getUid() { return uid; }
     int getTid() {return tid;}
+    void setPriority(int pri){priority = pri;}
+    int getPriority(){return priority;}
   private:
     // some of the private data for this class is listed above
     
@@ -118,6 +120,7 @@ class Thread {
     char* name;
     int uid; 
     int tid;
+    int priority;
     void StackAllocate(VoidFunctionPtr func, int arg);
     					// Allocate a stack for thread.
 					// Used internally by Fork()

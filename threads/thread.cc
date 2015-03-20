@@ -39,7 +39,7 @@
 //statusName.insert("READY");
 //statusName.insert("BLOCKED");
 
-Thread::Thread(char* threadName)
+Thread::Thread(char* threadName, int priorityVal = 4)
 {
     name = threadName;
     stackTop = NULL;
@@ -48,6 +48,7 @@ Thread::Thread(char* threadName)
 #ifdef USER_PROGRAM
     space = NULL;
     uid = getuid();
+    priority = priorityVal;
 #endif
 }
 

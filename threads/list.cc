@@ -87,6 +87,26 @@ List::Append(void *item)
     }
 }
 
+//CQY's method:
+//rank by priority
+void
+List::Insert(void *item){
+    Thread *t = (Thread*) item;
+    int pri = t->getPriority();
+    ListElement *element = new ListElement(t, pri);
+    if (IsEmpty()){
+        first = element;
+        last = element;
+    }else{
+        for (Thread *tmp = first; tmp != NULL;tmp = tmp->next;){
+            if (pri < tmp->getPriority()){
+                
+                element->next = tmp;
+            }
+        }
+
+    }
+}
 //----------------------------------------------------------------------
 // List::Prepend
 //      Put an "item" on the front of the list.
