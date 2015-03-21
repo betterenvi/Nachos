@@ -22,7 +22,7 @@ extern void Initialize(int argc, char **argv); 	// Initialization,
 						// called before anything else
 extern void Cleanup();				// Cleanup, called when
 						// Nachos is done.
-extern Thread* createThread(char* name);
+extern Thread* createThread(char* name, int priorityVal = 4);
 extern Thread *currentThread;			// the thread holding the CPU
 extern Thread *threadToBeDestroyed;  		// the thread that just finished
 extern Scheduler *scheduler;			// the ready list

@@ -70,6 +70,7 @@ Scheduler::ReadyToRun (Thread *thread)
 Thread *
 Scheduler::FindNextToRun ()
 {
+    Print();
     return (Thread *)readyList->Remove();
 }
 
@@ -144,4 +145,6 @@ Scheduler::Print()
 {
     printf("Ready list contents:\n");
     readyList->Mapcar((VoidFunctionPtr) ThreadPrint);
+    printf("\nReady list ends.\n");
 }
+

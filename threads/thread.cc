@@ -39,16 +39,19 @@
 //statusName.insert("READY");
 //statusName.insert("BLOCKED");
 
-Thread::Thread(char* threadName, int priorityVal = 4)
+Thread::Thread(char* threadName, int priorityVal)
 {
     name = threadName;
     stackTop = NULL;
     stack = NULL;
     status = JUST_CREATED;
-#ifdef USER_PROGRAM
-    space = NULL;
     uid = getuid();
     priority = priorityVal;
+#ifdef USER_PROGRAM
+    space = NULL;
+//   uid = getuid();
+//    priority = priorityVal;
+//    printf("priorityVal:%d\n", priority);
 #endif
 }
 
@@ -202,11 +205,16 @@ Thread::Yield ()
     ASSERT(this == currentThread);
     
     DEBUG('t', "Yielding thread \"%s\"\n", getName());
-    
     nextThread = scheduler->FindNextToRun();
     if (nextThread != NULL) {
-	scheduler->ReadyToRun(this);
-	scheduler->Run(nextThread);
+        if (nextThread->getPriority() <= currentThread->getPriority()){
+            scheduler->ReadyToRun(this);
+            scheduler->Run(nextThread);
+        }else{
+            scheduler->ReadyToRun(nextThread);
+        }
+//	scheduler->ReadyToRun(this);
+//	scheduler->Run(nextThread);
     }
     (void) interrupt->SetLevel(oldLevel);
 }

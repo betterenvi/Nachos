@@ -15,6 +15,7 @@
 
 #include "copyright.h"
 #include "utility.h"
+#include "thread.h"
 
 // The following class defines a "list element" -- which is
 // used to keep track of one item on a list.  It is equivalent to a
@@ -47,6 +48,7 @@ class List {
 
     void Prepend(void *item); 	// Put item at the beginning of the list
     void Append(void *item); 	// Put item at the end of the list
+    void Insert(void *item);    // CQY's method: rank by priority
     void *Remove(); 	 	// Take item off the front of the list
 
     void Mapcar(VoidFunctionPtr func);	// Apply "func" to every element 

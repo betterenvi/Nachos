@@ -30,7 +30,7 @@ SimpleThread(int which)
     int num;
     
     for (num = 0; num < 3; num++) {
-	printf("*** thread %d(tid %d, uid %d) looped %d times\n", which, currentThread->getTid(), currentThread->getUid(), num);
+	printf("*** thread %d(tid %d, uid %d, pri %d) looped %d times\n", which, currentThread->getTid(), currentThread->getUid(), currentThread->getPriority(), num);
         currentThread->Yield();
     }
 }
@@ -71,7 +71,7 @@ ThreadTest2ForMaxTid(){
     for (int i = 0; i < 130; ++i){
         Thread *t = createThread("Tid");
         if (t == NULL)
-            return;
+            continue;
         t->Fork(SimpleThread2ForMaxTid, t->getTid());
     }
     //tidManager->ts();
@@ -81,13 +81,13 @@ ThreadTest2ForMaxTid(){
 void
 ThreadTest3ForTs()
 {
-    DEBUG('t', "Entering ThreadTest1");
+    DEBUG('t', "Entering ThreadTest3ForTs");
 
     //Thread *t = new Thread("TS");
     for (int i = 0; i < 4; i++){
         Thread *t = createThread("TS");
         if (t == NULL)
-            return;
+            continue;
         t->Fork(SimpleThread, t->getTid());
     }
     tidManager->ts();
@@ -96,6 +96,17 @@ ThreadTest3ForTs()
 // ThreadTest
 // 	Invoke a test routine.
 //----------------------------------------------------------------------
+void
+ThreadTest23(){
+    DEBUG('t', "Entering ThreadTest23");
+    for (int i = 0; i < 3; ++i){
+        Thread *t = createThread("T23", 4 - i % 5);
+        if (t == NULL)
+            continue;
+        t->Fork(SimpleThread, t->getTid());
+    }
+    tidManager->ts();
+}
 
 void
 ThreadTest()
@@ -109,6 +120,9 @@ ThreadTest()
         break;
     case 3:
         ThreadTest3ForTs();
+        break;
+    case 23:
+        ThreadTest23();
         break;
     default:
 	    printf("No test specified.\n");

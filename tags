@@ -299,6 +299,7 @@ InitialPCState	threads/switch.h	144;"	d
 InitialPCState	threads/switch.h	57;"	d
 InitialPCState	threads/switch.h	87;"	d
 Initialize	threads/system.cc	/^Initialize(int argc, char **argv)$/;"	f
+Insert	threads/list.cc	/^List::Insert(void *item){$/;"	f	class:List
 Instruction	machine/machine.h	/^class Instruction {$/;"	c
 IntOff	machine/interrupt.h	/^enum IntStatus { IntOff, IntOn };$/;"	e	enum:IntStatus
 IntOn	machine/interrupt.h	/^enum IntStatus { IntOff, IntOn };$/;"	e	enum:IntStatus
@@ -352,12 +353,13 @@ MAXRELOCS	bin/out.c	31;"	d	file:
 MAXSCNS	bin/out.c	43;"	d	file:
 MAXSSPACE	bin/out.c	45;"	d	file:
 MAXSYMS	bin/out.c	44;"	d	file:
+MAX_NUM_THREAD	threads/tid.h	15;"	d
 MEMSIZE	bin/int.h	11;"	d
 MIPSELMAGIC	bin/coff.h	15;"	d
 MIPSSIM_H	machine/mipssim.h	11;"	d
 Machine	machine/machine.cc	/^Machine::Machine(bool debug)$/;"	f	class:Machine
 Machine	machine/machine.h	/^class Machine {$/;"	c
-MachineStateSize	threads/thread.h	51;"	d
+MachineStateSize	threads/thread.h	52;"	d
 MachineStatus	machine/interrupt.h	/^enum MachineStatus {IdleMode, SystemMode, UserMode};$/;"	g
 MagicNumber	machine/disk.cc	23;"	d	file:
 MagicSize	machine/disk.cc	24;"	d	file:
@@ -519,7 +521,7 @@ Print	filesys/filesys.cc	/^FileSystem::Print()$/;"	f	class:FileSystem
 Print	filesys/fstest.cc	/^Print(char *name)$/;"	f
 Print	machine/stats.cc	/^Statistics::Print()$/;"	f	class:Statistics
 Print	threads/scheduler.cc	/^Scheduler::Print()$/;"	f	class:Scheduler
-Print	threads/thread.h	/^    void Print() { printf("%s, ", name); }$/;"	f	class:Thread
+Print	threads/thread.h	/^    void Print() { printf("[%d, %d]", tid, priority); }$/;"	f	class:Thread
 Print	userprog/bitmap.cc	/^BitMap::Print() $/;"	f	class:BitMap
 PrintHeader	network/post.cc	/^PrintHeader(PacketHeader pktHdr, MailHeader mailHdr)$/;"	f	file:
 PrintPending	machine/interrupt.cc	/^PrintPending(int arg)$/;"	f	file:
@@ -663,6 +665,7 @@ ShortToHost	machine/translate.cc	/^ShortToHost(unsigned short shortword) {$/;"	f
 ShortToMachine	machine/translate.cc	/^ShortToMachine(unsigned short shortword) { return ShortToHost(shortword); }$/;"	f
 Signal	threads/synch.cc	/^void Condition::Signal(Lock* conditionLock) { }$/;"	f	class:Condition
 SimpleThread	threads/threadtest.cc	/^SimpleThread(int which)$/;"	f
+SimpleThread2ForMaxTid	threads/threadtest.cc	/^SimpleThread2ForMaxTid(int which)$/;"	f
 Sleep	threads/thread.cc	/^Thread::Sleep ()$/;"	f	class:Thread
 SortedInsert	threads/list.cc	/^List::SortedInsert(void *item, int sortKey)$/;"	f	class:List
 SortedRemove	threads/list.cc	/^List::SortedRemove(int *keyPtr)$/;"	f	class:List
@@ -670,7 +673,7 @@ SpaceId	userprog/syscall.h	/^typedef int SpaceId;	$/;"	t
 StackAllocate	threads/thread.cc	/^Thread::StackAllocate (VoidFunctionPtr func, int arg)$/;"	f	class:Thread
 StackReg	machine/machine.h	60;"	d
 StackSize	bin/coff2flat.c	31;"	d	file:
-StackSize	threads/thread.h	56;"	d
+StackSize	threads/thread.h	57;"	d
 StartProcess	userprog/progtest.cc	/^StartProcess(char *filename)$/;"	f
 StartupPC	threads/switch.c	/^	call	StartupPC,0$/;"	v
 StartupPC	threads/switch.h	119;"	d
@@ -700,7 +703,7 @@ TRACE	bin/main.c	/^int TRACE, Traptrace, Regtrace;$/;"	v
 TRUE	threads/bool.h	5;"	d
 Tell	machine/sysdep.cc	/^Tell(int fd)$/;"	f
 Test	userprog/bitmap.cc	/^BitMap::Test(int which)$/;"	f	class:BitMap
-Thread	threads/thread.cc	/^Thread::Thread(char* threadName)$/;"	f	class:Thread
+Thread	threads/thread.cc	/^Thread::Thread(char* threadName, int priorityVal)$/;"	f	class:Thread
 Thread	threads/thread.h	/^class Thread {$/;"	c
 ThreadFinish	threads/thread.cc	/^static void ThreadFinish()    { currentThread->Finish(); }$/;"	f	file:
 ThreadPrint	threads/thread.cc	/^void ThreadPrint(int arg){ Thread *t = (Thread *)arg; t->Print(); }$/;"	f
@@ -715,6 +718,11 @@ ThreadRoot	vm/swtch.s	/^ThreadRoot:$/;"	l
 ThreadStatus	threads/thread.h	/^enum ThreadStatus { JUST_CREATED, RUNNING, READY, BLOCKED };$/;"	g
 ThreadTest	threads/threadtest.cc	/^ThreadTest()$/;"	f
 ThreadTest1	threads/threadtest.cc	/^ThreadTest1()$/;"	f
+ThreadTest23	threads/threadtest.cc	/^ThreadTest23(){$/;"	f
+ThreadTest2ForMaxTid	threads/threadtest.cc	/^ThreadTest2ForMaxTid(){$/;"	f
+ThreadTest3ForTs	threads/threadtest.cc	/^ThreadTest3ForTs()$/;"	f
+TidManager	threads/tid.cc	/^TidManager::TidManager(){$/;"	f	class:TidManager
+TidManager	threads/tid.h	/^class TidManager{$/;"	c
 TimeOfNextInterrupt	machine/timer.cc	/^Timer::TimeOfNextInterrupt() $/;"	f	class:Timer
 TimeToSeek	machine/disk.cc	/^Disk::TimeToSeek(int newSector, int *rotation) $/;"	f	class:Disk
 Timer	machine/timer.cc	/^Timer::Timer(VoidFunctionPtr timerHandler, int callArg, bool doRandom)$/;"	f	class:Timer
@@ -787,6 +795,7 @@ _ESI	threads/switch.h	137;"	d
 _ESP	threads/switch.h	131;"	d
 _PC	threads/switch.h	139;"	d
 _STDARG_H	threads/stdarg.h	9;"	d
+_TID_H	threads/tid.h	8;"	d
 _VA_LIST	threads/stdarg.h	144;"	d
 _VA_LIST	threads/stdarg.h	160;"	d
 _VA_LIST	threads/stdarg.h	189;"	d
@@ -812,7 +821,9 @@ a0	threads/switch.s	/^#define a0      $4      \/* argument registers *\/$/;"	d
 a1	threads/switch.c	47;"	d	file:
 a1	threads/switch.s	/^#define a1      $5$/;"	d
 active	machine/disk.h	/^    bool active;     			\/\/ Is a disk operation in progress?$/;"	m	class:Disk
+addThread	threads/tid.cc	/^void TidManager::addThread(Thread * t){$/;"	f	class:TidManager
 addtable	bin/execute.c	/^int addtable[33][33];$/;"	v
+allThreads	threads/tid.h	/^        map<int, Thread*> allThreads;$/;"	m	class:TidManager
 amark	bin/int.h	15;"	d
 aouthdr	bin/coff.h	/^typedef struct aouthdr {$/;"	s
 aouthdr	bin/out.c	/^struct aouthdr aouthdr;$/;"	v	typeref:struct:aouthdr
@@ -839,6 +850,7 @@ console	userprog/progtest.cc	/^static Console *console;$/;"	v	file:
 copyright	threads/copyright.h	/^static char *copyright = "Copyright (c) 1992-1993 The Regents of the University of California.  All rights reserved.";$/;"	v
 counter	threads/switch.c	/^	stw  %rp, PC(%arg0)	;save program counter$/;"	v
 cprmask	bin/coff.h	/^        long    cprmask[4];     \/* co-processor register masks          *\/$/;"	m	struct:aouthdr
+createThread	threads/system.cc	/^Thread* createThread(char* name, int priorityVal){$/;"	f
 cstore	bin/int.h	29;"	d
 currentOffset	filesys/openfile.h	/^    int currentOffset;$/;"	m	class:OpenFile
 currentThread	threads/system.cc	/^Thread *currentThread;			\/\/ the thread we are running now$/;"	v
@@ -903,12 +915,17 @@ fp	threads/switch.s	/^#define fp      $30     \/* frame pointer *\/$/;"	d
 freeMapFile	filesys/filesys.h	/^   OpenFile* freeMapFile;		\/\/ Bit map of free disk blocks,$/;"	m	class:FileSystem
 from	machine/network.h	/^    NetworkAddress from;	\/\/ source machine ID$/;"	m	class:PacketHeader
 from	network/post.h	/^    MailBoxAddress from;	\/\/ Mail box to reply to$/;"	m	class:MailHeader
+genId	threads/tid.cc	/^int TidManager::genId(){$/;"	f	class:TidManager
 getLevel	machine/interrupt.h	/^    IntStatus getLevel() {return level;}\/\/ Return whether interrupts$/;"	f	class:Interrupt
 getName	threads/synch.h	/^    char* getName() { return (name); }$/;"	f	class:Condition
 getName	threads/synch.h	/^    char* getName() { return name; }	\/\/ debugging assist$/;"	f	class:Lock
 getName	threads/synch.h	/^    char* getName() { return name;}			\/\/ debugging assist$/;"	f	class:Semaphore
 getName	threads/thread.h	/^    char* getName() { return (name); }$/;"	f	class:Thread
+getPriority	threads/thread.h	/^    int getPriority(){return priority;}$/;"	f	class:Thread
 getStatus	machine/interrupt.h	/^    MachineStatus getStatus() { return status; } \/\/ idle, kernel, user$/;"	f	class:Interrupt
+getStatus	threads/thread.cc	/^char* Thread::getStatus(){$/;"	f	class:Thread
+getTid	threads/thread.h	/^    int getTid() {return tid;}$/;"	f	class:Thread
+getUid	threads/thread.h	/^    int getUid() { return uid; }$/;"	f	class:Thread
 gp_value	bin/coff.h	/^        long    gp_value;       \/* the gp value used for this object    *\/$/;"	m	struct:aouthdr
 gprmask	bin/coff.h	/^        long    gprmask;        \/* general purpose register mask        *\/$/;"	m	struct:aouthdr
 handler	machine/disk.h	/^    VoidFunctionPtr handler;		\/\/ Interrupt handler, to be invoked $/;"	m	class:Disk
@@ -933,6 +950,7 @@ i3	threads/switch.c	/^	st	%i3, [%i0+I3]$/;"	v
 i4	threads/switch.c	/^	st	%i4, [%i0+I4]$/;"	v
 i5	threads/switch.c	/^	st	%i5, [%i0+I5]$/;"	v
 i7	threads/switch.c	/^	st	%i7, [%i0+I7]$/;"	v
+idPool	threads/tid.h	/^        set<int> idPool;$/;"	m	class:TidManager
 ident	machine/network.h	/^    NetworkAddress ident;	\/\/ This machine's network address$/;"	m	class:Network
 idleTicks	machine/stats.h	/^    int idleTicks;       	\/\/ Time spent idle (no threads to run)$/;"	m	class:Statistics
 ifetch	bin/int.h	18;"	d
@@ -1060,6 +1078,8 @@ print_section	bin/out.c	/^print_section(i)$/;"	f
 printf	bin/out.c	190;"	d	file:
 printhist	bin/execute.c	/^printhist()$/;"	f
 printstatistics	bin/execute.c	/^printstatistics()$/;"	f
+priority	threads/thread.h	/^    int priority;$/;"	m	class:Thread
+putBack	threads/tid.cc	/^int TidManager::putBack(int tid){$/;"	f	class:TidManager
 putBusy	machine/console.h	/^    bool putBusy;    			\/\/ Is a PutChar operation in progress?$/;"	m	class:Console
 queue	threads/synch.h	/^    List *queue;       \/\/ threads waiting in P() for the value to be > 0$/;"	m	class:Semaphore
 r10	threads/switch.c	/^	stw  %r10, S7(%arg0)$/;"	v
@@ -1149,8 +1169,10 @@ self	bin/main.c	/^static char self[256];			\/* name of invoking program *\/$/;"	
 semaphore	filesys/synchdisk.h	/^    Semaphore *semaphore; 		\/\/ To synchronize requesting thread $/;"	m	class:SynchDisk
 sendBusy	machine/network.h	/^    bool sendBusy;		\/\/ Packet is being sent.$/;"	m	class:Network
 sendLock	network/post.h	/^    Lock *sendLock;		\/\/ Only one outgoing message at a time$/;"	m	class:PostOffice
+setPriority	threads/thread.h	/^    void setPriority(int pri){priority = pri;}$/;"	f	class:Thread
 setStatus	machine/interrupt.h	/^    void setStatus(MachineStatus st) { status = st; }$/;"	f	class:Interrupt
 setStatus	threads/thread.h	/^    void setStatus(ThreadStatus st) { status = st; }$/;"	f	class:Thread
+setTid	threads/thread.h	/^    void setTid(int tid_v) {tid = tid_v;}    $/;"	f	class:Thread
 sfetch	bin/int.h	20;"	d
 shamt	bin/instr.h	14;"	d
 singleStep	machine/machine.h	/^    bool singleStep;		\/\/ drop back into the debugger after each$/;"	m	class:Machine
@@ -1190,6 +1212,8 @@ text_start	bin/coff.h	/^        long    text_start;     \/* base of text used fo
 texthead	bin/disasm.c	/^static SCNHDR texthead, rdatahead, datahead, sdatahead, sbsshead, bsshead;$/;"	v	file:
 texthead	bin/main.c	/^static SCNHDR texthead, rdatahead, datahead, sdatahead, sbsshead, bsshead;$/;"	v	file:
 threadToBeDestroyed	threads/system.cc	/^Thread *threadToBeDestroyed;  		\/\/ the thread that just finished$/;"	v
+tid	threads/thread.h	/^    int tid;$/;"	m	class:Thread
+tidManager	threads/system.cc	/^TidManager *tidManager;\/\/ = TidManager();$/;"	v
 timer	threads/system.cc	/^Timer *timer;				\/\/ the hardware timer device,$/;"	v
 tlb	machine/machine.h	/^    TranslationEntry *tlb;		\/\/ this pointer should be considered $/;"	m	class:Machine
 to	machine/network.h	/^    NetworkAddress to;		\/\/ Destination machine ID$/;"	m	class:PacketHeader
@@ -1197,12 +1221,14 @@ to	network/post.h	/^    MailBoxAddress to;		\/\/ Destination mail box$/;"	m	clas
 top4	bin/instr.h	18;"	d
 totalTicks	machine/stats.h	/^    int totalTicks;      	\/\/ Total time running Nachos$/;"	m	class:Statistics
 true	bin/execute.c	15;"	d	file:
+ts	threads/tid.cc	/^void TidManager::ts(){$/;"	f	class:TidManager
 tsize	bin/coff.h	/^        long    tsize;          \/* text size in bytes, padded to DW bdry*\/$/;"	m	struct:aouthdr
 type	machine/interrupt.h	/^    IntType type;		\/\/ for debugging$/;"	m	class:PendingInterrupt
 u	bin/execute.c	/^u()				\/* unimplemented *\/$/;"	f
 u_to_int_addr	bin/system.c	/^char *u_to_int_addr(ptr)$/;"	f
 u_to_int_fd	bin/system.c	/^u_to_int_fd(fd)$/;"	f
 ucfetch	bin/int.h	23;"	d
+uid	threads/thread.h	/^    int uid; $/;"	m	class:Thread
 uninitData	bin/noff.h	/^   Segment uninitData;		\/* uninitialized data segment --$/;"	m	struct:noffHeader
 use	machine/translate.h	/^    bool use;           \/\/ This bit is set by the hardware every time the$/;"	m	class:TranslationEntry
 userRegisters	threads/thread.h	/^    int userRegisters[NumTotalRegs];	\/\/ user-level CPU register state$/;"	m	class:Thread

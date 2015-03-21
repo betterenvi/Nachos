@@ -76,6 +76,12 @@ List::~List()
 void
 List::Append(void *item)
 {
+    //CQY:
+
+    SortedInsert(item, ((Thread*)item)->getPriority());
+    //Insert(item);
+    return;
+    //CQY
     ListElement *element = new ListElement(item, 0);
 
     if (IsEmpty()) {		// list is empty
@@ -98,13 +104,24 @@ List::Insert(void *item){
         first = element;
         last = element;
     }else{
-        for (Thread *tmp = first; tmp != NULL;tmp = tmp->next;){
-            if (pri < tmp->getPriority()){
-                
-                element->next = tmp;
+        ListElement *prev = NULL;
+        ListElement *now = first;
+        for (; now != NULL; prev = now, now = now->next){
+            if (pri < ((Thread*)(now->item))->getPriority()){
+                if (prev != NULL){
+                    prev->next = element;
+                }else{
+                    first = element;
+                }
+                element->next = now;
+
+                break;
             }
         }
-
+        if (now == NULL){
+            last->next = element;
+            last = element;
+        }
     }
 }
 //----------------------------------------------------------------------

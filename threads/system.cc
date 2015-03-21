@@ -201,8 +201,9 @@ Cleanup()
     Exit(0);
 }
 
-Thread* createThread(char* name){
-    Thread* t = new Thread(name);
+Thread* createThread(char* name, int priorityVal){
+    Thread* t = new Thread(name, priorityVal);
+    printf("pri:%d %d\n", priorityVal, t->getPriority());
     int tid = tidManager->genId();
     if (tid == -1)
         return NULL;

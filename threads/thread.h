@@ -104,7 +104,7 @@ class Thread {
     void setStatus(ThreadStatus st) { status = st; }
     char* getStatus();//{return statusName[status];}
     char* getName() { return (name); }
-    void Print() { printf("%s, ", name); }
+    void Print() { printf("[%d, %d]", tid, priority); }
     void setTid(int tid_v) {tid = tid_v;}    
     int getUid() { return uid; }
     int getTid() {return tid;}
