@@ -143,7 +143,7 @@ Initialize(int argc, char **argv)
     // But if it ever tries to give up the CPU, we better have a Thread
     // object to save its state. 
     tidManager = new TidManager();
-    currentThread = createThread("main");
+    currentThread = createThread("main", 0);
     if (currentThread == NULL){
         return;
     }
@@ -203,7 +203,7 @@ Cleanup()
 
 Thread* createThread(char* name, int priorityVal){
     Thread* t = new Thread(name, priorityVal);
-    printf("pri:%d %d\n", priorityVal, t->getPriority());
+   // printf("pri:%d %d\n", priorityVal, t->getPriority());
     int tid = tidManager->genId();
     if (tid == -1)
         return NULL;

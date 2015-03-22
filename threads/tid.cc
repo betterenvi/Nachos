@@ -18,6 +18,7 @@ int TidManager::genId(){
 int TidManager::putBack(int tid){
     if (tid < 0 || tid >= MAX_NUM_THREAD)
         return -1;
+    allThreads.erase(tid);
     idPool.insert(tid);
     return 0;
 }

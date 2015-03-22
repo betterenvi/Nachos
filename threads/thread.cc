@@ -46,6 +46,7 @@ Thread::Thread(char* threadName, int priorityVal)
     stack = NULL;
     status = JUST_CREATED;
     uid = getuid();
+    //tid = tidManager->genId()
     priority = priorityVal;
 #ifdef USER_PROGRAM
     space = NULL;
@@ -72,6 +73,9 @@ Thread::~Thread()
     DEBUG('t', "Deleting thread \"%s\"\n", name);
 
     ASSERT(this != currentThread);
+    //CQY
+    tidManager->putBack(this->getTid());
+    //CQY
     if (stack != NULL)
 	DeallocBoundedArray((char *) stack, StackSize * sizeof(int));
 }
@@ -121,6 +125,11 @@ Thread::Fork(VoidFunctionPtr func, int arg)
     scheduler->ReadyToRun(this);	// ReadyToRun assumes that interrupts 
 					// are disabled!
     (void) interrupt->SetLevel(oldLevel);
+    //CQY
+    if (this != currentThread && this->getPriority() < currentThread->getPriority()){
+        printf("Thread::Fork$ child thread's pri(tid %d, pri %d) is higher than father thread(tid %d, pri %d).\n", this->getTid(), this->getPriority(), currentThread->getTid(), currentThread->getPriority());
+        currentThread->Yield();
+    }
 }    
 
 //----------------------------------------------------------------------

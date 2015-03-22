@@ -107,7 +107,25 @@ ThreadTest23(){
     }
     tidManager->ts();
 }
-
+void
+SimpleThread231(int tid){
+    for (int i = 0; i < 2; ++i){
+        Thread *t = createThread("T231", 3 - i);
+        if (t == NULL)
+            return;
+        printf("*** thread %d(tid %d, uid %d, pri %d)created thread %d(tid %d, uid %d, pri %d)\n", tid, tid, currentThread->getUid(), currentThread->getPriority(), t->getTid(), t->getTid(), t->getUid(), t->getPriority());
+        t->Fork(SimpleThread, t->getTid());
+    }
+}
+void 
+ThreadTest231(){
+    DEBUG('t', "Entering ThreadTest231");
+    Thread* t = createThread("T231", 4);
+    if (t == NULL)
+        return;
+    t->Fork(SimpleThread231, t->getTid());
+    tidManager->ts();
+}
 void
 ThreadTest()
 {
@@ -123,6 +141,9 @@ ThreadTest()
         break;
     case 23:
         ThreadTest23();
+        break;
+    case 231:
+        ThreadTest231();
         break;
     default:
 	    printf("No test specified.\n");
