@@ -78,9 +78,9 @@ List::Append(void *item)
 {
     //CQY:
 
-    SortedInsert(item, ((Thread*)item)->getPriority());
+   // SortedInsert(item, ((Thread*)item)->getPriority());
     //Insert(item);
-    return;
+   // return;
     //CQY
     ListElement *element = new ListElement(item, 0);
 

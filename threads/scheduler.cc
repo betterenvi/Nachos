@@ -56,8 +56,9 @@ Scheduler::ReadyToRun (Thread *thread)
     DEBUG('t', "Putting thread %s on ready list.\n", thread->getName());
 
     thread->setStatus(READY);
-    readyList->Append((void *)thread); //Append method's function has been modified.
-
+    //CQY
+//    readyList->Append((void *)thread); //Append method's function has been modified.
+    readyList->SortedInsert((void *)thread, thread->getPriority());
 
 }
 

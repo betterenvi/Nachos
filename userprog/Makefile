@@ -86,7 +86,11 @@ list.o: ../threads/list.cc /usr/include/stdc-predef.h \
  /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
  ../threads/stdarg.h /usr/include/bits/stdio_lim.h \
  /usr/include/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/xlocale.h
+ /usr/include/xlocale.h ../threads/thread.h /usr/include/unistd.h \
+ /usr/include/bits/posix_opt.h /usr/include/bits/environments.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h ../machine/machine.h \
+ ../threads/utility.h ../machine/translate.h ../machine/disk.h \
+ ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h
 scheduler.o: ../threads/scheduler.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/scheduler.h ../threads/list.h \
  ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
@@ -192,12 +196,12 @@ synchlist.o: ../threads/synchlist.cc /usr/include/stdc-predef.h \
  /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
  ../threads/stdarg.h /usr/include/bits/stdio_lim.h \
  /usr/include/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/xlocale.h ../threads/synch.h ../threads/thread.h \
- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/environments.h /usr/include/bits/confname.h \
- /usr/include/getopt.h ../machine/machine.h ../threads/utility.h \
- ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h
+ /usr/include/xlocale.h ../threads/thread.h /usr/include/unistd.h \
+ /usr/include/bits/posix_opt.h /usr/include/bits/environments.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h ../machine/machine.h \
+ ../threads/utility.h ../machine/translate.h ../machine/disk.h \
+ ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
+ ../threads/synch.h
 system.o: ../threads/system.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/system.h ../threads/utility.h \
  ../threads/bool.h ../machine/sysdep.h ../threads/copyright.h \
@@ -363,14 +367,14 @@ interrupt.o: ../machine/interrupt.cc /usr/include/stdc-predef.h \
  /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
  ../threads/stdarg.h /usr/include/bits/stdio_lim.h \
  /usr/include/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/xlocale.h ../threads/system.h ../threads/thread.h \
- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/environments.h /usr/include/bits/confname.h \
- /usr/include/getopt.h ../machine/machine.h ../threads/utility.h \
- ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
- ../threads/list.h ../machine/interrupt.h ../machine/stats.h \
- ../machine/timer.h ../threads/tid.h /usr/include/c++/4.8/set \
+ /usr/include/xlocale.h ../threads/thread.h /usr/include/unistd.h \
+ /usr/include/bits/posix_opt.h /usr/include/bits/environments.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h ../machine/machine.h \
+ ../threads/utility.h ../machine/translate.h ../machine/disk.h \
+ ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
+ ../threads/system.h ../threads/scheduler.h ../threads/list.h \
+ ../machine/interrupt.h ../machine/stats.h ../machine/timer.h \
+ ../threads/tid.h /usr/include/c++/4.8/set \
  /usr/include/c++/4.8/bits/stl_tree.h \
  /usr/include/c++/4.8/bits/stl_algobase.h \
  /usr/include/x86_64-linux-gnu/c++/4.8/32/bits/c++config.h \
@@ -434,10 +438,10 @@ sysdep.o: ../machine/sysdep.cc /usr/include/stdc-predef.h \
  /usr/include/asm/errno.h /usr/include/asm-generic/errno.h \
  /usr/include/asm-generic/errno-base.h ../machine/interrupt.h \
  ../threads/list.h ../threads/copyright.h ../threads/utility.h \
- ../threads/bool.h ../machine/sysdep.h ../threads/system.h \
- ../threads/thread.h ../machine/machine.h ../threads/utility.h \
- ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../threads/bool.h ../machine/sysdep.h ../threads/thread.h \
+ ../machine/machine.h ../threads/utility.h ../machine/translate.h \
+ ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
+ ../filesys/openfile.h ../threads/system.h ../threads/scheduler.h \
  ../threads/list.h ../machine/interrupt.h ../machine/stats.h \
  ../machine/timer.h ../threads/tid.h /usr/include/c++/4.8/set \
  /usr/include/c++/4.8/bits/stl_tree.h \
