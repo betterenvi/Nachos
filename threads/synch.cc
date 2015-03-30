@@ -113,7 +113,8 @@ void Lock::Acquire() {
     lockHolder = currentThread;
 }
 void Lock::Release() {
-    ASSERT(isHeldByCurrentThread());
+//    A lock Acquired by a thread does not need to be Released by the same thread.
+//    ASSERT(isHeldByCurrentThread());
     lockHolder = NULL;
     semaph->V();
 }

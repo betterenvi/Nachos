@@ -131,6 +131,10 @@ ThreadTest231(){
 //in synchtest.cc
 extern int synch_test_choice;
 extern void producer_cosumer_test();
+extern void barrier_test();
+extern bool synch_test_yield;
+extern bool synch_test_yield_writer;
+extern void read_write_lock_test();
 void
 ThreadTest()
 {
@@ -165,6 +169,22 @@ ThreadTest()
     case 34:
         synch_test_choice = 3;
         producer_cosumer_test();
+        break;
+    case 35:
+        barrier_test();
+        break;
+    case 36:
+        synch_test_yield = false;
+        read_write_lock_test();
+        break;
+    case 37:
+        synch_test_yield = true;
+        read_write_lock_test();
+        break;
+    case 38:
+        synch_test_yield = false;
+        synch_test_yield_writer = true;
+        read_write_lock_test();
         break;
     default:
 	    printf("No test specified.\n");
