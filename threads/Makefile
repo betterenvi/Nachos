@@ -548,6 +548,7 @@ tid.o: ../threads/tid.cc /usr/include/stdc-predef.h ../threads/tid.h \
  ../threads/stdarg.h /usr/include/bits/stdio_lim.h \
  /usr/include/bits/sys_errlist.h /usr/include/string.h \
  /usr/include/xlocale.h
+synchtest.o: ../threads/synchtest.cc
 # DEPENDENCIES MUST END AT END OF FILE
 # IF YOU PUT STUFF HERE IT WILL GO AWAY
 # see make depend above

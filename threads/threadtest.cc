@@ -78,6 +78,7 @@ ThreadTest2ForMaxTid(){
 //    t->Fork(SimpleThread, 1);
 }
 //
+
 void
 ThreadTest3ForTs()
 {
@@ -126,6 +127,10 @@ ThreadTest231(){
     t->Fork(SimpleThread231, t->getTid());
     tidManager->ts();
 }
+
+//in synchtest.cc
+extern int synch_test_choice;
+extern void producer_cosumer_test();
 void
 ThreadTest()
 {
@@ -144,6 +149,22 @@ ThreadTest()
         break;
     case 231:
         ThreadTest231();
+        break;
+    case 31:
+        synch_test_choice = 0;
+        producer_cosumer_test();
+        break;
+    case 32:
+        synch_test_choice = 1;
+        producer_cosumer_test();
+        break;
+    case 33:
+        synch_test_choice = 2;
+        producer_cosumer_test();
+        break;
+    case 34:
+        synch_test_choice = 3;
+        producer_cosumer_test();
         break;
     default:
 	    printf("No test specified.\n");
