@@ -131,6 +131,7 @@ Condition::~Condition() {
     delete queue;
 }
 void Condition::Wait(Lock* conditionLock) { 
+    //no need to disable interrupt? I think yes if we Append currentThread to queue before Releasing the conditionLock.
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
     ASSERT(conditionLock->isHeldByCurrentThread());
     conditionLock->Release();
@@ -141,6 +142,7 @@ void Condition::Wait(Lock* conditionLock) {
     (void) interrupt->SetLevel(oldLevel);
 }
 void Condition::Signal(Lock* conditionLock) {
+    //no need to disable interrupt? I think yes.
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
     ASSERT(conditionLock->isHeldByCurrentThread());
     Thread* t = (Thread *)queue->Remove();
