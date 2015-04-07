@@ -30,7 +30,6 @@ void produce_buffer(int arg){
 }
 
 
-
 //using Condition variable
 bool is_empty = true;
 int condition_buffer = 0;
