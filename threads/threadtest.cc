@@ -128,6 +128,19 @@ ThreadTest231(){
     tidManager->ts();
 }
 
+void midrun(int which){
+    for (int i = 0; i < 20; i++){
+        printf("%s\n", currentThread->getName());
+        interrupt->OneTick();
+    }
+}
+void mid(){
+    Thread *t1 = createThread("Bat", 4);
+    Thread *t2 = createThread("sup", 4);
+    t1->Fork(midrun, 1);
+    t2->Fork(midrun, 2);
+}
+
 //in synchtest.cc
 extern int synch_test_choice;
 extern void producer_cosumer_test();
@@ -185,6 +198,9 @@ ThreadTest()
         synch_test_yield = false;
         synch_test_yield_writer = true;
         read_write_lock_test();
+        break;
+    case 39:
+        mid();
         break;
     default:
 	    printf("No test specified.\n");
