@@ -77,6 +77,7 @@ Machine::Machine(bool debug)
     CheckEndian();
     numTLBMiss = 0;
     numTLBEvict = 0;
+    numTLBAccess = 0;
 }
 
 //----------------------------------------------------------------------
@@ -217,6 +218,8 @@ void Machine::WriteRegister(int num, int value)
     }
 
 void Machine::CachePageEntryInTLB(unsigned int vpn){
+    numTLBMiss += 1;
+    
     int target = -1;
 
     // decide which entry as target
@@ -227,6 +230,7 @@ void Machine::CachePageEntryInTLB(unsigned int vpn){
         }
     }
     if (target == -1){       // TLB is full
+        numTLBEvict += 1;
         switch(replaceAlgorithmOfTLB){
             case LRU:
                 target = GetReplaceTargetByLRU();
@@ -298,4 +302,12 @@ int Machine:GetReplaceTargetByLRU(){
         }
     }
     return target;
+}
+
+void Machine::InvalidAllEntryInTLB(){
+    for (int i = 0; i < TLBSize; ++i){
+        if (tlb[i].valid && tlb[i].dirty)
+            WriteBackPageEntry(i);
+        tlb[i].valid = FALSE;
+    }
 }

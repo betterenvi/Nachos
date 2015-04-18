@@ -220,6 +220,7 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
 		}
 		entry = &pageTable[vpn];
 	} else {
+		machine->numTLBAccess += 1;
     	while(TRUE){
 	        for (entry = NULL, i = 0; i < TLBSize; i++){
 	    	    if (tlb[i].valid && (tlb[i].virtualPage == vpn)) {

@@ -186,6 +186,7 @@ class Machine {
     unsigned int pageTableSize;
 
     //.cqy.
+    void InvalidAllEntryInTLB();
     void CachePageEntryInTLB(unsigned int vpn);
     void WriteBackPageEntry(int target);    //write back the evicted entry in TLB
     int GetReplaceTargetByLRU();
@@ -194,8 +195,8 @@ class Machine {
 
     int replaceAlgorithmOfTLB;
     int numTLBMiss;
-    int nunmTLBEvict;
-
+    int numTLBEvict;
+    int numTLBAccess;
 
   private:
     bool singleStep;		// drop back into the debugger after each

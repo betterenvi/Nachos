@@ -89,7 +89,10 @@ AddrSpace::AddrSpace(OpenFile *executable)
     pageTable = new TranslationEntry[numPages];
     for (i = 0; i < numPages; i++) {
 	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
-	pageTable[i].physicalPage = i;
+    //.cqy
+	pageTable[i].physicalPage = memBitMap->Find();
+    ASSERT(pageTable[i].physicalPage != -1);
+    //..
 	pageTable[i].valid = TRUE;
 	pageTable[i].use = FALSE;
 	pageTable[i].dirty = FALSE;
@@ -183,4 +186,6 @@ void AddrSpace::RestoreState()
 {
     machine->pageTable = pageTable;
     machine->pageTableSize = numPages;
+    //.cqy
+    machine->InvalidAllEntryInTLB();
 }
