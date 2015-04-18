@@ -90,7 +90,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
     for (i = 0; i < numPages; i++) {
 	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
     //.cqy
-	pageTable[i].physicalPage = memBitMap->Find();
+	pageTable[i].physicalPage = machine->memBitMap->Find();
     ASSERT(pageTable[i].physicalPage != -1);
     //..
 	pageTable[i].valid = TRUE;
@@ -103,20 +103,35 @@ AddrSpace::AddrSpace(OpenFile *executable)
     
 // zero out the entire address space, to zero the unitialized data segment 
 // and the stack segment
-    bzero(machine->mainMemory, size);
+//.    bzero(machine->mainMemory, size);
+//..
 
 // then, copy in the code and data segments into memory
     if (noffH.code.size > 0) {
+        /*. DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
+            noffH.code.virtualAddr, noffH.code.size);*/
+        
+          /*  executable->ReadAt(&(machine->mainMemory[noffH.code.virtualAddr]),
+                noffH.code.size, noffH.code.inFileAddr);*/
+
         DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
-			noffH.code.virtualAddr, noffH.code.size);
-        executable->ReadAt(&(machine->mainMemory[noffH.code.virtualAddr]),
-			noffH.code.size, noffH.code.inFileAddr);
+            VAddr2PAddr(noffH.code.virtualAddr), noffH.code.size);
+        for (int i = 0; i < noffH.code.size; ++i){
+            executable->ReadAt((machine->mainMemory[VAddr2PAddr(noffH.code.virtualAddr + i)]),
+                1, noffH.code.inFileAddr + i);
+        }//..
     }
     if (noffH.initData.size > 0) {
+        /*DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
+			noffH.initData.virtualAddr, noffH.initData.size);*/
+        /*executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr]),
+			noffH.initData.size, noffH.initData.inFileAddr);*/
         DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
-			noffH.initData.virtualAddr, noffH.initData.size);
-        executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr]),
-			noffH.initData.size, noffH.initData.inFileAddr);
+            VAddr2PAddr(noffH.initData.virtualAddr), noffH.initData.size);
+        for (int i = 0; i < noffH.initData.inFileAddr; ++i){
+            executable->ReadAt(&(machine->mainMemory[VAddr2PAddr(noffH.initData.virtualAddr + i)]),
+                1, noffH.initData.inFileAddr + i);//..
+        }
     }
 
 }
@@ -188,4 +203,12 @@ void AddrSpace::RestoreState()
     machine->pageTableSize = numPages;
     //.cqy
     machine->InvalidAllEntryInTLB();
+}
+
+//only responsible for calculating PAddr.
+// If addr space is not allocated at the beginning, pageTable[vpn] may be -1(NA).
+int AddrSpace::VAddr2PAddr(int vAddr){
+    int vpn = (unsigned) vAddr / PageSize;
+    int offSet = (unsigned) vAddr % PageSize;
+    return pageTable[vpn] * PageSize + offSet;
 }

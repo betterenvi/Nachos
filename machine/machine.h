@@ -198,6 +198,11 @@ class Machine {
     int numTLBEvict;
     int numTLBAccess;
 
+    BitMap *memBitMap;
+    
+
+    //..
+
   private:
     bool singleStep;		// drop back into the debugger after each
 				// simulated instruction
