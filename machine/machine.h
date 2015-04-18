@@ -199,7 +199,7 @@ class Machine {
     int numTLBAccess;
 
     BitMap *memBitMap;
-    
+
 
     //..
 
@@ -214,7 +214,9 @@ extern void ExceptionHandler(ExceptionType which);
 				// Entry point into Nachos for handling
 				// user system calls and exceptions
 				// Defined in exception.cc
-
+//.
+extern void PageFaultExceptionHandler(int vpn);
+//..
 
 // Routines for converting Words and Short Words to and from the
 // simulated machine's format of little endian.  If the host machine

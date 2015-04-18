@@ -84,3 +84,7 @@ void TlbMissExceptionHandler(){
 	int vpn = (unsigned int) badVAddr / PageSize;
 	machine->CachePageEntryInTLB(vpn);
 }
+
+void PageFaultExceptionHandler(int vpn){
+	
+}

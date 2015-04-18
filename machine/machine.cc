@@ -253,6 +253,9 @@ void Machine::CachePageEntryInTLB(unsigned int vpn){
     //Maybe page fault? Yes.
     // When page fault happens, we can know corresponding page is not mapped into main memory,
     // and thus the virtual addr does have a corresponding physical addr.
+    if (pageTable[vpn].physicalPage < 0){   // page fault
+        PageFaultExceptionHandler(vpn);
+    }
 
     //update TLB
     tlb[target] = pageTable[vpn];
@@ -298,7 +301,7 @@ void Machine::ClearRBit(){
     }
 }
 
-int Machine:GetReplaceTargetByLRU(){
+int Machine::GetReplaceTargetByLRU(){
     int target = 0;
     int targetLastUsed = tlb[target];
     for (int i = 1; i < TLBSize; ++i){
@@ -317,3 +320,4 @@ void Machine::InvalidAllEntryInTLB(){
         tlb[i].valid = FALSE;
     }
 }
+

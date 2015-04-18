@@ -104,7 +104,12 @@ AddrSpace::AddrSpace(OpenFile *executable)
 // zero out the entire address space, to zero the unitialized data segment 
 // and the stack segment
 //.    bzero(machine->mainMemory, size);
+
+    for (int i = 0; i < numPages; ++i){
+        bzero(&(machine->mainMemory[pageTable[i].physicalPage * PageSize]), PageSize);
+    }
 //..
+
 
 // then, copy in the code and data segments into memory
     if (noffH.code.size > 0) {
