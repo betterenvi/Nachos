@@ -16,7 +16,9 @@
 static char* exceptionNames[] = { "no exception", "syscall", 
 				"page fault/no TLB entry", "page read only",
 				"bus error", "address error", "overflow",
-				"illegal instruction" };
+				"illegal instruction",
+                "TLB miss" //.cqy.
+                 };
 
 //----------------------------------------------------------------------
 // CheckEndian
@@ -73,6 +75,8 @@ Machine::Machine(bool debug)
 
     singleStep = debug;
     CheckEndian();
+    numTLBMiss = 0;
+    numTLBEvict = 0;
 }
 
 //----------------------------------------------------------------------
@@ -212,3 +216,71 @@ void Machine::WriteRegister(int num, int value)
 	registers[num] = value;
     }
 
+void Machine::CachePageEntryInTLB(unsigned int vpn){
+    int target = -1;
+
+    // decide which entry as target
+    for (int i = 0; i < TLBSize; ++i){
+        if (!tlb[i]->valid){
+            target = i;
+            break;
+        }
+    }
+    if (target == -1){       // TLB is full
+        switch(replaceAlgorithmOfTLB){
+            case NRU:
+                target = getReplaceTargetByNRU();
+                break;
+            default:        //replace the first, very naive.
+                target = 0;
+        }
+
+        //write back the evicted entry to page table
+        WriteBackPageEntry(target);
+    }
+
+    //Maybe page fault?
+
+    //update TLB
+    tlb[target] = pageTable[vpn];
+    tlb[target].valid = TRUE;
+    tlb[target].dirty = FALSE;
+}
+
+void Machine::WriteBackPageEntry(int target){
+    int vpn = tlb[target].virtualPage;
+    pageTable[vpn] = tlb[target];
+    //pageTable[vpn].valid = TRUE; //must be true
+    pageTable[vpn].dirty = FALSE;
+    pageTable[vpn].use = FALSE;
+}
+
+
+/*
+class   use dirty
+0:      0   0
+1:      0   1
+2:      1   0
+3:      1   1
+*/
+int Machine::getReplaceTargetByNRU(){
+    int classVal[TLBSize];
+    for (int i = 0; i < TLBSize; ++i){
+        classVal[i] = (((int)tlb[i].use) << 1) + (int) tlb[i].dirty;
+    }
+    int target = 0;
+    int targetClassVal = classVal[target];
+    for (int i = 1; i < TLBSize; ++i){
+        if (classVal[i] < targetClassVal){
+            target = i;
+            targetClassVal = classVal[i];
+        }
+    }
+    return target;
+}
+
+void Machine::ClearRBit(){
+    for (int i = 0; i < TLBSize; ++i){
+        tlb[i].use = FALSE;
+    }
+}

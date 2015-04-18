@@ -48,7 +48,7 @@ enum ExceptionType { NoException,           // Everything ok!
 					    // address space
 		     OverflowException,     // Integer overflow in add or sub.
 		     IllegalInstrException, // Unimplemented or reserved instr.
-		     
+             TlbMissException,   //.cqy. 
 		     NumExceptionTypes
 };
 
@@ -71,6 +71,9 @@ enum ExceptionType { NoException,           // Everything ok!
 
 #define NumTotalRegs 	40
 
+//replacement algorithm
+#define LRU 0
+#define NRU 1
 // The following class defines an instruction, represented in both
 // 	undecoded binary form
 //      decoded to identify
@@ -181,6 +184,17 @@ class Machine {
 
     TranslationEntry *pageTable;
     unsigned int pageTableSize;
+
+    //.cqy.
+    void CachePageEntryInTLB(unsigned int vpn);
+    void WriteBackPageEntry(int target);    //write back the evicted entry in TLB
+    int GetReplaceTargetByNRU();
+    void ClearRBit();
+
+    int replaceAlgorithmOfTLB;
+    int numTLBMiss;
+    int nunmTLBEvict;
+
 
   private:
     bool singleStep;		// drop back into the debugger after each
