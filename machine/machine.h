@@ -188,6 +188,7 @@ class Machine {
     //.cqy.
     void CachePageEntryInTLB(unsigned int vpn);
     void WriteBackPageEntry(int target);    //write back the evicted entry in TLB
+    int GetReplaceTargetByLRU();
     int GetReplaceTargetByNRU();
     void ClearRBit();
 

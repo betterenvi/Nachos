@@ -228,8 +228,11 @@ void Machine::CachePageEntryInTLB(unsigned int vpn){
     }
     if (target == -1){       // TLB is full
         switch(replaceAlgorithmOfTLB){
+            case LRU:
+                target = GetReplaceTargetByLRU();
+                break;
             case NRU:
-                target = getReplaceTargetByNRU();
+                target = GetReplaceTargetByNRU();
                 break;
             default:        //replace the first, very naive.
                 target = 0;
@@ -263,7 +266,7 @@ class   use dirty
 2:      1   0
 3:      1   1
 */
-int Machine::getReplaceTargetByNRU(){
+int Machine::GetReplaceTargetByNRU(){
     int classVal[TLBSize];
     for (int i = 0; i < TLBSize; ++i){
         classVal[i] = (((int)tlb[i].use) << 1) + (int) tlb[i].dirty;
@@ -283,4 +286,16 @@ void Machine::ClearRBit(){
     for (int i = 0; i < TLBSize; ++i){
         tlb[i].use = FALSE;
     }
+}
+
+int Machine:GetReplaceTargetByLRU(){
+    int target = 0;
+    int targetLastUsed = tlb[target];
+    for (int i = 1; i < TLBSize; ++i){
+        if (tlb[i].lastUsed < targetLastUsed){
+            target = i;
+            targetLastUsed = tlb[i].lastUsed;
+        }
+    }
+    return target;
 }
