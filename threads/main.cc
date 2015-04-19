@@ -63,7 +63,10 @@ extern void ThreadTest(void), Copy(char *unixFile, char *nachosFile);
 extern void Print(char *file), PerformanceTest(void);
 extern void StartProcess(char *file), ConsoleTest(char *in, char *out);
 extern void MailTest(int networkID);
+//.
+extern void CreatProcess(char *filename);
 
+//..
 //----------------------------------------------------------------------
 // main
 // 	Bootstrap the operating system kernel.  
@@ -112,9 +115,30 @@ main(int argc, char **argv)
 #ifdef USER_PROGRAM
         if (!strcmp(*argv, "-x")) {        	// run a user program
 	    ASSERT(argc > 1);
+	    	printf("Run One Process.\n");
             StartProcess(*(argv + 1));
+            /*printf("Second Process.x\n");
+            StartProcess(*(argv + 1));*/
             argCount = 2;
-        } else if (!strcmp(*argv, "-c")) {      // test the console
+        } //.
+        else if (!strcmp(*argv, "-x2")) {        	// run 2 user program
+	    	printf("Run Two Process.\n");
+            CreatProcess(*(argv + 1));
+            CreatProcess(*(argv + 1));
+            /*printf("Second Process.x\n");
+            StartProcess(*(argv + 1));*/
+            argCount = 2;
+        }
+        else if (!strcmp(*argv, "-x3")) {        	// run 2 user program
+	    	printf("Run Three Process.\n");
+            CreatProcess(*(argv + 1));
+            CreatProcess(*(argv + 1));
+            CreatProcess(*(argv + 1));
+            /*printf("Second Process.x\n");
+            StartProcess(*(argv + 1));*/
+            argCount = 2;
+        }//..
+         else if (!strcmp(*argv, "-c")) {      // test the console
 	    if (argc == 1)
 	        ConsoleTest(NULL, NULL);
 	    else {

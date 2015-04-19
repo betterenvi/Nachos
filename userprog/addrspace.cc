@@ -205,6 +205,7 @@ void AddrSpace::SaveState()
 
 void AddrSpace::RestoreState() 
 {
+    DEBUG('d', "AddrSpace::RestoreState\n");
     machine->pageTable = pageTable;
     machine->pageTableSize = numPages;
     //.cqy

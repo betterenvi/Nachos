@@ -45,7 +45,9 @@ Statistics::Print()
     #ifdef USER_PROGRAM
     int numTLBHit = machine->numTLBAccess - machine->numTLBMiss;
     printf("TLB: accesses %d, hits %d, misses %d, evicts %d, hit rate %.2f\n", machine->numTLBAccess,
-     numTLBHit, machine->numTLBMiss, machine->numTLBEvict, 
-     numTLBHit / (float) machine->numTLBAccess);
+        numTLBHit, machine->numTLBMiss, machine->numTLBEvict, 
+        numTLBHit / (float) machine->numTLBAccess);
+
+    printf("Memory: total %d, used %d (unit: page)\n", memBitMap->GetSize(), memBitMap->GetUsed());
     #endif
 }

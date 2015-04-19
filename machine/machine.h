@@ -25,7 +25,9 @@
 #include "utility.h"
 #include "translate.h"
 #include "disk.h"
-
+/*//.
+#include "synch.h"
+//..*/
 // Definitions related to the size, and format of user memory
 
 #define PageSize 	SectorSize 	// set the page size equal to
@@ -35,6 +37,7 @@
 #define NumPhysPages    32
 #define MemorySize 	(NumPhysPages * PageSize)
 #define TLBSize		4		// if there is a TLB, make it small
+//..class Lock;
 
 enum ExceptionType { NoException,           // Everything ok!
 		     SyscallException,      // A program executed a system call.
@@ -197,7 +200,9 @@ class Machine {
     int numTLBMiss;
     int numTLBEvict;
     int numTLBAccess;
-
+    void *accessLock;   //recursive include failed, forward declaration failed, 
+                        //  therefore use void *, when what to use it in .cpp file, 
+                        //  cast to (Lock *) type.
    // BitMap *memBitMap;
 
 

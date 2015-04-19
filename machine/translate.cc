@@ -33,7 +33,7 @@
 #include "machine.h"
 #include "addrspace.h"
 #include "system.h"
-
+#include "synch.h"
 // Routines for converting Words and Short Words to and from the
 // simulated machine's format of little endian.  These end up
 // being NOPs when the host machine is also little endian (DEC and Intel).
@@ -186,6 +186,10 @@ Machine::WriteMem(int addr, int size, int value)
 ExceptionType
 Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
 {
+	Lock *ctrlLock = (Lock *)(machine->accessLock);
+	DEBUG("d", "curr:%d %d\n", currentThread->getTid(), (int)(ctrlLock->isHeldByCurrentThread()));
+	ctrlLock->Acquire();
+	DEBUG("d", "curr:%d %d\n", currentThread->getTid(), (int)(ctrlLock->isHeldByCurrentThread()));
     int i;
     unsigned int vpn, offset;
     TranslationEntry *entry;
@@ -260,5 +264,6 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
     *physAddr = pageFrame * PageSize + offset;
     ASSERT((*physAddr >= 0) && ((*physAddr + size) <= MemorySize));
     DEBUG('a', "phys addr = 0x%x\n", *physAddr);
+	ctrlLock->Release();
     return NoException;
 }

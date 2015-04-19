@@ -14,6 +14,33 @@
 #include "addrspace.h"
 #include "synch.h"
 
+//.
+void FireProcess(int which)
+{
+    printf("Enter FireProcess.\n");
+    currentThread->space->InitRegisters();
+    currentThread->space->RestoreState();
+    machine->Run();
+}
+void CreatProcess(char *filename){
+    OpenFile *executable = fileSystem->Open(filename);
+    AddrSpace *space;
+    if (executable == NULL) {
+        printf("Unable to open file %s\n", filename);
+        return;
+    }
+    space = new AddrSpace(executable);   
+    delete executable;
+
+    Thread *t = createThread("UserProg", 4);
+    if (t == NULL){
+        return;
+    }
+    t->space = space;
+    t->Fork(FireProcess, t->getTid());
+}
+//..
+
 //----------------------------------------------------------------------
 // StartProcess
 // 	Run a user program.  Open the executable, load it into
@@ -38,6 +65,10 @@ StartProcess(char *filename)
     space->InitRegisters();		// set the initial register values
     space->RestoreState();		// load page table register
 
+   /* //.
+    CreatProcess(filename);
+    //..*/
+    
     machine->Run();			// jump to the user progam
     ASSERT(FALSE);			// machine->Run never returns;
 					// the address space exits

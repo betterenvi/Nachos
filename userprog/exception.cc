@@ -73,9 +73,17 @@ ExceptionHandler(ExceptionType which)
 
 	switch(which){
     	case SyscallException:
-    		if (type == SC_Halt){
-    			DEBUG('a', "Shutdown, initiated by user program.\n");
-   				interrupt->Halt();
+    		switch(type){
+    			case SC_Halt:
+    				DEBUG('a', "Shutdown, initiated by user program.\n");
+   					interrupt->Halt();
+   					break;
+   				case SC_Exit:
+   					DEBUG('a', "Exit in ExceptionHandler.\n");
+   					interrupt->Halt();
+   					break;
+   				default:
+   					break;
     		}
     		break;
     	case TlbMissException:
