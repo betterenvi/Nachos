@@ -10,7 +10,7 @@
 #include "copyright.h"
 #include "utility.h"
 #include "stats.h"
-
+#include "system.h"
 //----------------------------------------------------------------------
 // Statistics::Statistics
 // 	Initialize performance metrics to zero, at system startup.
@@ -41,4 +41,11 @@ Statistics::Print()
     printf("Paging: faults %d\n", numPageFaults);
     printf("Network I/O: packets received %d, sent %d\n", numPacketsRecvd, 
 	numPacketsSent);
+
+    #ifdef USER_PROGRAM
+    int numTLBHit = machine->numTLBAccess - machine->numTLBMiss;
+    printf("TLB: accesses %d, hits %d, misses %d, evicts %d, hit rate %.2f\n", machine->numTLBAccess,
+     numTLBHit, machine->numTLBMiss, machine->numTLBEvict, 
+     numTLBHit / (float) machine->numTLBAccess);
+    #endif
 }
