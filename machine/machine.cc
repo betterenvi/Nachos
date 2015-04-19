@@ -80,7 +80,7 @@ Machine::Machine(bool debug)
     numTLBMiss = 0;
     numTLBEvict = 0;
     numTLBAccess = 0;
-    memBitMap = new BitMap(NumPhysPages);
+    //memBitMap = new BitMap(NumPhysPages);
     //..
 }
 
@@ -228,7 +228,7 @@ void Machine::CachePageEntryInTLB(unsigned int vpn){
 
     // decide which entry as target
     for (int i = 0; i < TLBSize; ++i){
-        if (!tlb[i]->valid){
+        if (!tlb[i].valid){
             target = i;
             break;
         }
@@ -303,7 +303,7 @@ void Machine::ClearRBit(){
 
 int Machine::GetReplaceTargetByLRU(){
     int target = 0;
-    int targetLastUsed = tlb[target];
+    int targetLastUsed = tlb[target].lastUsed;
     for (int i = 1; i < TLBSize; ++i){
         if (tlb[i].lastUsed < targetLastUsed){
             target = i;

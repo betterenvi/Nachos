@@ -25,6 +25,16 @@
 #include "system.h"
 #include "syscall.h"
 
+void TlbMissExceptionHandler(){
+	int badVAddr = machine->ReadRegister(BadVAddrReg);
+	int vpn = (unsigned int) badVAddr / PageSize;
+	machine->CachePageEntryInTLB(vpn);
+}
+
+void PageFaultExceptionHandler(int vpn){
+	
+}
+
 //----------------------------------------------------------------------
 // ExceptionHandler
 // 	Entry point into the Nachos kernel.  Called when a user program
@@ -79,12 +89,3 @@ ExceptionHandler(ExceptionType which)
 
 }
 
-void TlbMissExceptionHandler(){
-	int badVAddr = machine->ReadRegister(BadVAddrReg);
-	int vpn = (unsigned int) badVAddr / PageSize;
-	machine->CachePageEntryInTLB(vpn);
-}
-
-void PageFaultExceptionHandler(int vpn){
-	
-}

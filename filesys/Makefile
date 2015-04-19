@@ -73,8 +73,9 @@ main.o: ../threads/main.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multiset.h \
  /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
  /usr/include/c++/4.8/bits/stl_map.h \
- /usr/include/c++/4.8/bits/stl_multimap.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h
 list.o: ../threads/list.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/list.h ../threads/utility.h \
  ../threads/bool.h ../machine/sysdep.h ../threads/copyright.h \
@@ -86,7 +87,11 @@ list.o: ../threads/list.cc /usr/include/stdc-predef.h \
  /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
  ../threads/stdarg.h /usr/include/bits/stdio_lim.h \
  /usr/include/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/xlocale.h
+ /usr/include/xlocale.h ../threads/thread.h /usr/include/unistd.h \
+ /usr/include/bits/posix_opt.h /usr/include/bits/environments.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h ../machine/machine.h \
+ ../threads/utility.h ../machine/translate.h ../machine/disk.h \
+ ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h
 scheduler.o: ../threads/scheduler.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/scheduler.h ../threads/list.h \
  ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
@@ -133,8 +138,9 @@ scheduler.o: ../threads/scheduler.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multiset.h \
  /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
  /usr/include/c++/4.8/bits/stl_map.h \
- /usr/include/c++/4.8/bits/stl_multimap.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h
 synch.o: ../threads/synch.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/synch.h ../threads/thread.h \
  /usr/include/unistd.h /usr/include/features.h /usr/include/sys/cdefs.h \
@@ -181,8 +187,9 @@ synch.o: ../threads/synch.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multiset.h \
  /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
  /usr/include/c++/4.8/bits/stl_map.h \
- /usr/include/c++/4.8/bits/stl_multimap.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h
 synchlist.o: ../threads/synchlist.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/synchlist.h ../threads/list.h \
  ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
@@ -194,12 +201,12 @@ synchlist.o: ../threads/synchlist.cc /usr/include/stdc-predef.h \
  /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
  ../threads/stdarg.h /usr/include/bits/stdio_lim.h \
  /usr/include/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/xlocale.h ../threads/synch.h ../threads/thread.h \
- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/environments.h /usr/include/bits/confname.h \
- /usr/include/getopt.h ../machine/machine.h ../threads/utility.h \
- ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h
+ /usr/include/xlocale.h ../threads/thread.h /usr/include/unistd.h \
+ /usr/include/bits/posix_opt.h /usr/include/bits/environments.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h ../machine/machine.h \
+ ../threads/utility.h ../machine/translate.h ../machine/disk.h \
+ ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
+ ../threads/synch.h
 system.o: ../threads/system.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/system.h ../threads/utility.h \
  ../threads/bool.h ../machine/sysdep.h ../threads/copyright.h \
@@ -246,8 +253,9 @@ system.o: ../threads/system.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multiset.h \
  /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
  /usr/include/c++/4.8/bits/stl_map.h \
- /usr/include/c++/4.8/bits/stl_multimap.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h
 thread.o: ../threads/thread.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/thread.h /usr/include/unistd.h \
  /usr/include/features.h /usr/include/sys/cdefs.h \
@@ -295,8 +303,9 @@ thread.o: ../threads/thread.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multiset.h \
  /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
  /usr/include/c++/4.8/bits/stl_map.h \
- /usr/include/c++/4.8/bits/stl_multimap.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h
 utility.o: ../threads/utility.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/utility.h ../threads/bool.h \
  ../machine/sysdep.h ../threads/copyright.h /usr/include/stdio.h \
@@ -355,8 +364,9 @@ threadtest.o: ../threads/threadtest.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multiset.h \
  /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
  /usr/include/c++/4.8/bits/stl_map.h \
- /usr/include/c++/4.8/bits/stl_multimap.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h
 interrupt.o: ../machine/interrupt.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/interrupt.h ../threads/list.h \
  ../threads/copyright.h ../threads/utility.h ../threads/bool.h \
@@ -368,14 +378,14 @@ interrupt.o: ../machine/interrupt.cc /usr/include/stdc-predef.h \
  /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
  ../threads/stdarg.h /usr/include/bits/stdio_lim.h \
  /usr/include/bits/sys_errlist.h /usr/include/string.h \
- /usr/include/xlocale.h ../threads/system.h ../threads/thread.h \
- /usr/include/unistd.h /usr/include/bits/posix_opt.h \
- /usr/include/bits/environments.h /usr/include/bits/confname.h \
- /usr/include/getopt.h ../machine/machine.h ../threads/utility.h \
- ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
- ../threads/list.h ../machine/interrupt.h ../machine/stats.h \
- ../machine/timer.h ../threads/tid.h /usr/include/c++/4.8/set \
+ /usr/include/xlocale.h ../threads/thread.h /usr/include/unistd.h \
+ /usr/include/bits/posix_opt.h /usr/include/bits/environments.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h ../machine/machine.h \
+ ../threads/utility.h ../machine/translate.h ../machine/disk.h \
+ ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
+ ../threads/system.h ../threads/scheduler.h ../threads/list.h \
+ ../machine/interrupt.h ../machine/stats.h ../machine/timer.h \
+ ../threads/tid.h /usr/include/c++/4.8/set \
  /usr/include/c++/4.8/bits/stl_tree.h \
  /usr/include/c++/4.8/bits/stl_algobase.h \
  /usr/include/x86_64-linux-gnu/c++/4.8/32/bits/c++config.h \
@@ -404,8 +414,9 @@ interrupt.o: ../machine/interrupt.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multiset.h \
  /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
  /usr/include/c++/4.8/bits/stl_map.h \
- /usr/include/c++/4.8/bits/stl_multimap.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h
 sysdep.o: ../machine/sysdep.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h /usr/include/stdio.h /usr/include/features.h \
  /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
@@ -440,10 +451,10 @@ sysdep.o: ../machine/sysdep.cc /usr/include/stdc-predef.h \
  /usr/include/asm/errno.h /usr/include/asm-generic/errno.h \
  /usr/include/asm-generic/errno-base.h ../machine/interrupt.h \
  ../threads/list.h ../threads/copyright.h ../threads/utility.h \
- ../threads/bool.h ../machine/sysdep.h ../threads/system.h \
- ../threads/thread.h ../machine/machine.h ../threads/utility.h \
- ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/scheduler.h \
+ ../threads/bool.h ../machine/sysdep.h ../threads/thread.h \
+ ../machine/machine.h ../threads/utility.h ../machine/translate.h \
+ ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
+ ../filesys/openfile.h ../threads/system.h ../threads/scheduler.h \
  ../threads/list.h ../machine/interrupt.h ../machine/stats.h \
  ../machine/timer.h ../threads/tid.h /usr/include/c++/4.8/set \
  /usr/include/c++/4.8/bits/stl_tree.h \
@@ -474,8 +485,9 @@ sysdep.o: ../machine/sysdep.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multiset.h \
  /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
  /usr/include/c++/4.8/bits/stl_map.h \
- /usr/include/c++/4.8/bits/stl_multimap.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h
 stats.o: ../machine/stats.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/utility.h ../threads/copyright.h \
  ../threads/bool.h ../machine/sysdep.h /usr/include/stdio.h \
@@ -535,8 +547,9 @@ timer.o: ../machine/timer.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multiset.h \
  /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
  /usr/include/c++/4.8/bits/stl_map.h \
- /usr/include/c++/4.8/bits/stl_multimap.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h
 tid.o: ../threads/tid.cc /usr/include/stdc-predef.h ../threads/tid.h \
  /usr/include/c++/4.8/set /usr/include/c++/4.8/bits/stl_tree.h \
  /usr/include/c++/4.8/bits/stl_algobase.h \
@@ -583,6 +596,55 @@ tid.o: ../threads/tid.cc /usr/include/stdc-predef.h ../threads/tid.h \
  /usr/include/xlocale.h ../machine/machine.h ../threads/utility.h \
  ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
  ../filesys/filesys.h ../filesys/openfile.h
+synchtest.o: ../threads/synchtest.cc /usr/include/stdc-predef.h \
+ ../threads/system.h ../threads/copyright.h ../threads/utility.h \
+ ../threads/bool.h ../machine/sysdep.h ../threads/copyright.h \
+ /usr/include/stdio.h /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+ /usr/include/gnu/stubs-32.h \
+ /usr/lib/gcc/x86_64-linux-gnu/4.8/include/stddef.h \
+ /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+ /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ ../threads/stdarg.h /usr/include/bits/stdio_lim.h \
+ /usr/include/bits/sys_errlist.h /usr/include/string.h \
+ /usr/include/xlocale.h ../threads/thread.h /usr/include/unistd.h \
+ /usr/include/bits/posix_opt.h /usr/include/bits/environments.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h ../machine/machine.h \
+ ../threads/utility.h ../machine/translate.h ../machine/disk.h \
+ ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
+ ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
+ ../threads/list.h ../machine/stats.h ../machine/timer.h ../threads/tid.h \
+ /usr/include/c++/4.8/set /usr/include/c++/4.8/bits/stl_tree.h \
+ /usr/include/c++/4.8/bits/stl_algobase.h \
+ /usr/include/x86_64-linux-gnu/c++/4.8/32/bits/c++config.h \
+ /usr/include/x86_64-linux-gnu/c++/4.8/32/bits/os_defines.h \
+ /usr/include/x86_64-linux-gnu/c++/4.8/32/bits/cpu_defines.h \
+ /usr/include/c++/4.8/bits/functexcept.h \
+ /usr/include/c++/4.8/bits/exception_defines.h \
+ /usr/include/c++/4.8/bits/cpp_type_traits.h \
+ /usr/include/c++/4.8/ext/type_traits.h \
+ /usr/include/c++/4.8/ext/numeric_traits.h \
+ /usr/include/c++/4.8/bits/stl_pair.h /usr/include/c++/4.8/bits/move.h \
+ /usr/include/c++/4.8/bits/concept_check.h \
+ /usr/include/c++/4.8/bits/stl_iterator_base_types.h \
+ /usr/include/c++/4.8/bits/stl_iterator_base_funcs.h \
+ /usr/include/c++/4.8/debug/debug.h \
+ /usr/include/c++/4.8/bits/stl_iterator.h \
+ /usr/include/c++/4.8/bits/allocator.h \
+ /usr/include/x86_64-linux-gnu/c++/4.8/32/bits/c++allocator.h \
+ /usr/include/c++/4.8/ext/new_allocator.h /usr/include/c++/4.8/new \
+ /usr/include/c++/4.8/exception \
+ /usr/include/c++/4.8/bits/atomic_lockfree_defines.h \
+ /usr/include/c++/4.8/bits/memoryfwd.h \
+ /usr/include/c++/4.8/bits/stl_function.h \
+ /usr/include/c++/4.8/backward/binders.h \
+ /usr/include/c++/4.8/bits/stl_set.h \
+ /usr/include/c++/4.8/bits/stl_multiset.h \
+ /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
+ /usr/include/c++/4.8/bits/stl_map.h \
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h ../threads/synch.h
 addrspace.o: ../userprog/addrspace.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/system.h ../threads/copyright.h \
  ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
@@ -629,9 +691,9 @@ addrspace.o: ../userprog/addrspace.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multiset.h \
  /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
  /usr/include/c++/4.8/bits/stl_map.h \
- /usr/include/c++/4.8/bits/stl_multimap.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h ../userprog/addrspace.h \
- ../bin/noff.h
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h ../userprog/addrspace.h ../bin/noff.h
 bitmap.o: ../userprog/bitmap.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../userprog/bitmap.h ../threads/utility.h \
  ../threads/copyright.h ../threads/bool.h ../machine/sysdep.h \
@@ -690,8 +752,9 @@ exception.o: ../userprog/exception.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multiset.h \
  /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
  /usr/include/c++/4.8/bits/stl_map.h \
- /usr/include/c++/4.8/bits/stl_multimap.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h ../userprog/syscall.h
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h ../userprog/syscall.h
 progtest.o: ../userprog/progtest.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/system.h ../threads/copyright.h \
  ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
@@ -738,9 +801,9 @@ progtest.o: ../userprog/progtest.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multiset.h \
  /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
  /usr/include/c++/4.8/bits/stl_map.h \
- /usr/include/c++/4.8/bits/stl_multimap.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h ../machine/console.h \
- ../userprog/addrspace.h
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h ../machine/console.h ../userprog/addrspace.h
 console.o: ../machine/console.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/console.h ../threads/utility.h \
  ../threads/copyright.h ../threads/bool.h ../machine/sysdep.h \
@@ -788,8 +851,9 @@ console.o: ../machine/console.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multiset.h \
  /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
  /usr/include/c++/4.8/bits/stl_map.h \
- /usr/include/c++/4.8/bits/stl_multimap.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h
 machine.o: ../machine/machine.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/machine.h ../threads/utility.h \
  ../threads/copyright.h ../threads/bool.h ../machine/sysdep.h \
@@ -837,8 +901,9 @@ machine.o: ../machine/machine.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multiset.h \
  /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
  /usr/include/c++/4.8/bits/stl_map.h \
- /usr/include/c++/4.8/bits/stl_multimap.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h
 mipssim.o: ../machine/mipssim.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/machine.h ../threads/utility.h \
  ../threads/copyright.h ../threads/bool.h ../machine/sysdep.h \
@@ -886,8 +951,9 @@ mipssim.o: ../machine/mipssim.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multiset.h \
  /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
  /usr/include/c++/4.8/bits/stl_map.h \
- /usr/include/c++/4.8/bits/stl_multimap.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h
 translate.o: ../machine/translate.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/machine.h ../threads/utility.h \
  ../threads/copyright.h ../threads/bool.h ../machine/sysdep.h \
@@ -935,8 +1001,9 @@ translate.o: ../machine/translate.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multiset.h \
  /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
  /usr/include/c++/4.8/bits/stl_map.h \
- /usr/include/c++/4.8/bits/stl_multimap.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h
 directory.o: ../filesys/directory.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../threads/utility.h ../threads/copyright.h \
  ../threads/bool.h ../machine/sysdep.h /usr/include/stdio.h \
@@ -997,9 +1064,9 @@ filehdr.o: ../filesys/filehdr.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multiset.h \
  /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
  /usr/include/c++/4.8/bits/stl_map.h \
- /usr/include/c++/4.8/bits/stl_multimap.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h ../filesys/filehdr.h \
- ../userprog/bitmap.h ../filesys/openfile.h
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h ../filesys/filehdr.h
 filesys.o: ../filesys/filesys.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../machine/disk.h ../threads/utility.h \
  ../threads/copyright.h ../threads/bool.h ../machine/sysdep.h \
@@ -1061,8 +1128,9 @@ fstest.o: ../filesys/fstest.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multiset.h \
  /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
  /usr/include/c++/4.8/bits/stl_map.h \
- /usr/include/c++/4.8/bits/stl_multimap.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h ../threads/thread.h
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h ../threads/thread.h
 openfile.o: ../filesys/openfile.cc /usr/include/stdc-predef.h \
  ../threads/copyright.h ../filesys/filehdr.h ../machine/disk.h \
  ../threads/utility.h ../threads/copyright.h ../threads/bool.h \
@@ -1175,8 +1243,9 @@ disk.o: ../machine/disk.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multiset.h \
  /usr/include/c++/4.8/bits/range_access.h /usr/include/c++/4.8/map \
  /usr/include/c++/4.8/bits/stl_map.h \
- /usr/include/c++/4.8/bits/stl_multimap.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h
+ /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
+ ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
+ ../threads/synch.h
 # DEPENDENCIES MUST END AT END OF FILE
 # IF YOU PUT STUFF HERE IT WILL GO AWAY
 # see make depend above

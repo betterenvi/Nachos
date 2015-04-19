@@ -90,7 +90,8 @@ AddrSpace::AddrSpace(OpenFile *executable)
     for (i = 0; i < numPages; i++) {
 	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
     //.cqy
-	pageTable[i].physicalPage = machine->memBitMap->Find();
+//	pageTable[i].physicalPage = machine->memBitMap->Find();
+    pageTable[i].physicalPage = memBitMap->Find();
     ASSERT(pageTable[i].physicalPage != -1);
     //..
 	pageTable[i].valid = TRUE;
@@ -122,7 +123,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
         DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
             VAddr2PAddr(noffH.code.virtualAddr), noffH.code.size);
         for (int i = 0; i < noffH.code.size; ++i){
-            executable->ReadAt((machine->mainMemory[VAddr2PAddr(noffH.code.virtualAddr + i)]),
+            executable->ReadAt(&(machine->mainMemory[VAddr2PAddr(noffH.code.virtualAddr + i)]),
                 1, noffH.code.inFileAddr + i);
         }//..
     }
@@ -215,5 +216,5 @@ void AddrSpace::RestoreState()
 int AddrSpace::VAddr2PAddr(int vAddr){
     int vpn = (unsigned) vAddr / PageSize;
     int offSet = (unsigned) vAddr % PageSize;
-    return pageTable[vpn] * PageSize + offSet;
+    return pageTable[vpn].physicalPage * PageSize + offSet;
 }

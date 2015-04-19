@@ -53,9 +53,9 @@ class BitMap {
     void WriteBack(OpenFile *file); 	// write contents to disk
 
     //.
-    int GetUsed(){return numBits - NumClear()};
-    int GetSize(){return numBits};
-    double GetUseRate(){GetUsed() / (double) numBits};
+    int GetUsed(){return numBits - NumClear();}
+    int GetSize(){return numBits;}
+    double GetUseRate(){GetUsed() / (double) numBits;}
     //..
 
   private:

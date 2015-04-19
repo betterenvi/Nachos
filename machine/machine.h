@@ -198,7 +198,7 @@ class Machine {
     int numTLBEvict;
     int numTLBAccess;
 
-    BitMap *memBitMap;
+   // BitMap *memBitMap;
 
 
     //..

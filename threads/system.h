@@ -17,6 +17,7 @@
 #include "timer.h"
 #include "tid.h"
 
+
 // Initialization and cleanup routines
 extern void Initialize(int argc, char **argv); 	// Initialization,
 						// called before anything else
@@ -33,6 +34,8 @@ extern TidManager *tidManager;
 #ifdef USER_PROGRAM
 #include "machine.h"
 extern Machine* machine;	// user program memory and registers
+#include "bitmap.h"
+extern BitMap* memBitMap;
 #endif
 
 #ifdef FILESYS_NEEDED 		// FILESYS or FILESYS_STUB 
