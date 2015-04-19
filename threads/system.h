@@ -34,8 +34,8 @@ extern TidManager *tidManager;
 #ifdef USER_PROGRAM
 #include "machine.h"
 extern Machine* machine;	// user program memory and registers
-#include "bitmap.h"
-extern BitMap* memBitMap;
+#include "bitmap.h"			//must be placed between "#ifdef USER_PROGRAM" and "#endif", otherwise will 
+extern BitMap* memBitMap;		// case make failure.
 #endif
 
 #ifdef FILESYS_NEEDED 		// FILESYS or FILESYS_STUB 
