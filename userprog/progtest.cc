@@ -20,6 +20,8 @@ void FireProcess(int which)
     printf("Enter FireProcess.\n");
     currentThread->space->InitRegisters();
     currentThread->space->RestoreState();
+    machine->DumpPageTable();
+    printf("In FireProcess.\n");
     machine->Run();
 }
 void CreatProcess(char *filename){
@@ -68,7 +70,7 @@ StartProcess(char *filename)
    /* //.
     CreatProcess(filename);
     //..*/
-    
+
     machine->Run();			// jump to the user progam
     ASSERT(FALSE);			// machine->Run never returns;
 					// the address space exits

@@ -59,7 +59,8 @@ ShortToHost(unsigned short shortword) {
 	 result = (shortword << 8) & 0xff00;
 	 result |= (shortword >> 8) & 0x00ff;
 	 return result;
-#else 
+#else /*
+	 printf("Little endian\n");*/
 	 return shortword;
 #endif /* HOST_IS_BIG_ENDIAN */
 }
@@ -187,9 +188,9 @@ ExceptionType
 Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
 {
 	Lock *ctrlLock = (Lock *)(machine->accessLock);
-	DEBUG("d", "curr:%d %d\n", currentThread->getTid(), (int)(ctrlLock->isHeldByCurrentThread()));
+	DEBUG('d', "curr:%d %d\n", currentThread->getTid(), (int)(ctrlLock->isHeldByCurrentThread()));
 	ctrlLock->Acquire();
-	DEBUG("d", "curr:%d %d\n", currentThread->getTid(), (int)(ctrlLock->isHeldByCurrentThread()));
+	DEBUG('d', "curr:%d %d\n", currentThread->getTid(), (int)(ctrlLock->isHeldByCurrentThread()));
     int i;
     unsigned int vpn, offset;
     TranslationEntry *entry;

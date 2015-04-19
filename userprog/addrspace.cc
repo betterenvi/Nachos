@@ -134,12 +134,14 @@ AddrSpace::AddrSpace(OpenFile *executable)
 			noffH.initData.size, noffH.initData.inFileAddr);*/
         DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
             VAddr2PAddr(noffH.initData.virtualAddr), noffH.initData.size);
-        for (int i = 0; i < noffH.initData.inFileAddr; ++i){
+        for (int i = 0; i < noffH.initData.size; ++i){
             executable->ReadAt(&(machine->mainMemory[VAddr2PAddr(noffH.initData.virtualAddr + i)]),
                 1, noffH.initData.inFileAddr + i);//..
         }
     }
-
+    //machine->DumpState();
+    //machine->DumpMem();
+    DumpPageTable();
 }
 
 //----------------------------------------------------------------------
@@ -205,11 +207,17 @@ void AddrSpace::SaveState()
 
 void AddrSpace::RestoreState() 
 {
-    DEBUG('d', "AddrSpace::RestoreState\n");
-    machine->pageTable = pageTable;
+    //DEBUG('d', "AddrSpace::RestoreState\n");
+    printf("AddrSpace::RestoreState\n");
+    //***********************//
+    machine->InvalidAllEntryInTLB();    //cose me so much time!!!!!!!
+                                        // must invalid all before update pageTable.
+    //**********************//
+    machine->pageTable = pageTable;         
     machine->pageTableSize = numPages;
     //.cqy
-    machine->InvalidAllEntryInTLB();
+    machine->DumpPageTable();
+    printf("leave AddrSpace::RestoreState\n");
 }
 
 //only responsible for calculating PAddr.
@@ -218,4 +226,10 @@ int AddrSpace::VAddr2PAddr(int vAddr){
     int vpn = (unsigned) vAddr / PageSize;
     int offSet = (unsigned) vAddr % PageSize;
     return pageTable[vpn].physicalPage * PageSize + offSet;
+}
+
+void AddrSpace::DumpPageTable(){
+    for (int i = 0; i < numPages; ++i){
+        printf("%d\t%d\n", i, pageTable[i].physicalPage);
+    }   
 }

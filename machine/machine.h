@@ -196,6 +196,9 @@ class Machine {
     int GetReplaceTargetByNRU();
     void ClearRBit();
 
+    void DumpMem();
+    void DumpPageTable();
+
     int replaceAlgorithmOfTLB;
     int numTLBMiss;
     int numTLBEvict;

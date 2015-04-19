@@ -33,9 +33,9 @@ class AddrSpace {
 
     //.
     int VAddr2PAddr(int vAddr);
-
+    void DumpPageTable();
     //..
-    
+
   private:
     TranslationEntry *pageTable;	// Assume linear page table translation
 					// for now!

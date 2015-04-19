@@ -22,7 +22,7 @@ main()
 
     /* then sort! */
     for (i = 0; i < N - 1; i++)
-        for (j = i; j < (N - 1 - i); j++)
+        for (j = 0; j < (N - 1 - i); j++)
 	   if (A[j] > A[j + 1]) {	/* out of order -> need to swap ! */
 	      tmp = A[j];
 	      A[j] = A[j + 1];

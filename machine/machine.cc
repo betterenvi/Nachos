@@ -267,11 +267,19 @@ void Machine::CachePageEntryInTLB(unsigned int vpn){
 }
 
 void Machine::WriteBackPageEntry(int target){
+    DEBUG('v', "Enter WriteBackPageEntry\n");
+
     int vpn = tlb[target].virtualPage;
+    //...........pageTable[vpn] = tlb[target];///////cost me so much time!!!!!!!!!!!!!!!!. 
+    //But in face , not wrong.
     pageTable[vpn] = tlb[target];
+    //pageTable[vpn].physicalPage = tlb[target].physicalPage;
     //pageTable[vpn].valid = TRUE; //must be true
-    pageTable[vpn].dirty = FALSE;
-    pageTable[vpn].use = FALSE;
+    /*pageTable[vpn].dirty = FALSE;
+    pageTable[vpn].use = FALSE;*/   //I made a big mistake here. TLB is not a memory cache. !!!!
+/*    if (vpn == 13)
+        DEBUG('v', "vpn 13, ppn %d\n", pageTable[vpn].physicalPage);
+*/    DEBUG('v', "Leave WriteBackPageEntry\n");
 }
 
 
@@ -324,3 +332,21 @@ void Machine::InvalidAllEntryInTLB(){
     }
 }
 
+void Machine::DumpMem(){
+    for (int i = 0; i < MemorySize; i += 2){
+        if (i % 16 == 0)
+            printf("\n");
+        if (i % PageSize == 0)
+            printf("\n");
+        unsigned short data = *(unsigned short *) &mainMemory[i];
+       // data = ShortToHost(data);
+       // printf("%4.4x %4.4x ", data, ShortToHost(data));
+        printf("%4.4x ", data);
+    }
+}
+
+void Machine::DumpPageTable(){
+    for (int i = 0; i < pageTableSize; ++i){
+        printf("%d\t%d\n", i, pageTable[i].physicalPage);
+    }
+}
