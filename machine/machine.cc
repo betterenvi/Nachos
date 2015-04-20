@@ -245,14 +245,15 @@ void Machine::CachePageEntryInTLB(unsigned int vpn){
     if (target == -1){       // TLB is full
         numTLBEvict += 1;
         switch(replaceAlgorithmOfTLB){
-            case LRU:
-                target = GetReplaceTargetInTLBByLRU();
+            case SIM:
+                target = 0;
                 break;
             case NRU:
                 target = GetReplaceTargetInTLBByNRU();
                 break;
             default:        //replace the first, very naive.
-                target = 0;
+                target = GetReplaceTargetInTLBByLRU();
+                break;
         }
 
         //write back the evicted entry to page table
@@ -391,18 +392,18 @@ bool Machine::InvalidateSwappedPageEntryInTLB(int ppn){
 }
 
 void Machine::SwapPageToFile(int ppn){
-    DEBUG('d', "Enter Machine::SwapPageToFile\n");
+    DEBUG('d', "Thread %d Enter Machine::SwapPageToFile\n", currentThread->getTid());
     int vpn = pageUsageTable[ppn].vpn;
     pageUsageTable[ppn].space->ForcedSwapPageToFile(vpn);
     pageUsageTable[ppn].space = NULL;
     InvalidateSwappedPageEntryInTLB(ppn);
-    DEBUG('d', "Leave Machine::SwapPageToFile\n");
+    DEBUG('d', "Thread %d Leave Machine::SwapPageToFile\n", currentThread->getTid());
 
 }
 
 
 void Machine::LoadPageToMemory(int vpn){
-    DEBUG('d', "Enter Machine::LoadPageToMemory\n");
+    DEBUG('d', "Thread %d Enter Machine::LoadPageToMemory\n", currentThread->getTid());
     int targetPage = -1;
     /*for (int i = 0; i < NumPhysPages; ++i){
         if (machine->pageUsageTable[i].space == NULL){
@@ -417,11 +418,11 @@ void Machine::LoadPageToMemory(int vpn){
     if (targetPage < 0){
         //choose a target to swap
         switch(replaceAlgorithmOfMemPage){
-            case LRU:
-                targetPage = machine->GetReplaceTargetInMemByLRU();
+            case SIM:
+                targetPage = 0;
                 break;
             default:
-                targetPage = 0;
+                targetPage = machine->GetReplaceTargetInMemByLRU();
                 break;
         }
 
@@ -433,5 +434,5 @@ void Machine::LoadPageToMemory(int vpn){
     currentThread->space->ForcedLoadPageToMemory(vpn, targetPage);
     pageUsageTable[targetPage].space = currentThread->space;
     pageUsageTable[targetPage].vpn = vpn;
-    DEBUG('d', "Leave Machine::LoadPageToMemory\n");
+    DEBUG('d', "Thread %d Leave Machine::LoadPageToMemory\n", currentThread->getTid());
 }

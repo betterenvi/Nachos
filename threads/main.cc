@@ -137,7 +137,14 @@ main(int argc, char **argv)
             /*printf("Second Process.x\n");
             StartProcess(*(argv + 1));*/
             argCount = 2;
-        }//..
+        }else if (!strcmp(*argv, "-xd")){
+        	printf("Run Different Process.\n");
+        	int num = atoi(*(argv + 1));
+        	for (int fileIdx = 1; fileIdx <= num; ++fileIdx)
+        		CreatProcess(*(argv + fileIdx + 1));
+        	argCount += 2 + num;
+        }
+        //..
          else if (!strcmp(*argv, "-c")) {      // test the console
 	    if (argc == 1)
 	        ConsoleTest(NULL, NULL);

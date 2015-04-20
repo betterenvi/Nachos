@@ -79,6 +79,7 @@ enum ExceptionType { NoException,           // Everything ok!
 //replacement algorithm
 #define LRU 0
 #define NRU 1
+#define SIM 2
 // The following class defines an instruction, represented in both
 // 	undecoded binary form
 //      decoded to identify
@@ -227,7 +228,7 @@ class Machine {
                         //  cast to (Lock *) type.
     void AcquireLock();
     void ReleaseLock();
-    
+
    // BitMap *memBitMap;
     PageUsageEntry *pageUsageTable;
     int GetReplaceTargetInMemByLRU();

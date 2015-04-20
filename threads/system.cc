@@ -84,6 +84,7 @@ Initialize(int argc, char **argv)
     bool randomYield = FALSE;
 
     int replaceAlgorithmOfTLB = 0; 
+    int replaceAlgorithmOfMemPage = 0;
 
 #ifdef USER_PROGRAM
     bool debugUserProg = FALSE;	// single step user program
@@ -115,8 +116,24 @@ Initialize(int argc, char **argv)
 #ifdef USER_PROGRAM
 	if (!strcmp(*argv, "-s"))
 	    debugUserProg = TRUE;
-    if (!strcmp(*argv, "-rpl"))
-        replaceAlgorithmOfTLB = atoi(*(argv + 1));
+    if (!strcmp(*argv, "-rplt")){
+        if (!strcmp(*(argv + 1), "SIM")){
+            replaceAlgorithmOfTLB = SIM;
+        else if (!strcmp(*(argv + 1), "NRU"))
+            replaceAlgorithmOfTLB = NRU;
+        else
+            replaceAlgorithmOfTLB = LRU;
+        argCount = 2;
+    }
+    if (!strcmp(*argv, "-rplp")){
+        if (!strcmp(*(argv + 1), "SIM"))
+            replaceAlgorithmOfMemPage = SIM;
+        else if (!strcmp(*(argv + 1), "NRU"))
+            replaceAlgorithmOfMemPage = NRU;
+        else
+            replaceAlgorithmOfMemPage = LRU;
+        argCount = 2;
+    }
 #endif
 #ifdef FILESYS_NEEDED
 	if (!strcmp(*argv, "-f"))

@@ -217,7 +217,7 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
 	//DEBUG('d', "curr:%d %d\n", currentThread->getTid(), (int)(ctrlLock->isHeldByCurrentThread()));
 //	ctrlLock->Acquire();
 	AcquireLock();
-	DEBUG('d', "curr:%d %d\n", currentThread->getTid(), (int)(ctrlLock->isHeldByCurrentThread()));
+//	DEBUG('d', "curr:%d %d\n", currentThread->getTid(), (int)(ctrlLock->isHeldByCurrentThread()));
     int i;
     unsigned int vpn, offset;
     TranslationEntry *entry;
