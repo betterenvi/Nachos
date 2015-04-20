@@ -20,7 +20,7 @@
 
 class AddrSpace {
   public:
-    AddrSpace(OpenFile *executable);	// Create an address space,
+    AddrSpace(OpenFile *executable, int tid);	// Create an address space,
 					// initializing it with the program
 					// stored in the file "executable"
     ~AddrSpace();			// De-allocate an address space
@@ -34,13 +34,26 @@ class AddrSpace {
     //.
     int VAddr2PAddr(int vAddr);
     void DumpPageTable();
+//    void SetSwapFileName(char *fileName){swapFileName = fileName;}
+//    char *GetSwapFileName(){return swapFileName;}
+    void CreateSwapFile(OpenFile *executable, int fileSize);
+    void ForcedSwapPageToFile(int vpn);
+    void ForcedLoadPageToMemory(int vpn, int ppn);
+    char* my_itoa(int val, char * str);  //val < 1000
+ //   TranslationEntry *GetPageTable(){return page}
     //..
 
-  private:
+  
     TranslationEntry *pageTable;	// Assume linear page table translation
 					// for now!
     unsigned int numPages;		// Number of pages in the virtual 
 					// address space
+
+    //.
+    char *swapFileName;
+    bool codeAndDataLoaded;
+
+    //..
 };
 
 #endif // ADDRSPACE_H

@@ -24,10 +24,12 @@
 #include "copyright.h"
 #include "utility.h"
 #include "translate.h"
+
 #include "disk.h"
-/*//.
-#include "synch.h"
-//..*/
+//.
+//#include "synch.h"
+#include "addrspace.h"
+//..
 // Definitions related to the size, and format of user memory
 
 #define PageSize 	SectorSize 	// set the page size equal to
@@ -96,7 +98,23 @@ class Instruction {
     int extra;       // Immediate or target or shamt field or offset.
                      // Immediates are sign-extended.
 };
-
+//.
+// decide which thread is using one page, and which virtual page corresponds to this physical page.
+class PageUsageEntry
+{
+public:
+    PageUsageEntry(){
+        space = NULL;
+        vpn = -1;
+    }
+    ~PageUsageEntry(){};
+    AddrSpace *space;    //which addrspace's page table's one entry is pointing at this page. 
+                            // as the judge.
+    int vpn;                        //  which entry of the page table is pointing at this page.
+                            // not the judge.
+    /* data */
+};
+//..
 // The following class defines the simulated host workstation hardware, as 
 // seen by user programs -- the CPU registers, main memory, etc.
 // User programs shouldn't be able to tell that they are running on our 
@@ -192,8 +210,8 @@ class Machine {
     void InvalidAllEntryInTLB();
     void CachePageEntryInTLB(unsigned int vpn);
     void WriteBackPageEntry(int target);    //write back the evicted entry in TLB
-    int GetReplaceTargetByLRU();
-    int GetReplaceTargetByNRU();
+    int GetReplaceTargetInTLBByLRU();
+    int GetReplaceTargetInTLBByNRU();
     void ClearRBit();
 
     void DumpMem();
@@ -207,8 +225,12 @@ class Machine {
                         //  therefore use void *, when what to use it in .cpp file, 
                         //  cast to (Lock *) type.
    // BitMap *memBitMap;
-
-
+    PageUsageEntry *pageUsageTable;
+    int GetReplaceTargetInMemByLRU();
+    int replaceAlgorithmOfMemPage;
+    bool InvalidateSwappedPageEntryInTLB(int ppn);
+    void SwapPageToFile(int ppn);
+    void LoadPageToMemory(int vpn);
     //..
 
   private:

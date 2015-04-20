@@ -1,0 +1,52 @@
+4ac2b0d HEAD@{0}: reset: moving to 4ac2b0d
+ef39ad8 HEAD@{1}: reset: moving to ef39ad8
+4ea8886 HEAD@{2}: reset: moving to 4ea8886
+4ac2b0d HEAD@{3}: reset: moving to 4ac2b0d
+4ea8886 HEAD@{4}: reset: moving to 4ea8886
+4ac2b0d HEAD@{5}: commit: fix bug when running 2 user prog.
+69f8fdb HEAD@{6}: commit: add sort10, add test for 2 process running the same time. The result seems to be wrong.
+4cfce36 HEAD@{7}: commit: add TLB statics
+a3260c9 HEAD@{8}: commit (amend): try to place include "bitmap.h" outside #ifdef USER_PROG, but cause make failure, (--amend)also make failed when putting memBitMap in Machine class
+3babcf8 HEAD@{9}: commit (amend): try to place include "bitmap.h" outside #ifdef USER_PROG, but cause make failure
+118f6bf HEAD@{10}: commit: try to place include "bitmap.h" outside #ifdef USER_PROG, but cause make failure
+1dbe03a HEAD@{11}: commit: fix errors resulting from yesterday's work, and make is fine
+3cd5096 HEAD@{12}: commit: patch for previous commit: add bzero of addrspace of a new thread
+4711da3 HEAD@{13}: commit: support multiple thread in main memory
+0855e4b HEAD@{14}: commit: complete global memory manage system, using bitmap
+24c45a8 HEAD@{15}: commit: add TLB replacement:LRU
+b83de18 HEAD@{16}: commit: complete TLB miss handler, NRU, excluding ClearRbit() every x ticks.
+ad0e587 HEAD@{17}: commit: add untracked exception.h
+c5c2c76 HEAD@{18}: commit: add midterm test
+ef39ad8 HEAD@{19}: commit: just test
+6f0d093 HEAD@{20}: commit: a little notation
+9cfbeb5 HEAD@{21}: commit: complete read/write lock, finish lab3
+559ffeb HEAD@{22}: commit: complete exercise 4, i.e., consumer and producer, using semaphore and condition variable
+941e6be HEAD@{23}: commit: add synchtest.cc, implement consumer and producer
+61991ec HEAD@{24}: commit: complete Condition variable
+8681f31 HEAD@{25}: commit: implemented Lock
+fc40e2f HEAD@{26}: commit: after commit of report
+684ec2e HEAD@{27}: commit: complete exercise 3 of lab2
+817cd81 HEAD@{28}: commit: complete exercise 3 of lab 2
+7dabdf2 HEAD@{29}: pull: Fast-forward
+4ea8886 HEAD@{30}: commit: complete lab1, including addition of threadtest
+5b0fca7 HEAD@{31}: commit: almost complete lab1
+1e6ba3d HEAD@{32}: pull: Merge made by the 'recursive' strategy.
+4f44efc HEAD@{33}: commit: add Print info in main.cc
+aa788ad HEAD@{34}: commit: add a line in ThreadTest()
+6511fe6 HEAD@{35}: commit: add tags.sh to gen tags
+b11d3cf HEAD@{36}: commit: modify bin/csh to bin/bash
+87920b5 HEAD@{37}: commit: add DocCQY dir and makefile_info file
+3ddbb68 HEAD@{38}: commit: discard "-m32" in line CC of "test/Makefile", previous commit is preformed in "threads" directory
+89261a7 HEAD@{39}: commit: discard "-m32" in line CC of "test/Makefile"
+c40a4aa HEAD@{40}: commit: modify "-m32" to "--32" in "AS = as"
+608700b HEAD@{41}: commit: add "-m32" to "AS = as"
+4999f3a HEAD@{42}: commit: add "-m32" to CFLAGS
+97ca67d HEAD@{43}: checkout: moving from test to master
+97ca67d HEAD@{44}: checkout: moving from a38c092db2e26c22bd00490d6ca16854b460c3bb to test
+a38c092 HEAD@{45}: commit: modify makefile.dep
+b3b077c HEAD@{46}: checkout: moving from master to b3b077c333e9201ad4296c406a737ead39a084b1
+97ca67d HEAD@{47}: commit: -fwritable-strings
+dd71df4 HEAD@{48}: commit: add "-m32" to all "g++"
+0c8491a HEAD@{49}: commit: add "*.o" to .gitignore
+0170a5b HEAD@{50}: commit: add "-m32" to all "gcc"
+b3b077c HEAD@{51}: commit (initial): init nachos

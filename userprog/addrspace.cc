@@ -60,7 +60,7 @@ SwapHeader (NoffHeader *noffH)
 //	"executable" is the file containing the object code to load into memory
 //----------------------------------------------------------------------
 
-AddrSpace::AddrSpace(OpenFile *executable)
+AddrSpace::AddrSpace(OpenFile *executable, int tid)
 {
     NoffHeader noffH;
     unsigned int i, size;
@@ -90,58 +90,62 @@ AddrSpace::AddrSpace(OpenFile *executable)
     for (i = 0; i < numPages; i++) {
 	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
     //.cqy
-//	pageTable[i].physicalPage = machine->memBitMap->Find();
+/*//	pageTable[i].physicalPage = machine->memBitMap->Find();
     pageTable[i].physicalPage = memBitMap->Find();
-    ASSERT(pageTable[i].physicalPage != -1);
+    ASSERT(pageTable[i].physicalPage != -1);*/
+    pageTable[i].physicalPage = -1; // not the judge.
     //..
-	pageTable[i].valid = TRUE;
-	pageTable[i].use = FALSE;
+	pageTable[i].valid = FALSE;    // as the judge of whether this page entry is useful
+	pageTable[i].use = FALSE;      //      
 	pageTable[i].dirty = FALSE;
 	pageTable[i].readOnly = FALSE;  // if the code segment was entirely on 
 					// a separate page, we could set its 
 					// pages to be read-only
     }
-    
 // zero out the entire address space, to zero the unitialized data segment 
 // and the stack segment
 //.    bzero(machine->mainMemory, size);
+    swapFileName = new char[10];
+    swapFileName = my_itoa(tid, swapFileName);
+    CreateSwapFile(executable, size);
+    codeAndDataLoaded = FALSE;
 
-    for (int i = 0; i < numPages; ++i){
-        bzero(&(machine->mainMemory[pageTable[i].physicalPage * PageSize]), PageSize);
-    }
+//    for (int i = 0; i < numPages; ++i){
+//        bzero(&(machine->mainMemory[pageTable[i].physicalPage * PageSize]), PageSize);
+//    }
 //..
 
 
-// then, copy in the code and data segments into memory
-    if (noffH.code.size > 0) {
-        /*. DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
-            noffH.code.virtualAddr, noffH.code.size);*/
-        
-          /*  executable->ReadAt(&(machine->mainMemory[noffH.code.virtualAddr]),
-                noffH.code.size, noffH.code.inFileAddr);*/
-
-        DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
-            VAddr2PAddr(noffH.code.virtualAddr), noffH.code.size);
-        for (int i = 0; i < noffH.code.size; ++i){
-            executable->ReadAt(&(machine->mainMemory[VAddr2PAddr(noffH.code.virtualAddr + i)]),
-                1, noffH.code.inFileAddr + i);
-        }//..
-    }
-    if (noffH.initData.size > 0) {
-        /*DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
-			noffH.initData.virtualAddr, noffH.initData.size);*/
-        /*executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr]),
-			noffH.initData.size, noffH.initData.inFileAddr);*/
-        DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
-            VAddr2PAddr(noffH.initData.virtualAddr), noffH.initData.size);
-        for (int i = 0; i < noffH.initData.size; ++i){
-            executable->ReadAt(&(machine->mainMemory[VAddr2PAddr(noffH.initData.virtualAddr + i)]),
-                1, noffH.initData.inFileAddr + i);//..
-        }
-    }
+//// then, copy in the code and data segments into memory
+//    if (noffH.code.size > 0) {
+//        /*. DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
+//            noffH.code.virtualAddr, noffH.code.size);*/
+//        
+//          /*  executable->ReadAt(&(machine->mainMemory[noffH.code.virtualAddr]),
+//                noffH.code.size, noffH.code.inFileAddr);*/
+//
+//        DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
+//            VAddr2PAddr(noffH.code.virtualAddr), noffH.code.size);
+//        for (int i = 0; i < noffH.code.size; ++i){
+//            executable->ReadAt(&(machine->mainMemory[VAddr2PAddr(noffH.code.virtualAddr + i)]),
+//                1, noffH.code.inFileAddr + i);
+//        }//..
+//    }
+//    if (noffH.initData.size > 0) {
+//        /*DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
+//			noffH.initData.virtualAddr, noffH.initData.size);*/
+//        /*executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr]),
+//			noffH.initData.size, noffH.initData.inFileAddr);*/
+//        DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
+//            VAddr2PAddr(noffH.initData.virtualAddr), noffH.initData.size);
+//        for (int i = 0; i < noffH.initData.size; ++i){
+//            executable->ReadAt(&(machine->mainMemory[VAddr2PAddr(noffH.initData.virtualAddr + i)]),
+//                1, noffH.initData.inFileAddr + i);//..
+//        }
+//    }
     //machine->DumpState();
     //machine->DumpMem();
-    DumpPageTable();
+   // DumpPageTable();
 }
 
 //----------------------------------------------------------------------
@@ -152,6 +156,7 @@ AddrSpace::AddrSpace(OpenFile *executable)
 AddrSpace::~AddrSpace()
 {
    delete pageTable;
+   delete swapFileName;
 }
 
 //----------------------------------------------------------------------
@@ -208,7 +213,7 @@ void AddrSpace::SaveState()
 void AddrSpace::RestoreState() 
 {
     //DEBUG('d', "AddrSpace::RestoreState\n");
-    printf("AddrSpace::RestoreState\n");
+    DEBUG('v', "AddrSpace::RestoreState\n");
     //***********************//
     machine->InvalidAllEntryInTLB();    //cose me so much time!!!!!!!
                                         // must invalid all before update pageTable.
@@ -216,8 +221,8 @@ void AddrSpace::RestoreState()
     machine->pageTable = pageTable;         
     machine->pageTableSize = numPages;
     //.cqy
-    machine->DumpPageTable();
-    printf("leave AddrSpace::RestoreState\n");
+    //machine->DumpPageTable();
+    DEBUG('v', "leave AddrSpace::RestoreState\n");
 }
 
 //only responsible for calculating PAddr.
@@ -232,4 +237,74 @@ void AddrSpace::DumpPageTable(){
     for (int i = 0; i < numPages; ++i){
         printf("%d\t%d\n", i, pageTable[i].physicalPage);
     }   
+}
+
+// invoked after the thread is running, but not
+void AddrSpace::CreateSwapFile(OpenFile *executable, int fileSize){
+
+    NoffHeader noffH;
+    executable -> ReadAt((char *)&noffH, sizeof(noffH), 0);
+    if ((noffH.noffMagic != NOFFMAGIC) && (WordToHost(noffH.noffMagic) == NOFFMAGIC))
+        SwapHeader(&noffH);
+    ASSERT(noffH.noffMagic == NOFFMAGIC);
+
+    int bufferSize = fileSize + 10;
+    char buffer[bufferSize];
+    bzero(buffer, bufferSize);
+
+    if (noffH.code.size > 0){
+        executable->ReadAt(buffer, noffH.code.size, noffH.code.inFileAddr);
+    }
+    if (noffH.initData.size > 0){
+        executable->ReadAt(buffer + noffH.code.size, noffH.initData.size, noffH.initData.inFileAddr);
+    }
+
+    fileSystem->Create(swapFileName, fileSize);
+    OpenFile * fileHandler = fileSystem->Open(swapFileName);
+    fileHandler->WriteAt(buffer, fileSize, 0);
+    delete fileHandler;
+}
+
+void AddrSpace::ForcedSwapPageToFile(int vpn){
+    DEBUG('d', "Enter AddrSpace::ForcedSwapPageToFile\n");
+    if (pageTable[vpn].dirty){
+        OpenFile * fileHandler = fileSystem->Open(swapFileName);
+        int ppn = pageTable[vpn].physicalPage;
+        fileHandler->WriteAt(&(machine->mainMemory[ppn * PageSize]), PageSize, vpn * PageSize);
+        pageTable[vpn].valid = FALSE;
+        delete fileHandler;
+        DEBUG('d', "Dirty page, write back.\n");
+    }else{
+        DEBUG('d', "Not a dirty page.\n");
+    }
+
+    DEBUG('d', "Leave AddrSpace::ForcedSwapPageToFile\n");
+}
+
+void AddrSpace::ForcedLoadPageToMemory(int vpn, int ppn){
+    DEBUG('d', "Enter AddrSpace::ForcedLoadPageToMemory\n");
+    OpenFile * fileHandler = fileSystem->Open(swapFileName);
+    fileHandler->ReadAt(&(machine->mainMemory[ppn * PageSize]), PageSize, vpn * PageSize);
+    pageTable[vpn].physicalPage = ppn;
+    pageTable[vpn].valid = TRUE;
+    pageTable[vpn].dirty = FALSE;
+    pageTable[vpn].use = FALSE;
+    pageTable[vpn].readOnly = FALSE;  // how to save its value.?
+    delete fileHandler;
+    DEBUG('d', "Leave AddrSpace::ForcedSwapPageToFile\n");
+}
+
+// base = 10;
+// val < 1000
+char* AddrSpace::my_itoa(int val, char * str){
+    ASSERT(val < 1000);
+    int a[3];
+    a[0] = val / 100;
+    a[1] = (val % 100) / 10;
+    a[2] = (val % 10);
+    for (int i = 0; i < 3; ++i){
+        str[i] = (char)(a[i] + '0');
+    }
+    str[3] = '\0';
+    return str;
 }

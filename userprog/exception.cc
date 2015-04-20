@@ -26,13 +26,17 @@
 #include "syscall.h"
 
 void TlbMissExceptionHandler(){
+  DEBUG('d', "Enter TlbMissExceptionHandler\n");
 	int badVAddr = machine->ReadRegister(BadVAddrReg);
 	int vpn = (unsigned int) badVAddr / PageSize;
 	machine->CachePageEntryInTLB(vpn);
+  DEBUG('d', "Leave TlbMissExceptionHandler\n");
 }
 
 void PageFaultExceptionHandler(int vpn){
-	
+  DEBUG('d', "Enter PageFaultExceptionHandler\n");
+  machine->LoadPageToMemory(vpn);
+  DEBUG('d', "Leave PageFaultExceptionHandler\n");
 }
 
 //----------------------------------------------------------------------

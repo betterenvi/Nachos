@@ -184,6 +184,18 @@ Machine::WriteMem(int addr, int size, int value)
 // 	"writing" -- if TRUE, check the "read-only" bit in the TLB
 //----------------------------------------------------------------------
 
+//. whether there is the case or not: one TLB entry is valid, 
+//	but corresponding entry in page table is invalid because of swapping.
+//	TLB is specific to one thread, so the question is equivalent to that 
+//	whether a thread's page is swapped into disk but its page entry is cache in TLB.
+//	I think the answer is yes.
+//	Just say, Nachos now is running one user prog, but this prog is large so that 
+//	the main memory cannot store all the data. TLB replacing algorithm is very simple, 
+//	say, always replacing the first entry. In this situation, what we worry does happen.
+//	Therefore, one thing we need to do when swapping happens is that check 
+//	whether the swapped page's page entry is cached in TLB or not.
+//	If yes, invalidate it.
+//..
 ExceptionType
 Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
 {
@@ -259,12 +271,19 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
     entry->use = TRUE;		// set the use, dirty bits
     //.cqy
     entry->lastUsed = stats->totalTicks;
-
+//.
+//    if (writing)
+//		entry->dirty = TRUE;	// useless for TLB
+    pageTable[vpn].use = TRUE;
+    pageTable[vpn].lastUsed = stats->totalTicks;
     if (writing)
-		entry->dirty = TRUE;
+    	pageTable[vpn].dirty = TRUE;
+//..
+
     *physAddr = pageFrame * PageSize + offset;
     ASSERT((*physAddr >= 0) && ((*physAddr + size) <= MemorySize));
     DEBUG('a', "phys addr = 0x%x\n", *physAddr);
 	ctrlLock->Release();
     return NoException;
 }
+

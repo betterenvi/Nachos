@@ -17,11 +17,11 @@
 //.
 void FireProcess(int which)
 {
-    printf("Enter FireProcess.\n");
+    DEBUG('d', "Enter FireProcess.\n");
     currentThread->space->InitRegisters();
     currentThread->space->RestoreState();
-    machine->DumpPageTable();
-    printf("In FireProcess.\n");
+    //machine->DumpPageTable();
+    DEBUG('d', "In FireProcess.\n");
     machine->Run();
 }
 void CreatProcess(char *filename){
@@ -31,13 +31,14 @@ void CreatProcess(char *filename){
         printf("Unable to open file %s\n", filename);
         return;
     }
-    space = new AddrSpace(executable);   
-    delete executable;
-
+    
     Thread *t = createThread("UserProg", 4);
     if (t == NULL){
         return;
     }
+    space = new AddrSpace(executable, t->getTid());   
+    delete executable;
+
     t->space = space;
     t->Fork(FireProcess, t->getTid());
 }
@@ -59,7 +60,7 @@ StartProcess(char *filename)
 	printf("Unable to open file %s\n", filename);
 	return;
     }
-    space = new AddrSpace(executable);    
+    space = new AddrSpace(executable, currentThread->getTid());    
     currentThread->space = space;
 
     delete executable;			// close file

@@ -68,7 +68,7 @@ Semaphore::P()
     
     while (value == 0) { 			// semaphore not available
 	queue->Append((void *)currentThread);	// so go to sleep
-    printf("Thread %d goes to sleep because of P()\n", currentThread->getTid());
+    DEBUG('d', "Thread %d goes to sleep because of P()\n", currentThread->getTid());
 	currentThread->Sleep();
     } 
     value--; 					// semaphore available, 
@@ -137,7 +137,7 @@ void Condition::Wait(Lock* conditionLock) {
     ASSERT(conditionLock->isHeldByCurrentThread());
     conditionLock->Release();
     queue->Append((void *)currentThread);
-    printf("Condition.Wait: Thread %d sleep.\n", currentThread->getTid());
+    DEBUG('d', "Condition.Wait: Thread %d sleep.\n", currentThread->getTid());
     currentThread->Sleep();
     conditionLock->Acquire();
     (void) interrupt->SetLevel(oldLevel);

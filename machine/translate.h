@@ -36,11 +36,21 @@ class TranslationEntry {
 			// (In other words, the entry hasn't been initialized.)
     bool readOnly;	// If this bit is set, the user program is not allowed
 			// to modify the contents of the page.
-    bool use;           // This bit is set by the hardware every time the
-			// page is referenced or modified.
-    bool dirty;         // This bit is set by the hardware every time the
+            //.. useless for TLB.
+    bool use;           // This bit is set by the hardware every time the   
+			// page is referenced or modified.                             
+            //.. different use for TLB and page table.
+            //..    for TLB, used to specify whether one TLB entry is used.
+            //..    for page table, used to specify whethre one page is used.
+    bool dirty;         // This bit is set by the hardware every time the   
 			// page is modified.
-    int lastUsed; //. used for LRU
+            //.. useless for TLB
+    int lastUsed; 
+            //. used for LRU
+            //  different use for TLB and Page table
+            //      for TLB, represents one TLB entry's last access time.
+            //      for Page table, represents one page's last access time.
+            //..
 };
 
 #endif

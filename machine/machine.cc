@@ -84,6 +84,7 @@ Machine::Machine(bool debug)
     numTLBAccess = 0;
     //memBitMap = new BitMap(NumPhysPages);
     accessLock = new Lock("accessLock");
+    pageUsageTable = new PageUsageEntry[NumPhysPages];
     //..
 }
 
@@ -240,32 +241,35 @@ void Machine::CachePageEntryInTLB(unsigned int vpn){
         numTLBEvict += 1;
         switch(replaceAlgorithmOfTLB){
             case LRU:
-                target = GetReplaceTargetByLRU();
+                target = GetReplaceTargetInTLBByLRU();
                 break;
             case NRU:
-                target = GetReplaceTargetByNRU();
+                target = GetReplaceTargetInTLBByNRU();
                 break;
             default:        //replace the first, very naive.
                 target = 0;
         }
 
         //write back the evicted entry to page table
-        WriteBackPageEntry(target);
+        //  previous sentence results from my wrong thoughts. no need write back a tlb entry.
+        //  WriteBackPageEntry(target);
     }
 
     //Maybe page fault? Yes.
     // When page fault happens, we can know corresponding page is not mapped into main memory,
     // and thus the virtual addr does have a corresponding physical addr.
-    if (pageTable[vpn].physicalPage < 0){   // page fault
+    if (!pageTable[vpn].valid){   // page fault
         PageFaultExceptionHandler(vpn);
     }
 
     //update TLB
     tlb[target] = pageTable[vpn];
     tlb[target].valid = TRUE;
-    tlb[target].dirty = FALSE;
+   // tlb[target].dirty = FALSE; //useless
 }
 
+
+// this is a useless method, resulted from my wrong thoughts.
 void Machine::WriteBackPageEntry(int target){
     DEBUG('v', "Enter WriteBackPageEntry\n");
 
@@ -290,7 +294,7 @@ class   use dirty
 2:      1   0
 3:      1   1
 */
-int Machine::GetReplaceTargetByNRU(){
+int Machine::GetReplaceTargetInTLBByNRU(){
     int classVal[TLBSize];
     for (int i = 0; i < TLBSize; ++i){
         classVal[i] = (((int)tlb[i].use) << 1) + (int) tlb[i].dirty;
@@ -312,7 +316,7 @@ void Machine::ClearRBit(){
     }
 }
 
-int Machine::GetReplaceTargetByLRU(){
+int Machine::GetReplaceTargetInTLBByLRU(){
     int target = 0;
     int targetLastUsed = tlb[target].lastUsed;
     for (int i = 1; i < TLBSize; ++i){
@@ -326,8 +330,8 @@ int Machine::GetReplaceTargetByLRU(){
 
 void Machine::InvalidAllEntryInTLB(){
     for (int i = 0; i < TLBSize; ++i){
-        if (tlb[i].valid && tlb[i].dirty)
-            WriteBackPageEntry(i);
+//        if (tlb[i].valid && tlb[i].dirty)
+//            WriteBackPageEntry(i);
         tlb[i].valid = FALSE;
     }
 }
@@ -349,4 +353,76 @@ void Machine::DumpPageTable(){
     for (int i = 0; i < pageTableSize; ++i){
         printf("%d\t%d\n", i, pageTable[i].physicalPage);
     }
+}
+
+int Machine::GetReplaceTargetInMemByLRU(){
+    int target = -1;
+    int targetLastUsed = -1;
+    for (int i = 0; i < NumPhysPages; ++i){
+        TranslationEntry *pgTable = pageUsageTable[i].space->pageTable;
+        int vpn = pageUsageTable[i].vpn;
+        if (targetLastUsed < 0 || pgTable[vpn].lastUsed < targetLastUsed){
+            target = i;
+            targetLastUsed = pgTable[vpn].lastUsed;
+        }
+
+    }
+    return target;
+}
+
+// check if this page's page table entry is cached in TLB. If yes, invalidate it.
+bool Machine::InvalidateSwappedPageEntryInTLB(int ppn){
+    for (int i = 0; i < TLBSize; ++i){
+        if (tlb[i].physicalPage == ppn){
+            tlb[i].valid = FALSE;
+            DEBUG('d', "Invalidate swapped entry TLB: %d\n", ppn);
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+void Machine::SwapPageToFile(int ppn){
+    DEBUG('d', "Enter Machine::SwapPageToFile\n");
+    int vpn = pageUsageTable[ppn].vpn;
+    pageUsageTable[ppn].space->ForcedSwapPageToFile(vpn);
+    pageUsageTable[ppn].space = NULL;
+    InvalidateSwappedPageEntryInTLB(ppn);
+    DEBUG('d', "Leave Machine::SwapPageToFile\n");
+
+}
+
+
+void Machine::LoadPageToMemory(int vpn){
+    DEBUG('d', "Enter Machine::LoadPageToMemory\n");
+    int targetPage = -1;
+    /*for (int i = 0; i < NumPhysPages; ++i){
+        if (machine->pageUsageTable[i].space == NULL){
+            targetPage = i;
+            break;
+        }
+    }*/
+
+    targetPage = memBitMap->Find();
+    
+    //Swapping
+    if (targetPage < 0){
+        //choose a target to swap
+        switch(replaceAlgorithmOfMemPage){
+            case LRU:
+                targetPage = machine->GetReplaceTargetInMemByLRU();
+                break;
+            default:
+                targetPage = 0;
+                break;
+        }
+
+        // swap
+        SwapPageToFile(targetPage);
+    }  
+
+    currentThread->space->ForcedLoadPageToMemory(vpn, targetPage);
+    pageUsageTable[targetPage].space = currentThread->space;
+    pageUsageTable[targetPage].vpn = vpn;
+    DEBUG('d', "Leave Machine::LoadPageToMemory\n");
 }

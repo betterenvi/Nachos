@@ -83,6 +83,8 @@ Initialize(int argc, char **argv)
     char* debugArgs = "";
     bool randomYield = FALSE;
 
+    int replaceAlgorithmOfTLB = 0; 
+
 #ifdef USER_PROGRAM
     bool debugUserProg = FALSE;	// single step user program
 #endif
@@ -113,6 +115,8 @@ Initialize(int argc, char **argv)
 #ifdef USER_PROGRAM
 	if (!strcmp(*argv, "-s"))
 	    debugUserProg = TRUE;
+    if (!strcmp(*argv, "-rpl"))
+        replaceAlgorithmOfTLB = atoi(*(argv + 1));
 #endif
 #ifdef FILESYS_NEEDED
 	if (!strcmp(*argv, "-f"))
@@ -156,6 +160,7 @@ Initialize(int argc, char **argv)
 #ifdef USER_PROGRAM
     machine = new Machine(debugUserProg);	// this must come first
     memBitMap = new BitMap(NumPhysPages);
+    machine->replaceAlgorithmOfTLB = replaceAlgorithmOfTLB;
 #endif
 
 #ifdef FILESYS
@@ -186,6 +191,7 @@ Cleanup()
     
 #ifdef USER_PROGRAM
     delete machine;
+    delete memBitMap;
 #endif
 
 #ifdef FILESYS_NEEDED
