@@ -40,6 +40,7 @@ class AddrSpace {
     void ForcedSwapPageToFile(int vpn);
     void ForcedLoadPageToMemory(int vpn, int ppn);
     char* my_itoa(int val, char * str);  //val < 1000
+    void SwapAllPagesToFile();
  //   TranslationEntry *GetPageTable(){return page}
     //..
 

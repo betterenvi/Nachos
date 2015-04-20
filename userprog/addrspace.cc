@@ -317,3 +317,13 @@ char* AddrSpace::my_itoa(int val, char * str){
     str[3] = '\0';
     return str;
 }
+
+void AddrSpace::SwapAllPagesToFile(){
+    DEBUG('d', "Enter AddrSpace::SwapAllPagesToFile\n");
+    for (int i = 0; i < numPages; ++i){
+        if (pageTable[i].valid){
+            ForcedSwapPageToFile(i);
+        }
+    }
+    DEBUG('d', "Leave AddrSpace::SwapAllPagesToFile\n");
+}

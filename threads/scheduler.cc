@@ -74,7 +74,13 @@ Thread *
 Scheduler::FindNextToRun ()
 {
 //    Print();
-    return (Thread *)readyList->Remove();
+    do{
+        Thread *t = (Thread *)readyList->Remove();
+        if (t == NULL)
+            return NULL;
+        if (t->getStatus() != SUSPENDED_RDY)
+            return t;
+    } while(TRUE);
 }
 
 //----------------------------------------------------------------------
@@ -151,3 +157,7 @@ Scheduler::Print()
     printf("\nReady list ends.\n");
 }
 
+
+void Scheduler::RemoveFromReadyList(Thread* thread){
+    //To do
+}

@@ -80,7 +80,7 @@ Thread::~Thread()
 	DeallocBoundedArray((char *) stack, StackSize * sizeof(int));
 }
 
-char* Thread::getStatus(){
+char* Thread::getStatusName(){
     switch(status){
         case JUST_CREATED:
             return "CREATED";
@@ -355,5 +355,31 @@ Thread::RestoreUserState()
 {
     for (int i = 0; i < NumTotalRegs; i++)
 	machine->WriteRegister(i, userRegisters[i]);
+}
+
+void Thread::Suspend(){
+    DEBUG('d', "Thread %d Enter Thread::Suspend\n", getTid());
+
+    space->SwapAllPagesToFile();
+    ASSERT(status == BLOCKED || status == READY);
+    if (status == BLOCKED)
+        status = SUSPENDED_BLK;
+    else if (status == READY)
+        status = SUSPENDED_RDY;
+
+    DEBUG('d', "Thread %d Leave Thread::Suspend\n", getTid());
+}
+
+void Thread::Awake(){
+    DEBUG('d', "Thread %d Enter Thread::Awake\n", getTid());
+    
+    ASSERT(status == BLOCKED || status == READY);
+    if (status == SUSPENDED_BLK)
+        status = BLOCKED;
+    else if (status == SUSPENDED_RDY){
+        scheduler->ReadyToRun(this);
+    }
+
+    DEBUG('d', "Thread %d Leave Thread::Awake\n", getTid());
 }
 #endif

@@ -58,7 +58,7 @@
 
 //using namespace std;
 // Thread state
-enum ThreadStatus { JUST_CREATED, RUNNING, READY, BLOCKED };
+enum ThreadStatus { JUST_CREATED, RUNNING, READY, BLOCKED, SUSPENDED_BLK, SUSPENDED_RDY };
 //extern char ** nameOfStatus;//[4] = {"CREATE", "RUNNING", "READY", "BLOCKED"};
 //extern vector<char*> statusName;
 
@@ -102,7 +102,8 @@ class Thread {
     void CheckOverflow();   			// Check if thread has 
 						// overflowed its stack
     void setStatus(ThreadStatus st) { status = st; }
-    char* getStatus();//{return statusName[status];}
+    ThreadStatus getStatus(){ return status;}
+    char* getStatusName();//{return statusName[status];}
     char* getName() { return (name); }
     void Print() { printf("[%d, %d]", tid, priority); }
     void setTid(int tid_v) {tid = tid_v;}    
@@ -110,6 +111,8 @@ class Thread {
     int getTid() {return tid;}
     void setPriority(int pri){priority = pri;}
     int getPriority(){return priority;}
+    void Suspend();
+    void Awake();
   private:
     // some of the private data for this class is listed above
     

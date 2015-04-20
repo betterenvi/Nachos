@@ -30,7 +30,7 @@ void TidManager::ts(){
     printf("Tid\tUid\tPri\tName\tStatus\n");
     for (itr = allThreads.begin(); itr != allThreads.end(); ++itr){
         Thread *t = itr->second;
-        printf("%d\t%d\t%d\t%s\t%s\n", t->getTid(), t->getUid(), t->getPriority(), t->getName(), t->getStatus());
+        printf("%d\t%d\t%d\t%s\t%s\n", t->getTid(), t->getUid(), t->getPriority(), t->getName(), t->getStatusName());
         
     }
 }

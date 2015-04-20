@@ -92,8 +92,12 @@ Semaphore::V()
     IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
     thread = (Thread *)queue->Remove();
-    if (thread != NULL)	   // make thread ready, consuming the V immediately
-	scheduler->ReadyToRun(thread);
+    if (thread != NULL){	   // make thread ready, consuming the V immediately
+        if (thread->getStatus() == BLOCKED)
+	       scheduler->ReadyToRun(thread);
+        else //SUSPEND_BLK
+            thread->setStatus(SUSPENDED_RDY);
+    }
     value++;
     (void) interrupt->SetLevel(oldLevel);
 }
