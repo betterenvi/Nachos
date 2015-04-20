@@ -165,10 +165,24 @@ Machine::WriteMem(int addr, int size, int value)
 	
       default: ASSERT(FALSE);
     }
-    
+    //.
+ /*   Lock *ctrlLock = (Lock *)(machine->accessLock);
+	DEBUG('d', "curr:%d %d\n", currentThread->getTid(), (int)(ctrlLock->isHeldByCurrentThread()));
+	ctrlLock->Acquire();
+	machine->numPageAccess += 1;
+	ctrlLock->Release();*/
+	//..
     return TRUE;
 }
 
+void Machine::AcquireLock(){
+	Lock *ctrlLock = (Lock *)(machine->accessLock);
+	ctrlLock->Acquire();
+}
+void Machine::ReleaseLock(){
+	Lock *ctrlLock = (Lock *)(machine->accessLock);
+	ctrlLock->Release();
+}
 //----------------------------------------------------------------------
 // Machine::Translate
 // 	Translate a virtual address into a physical address, using 
@@ -199,9 +213,10 @@ Machine::WriteMem(int addr, int size, int value)
 ExceptionType
 Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
 {
-	Lock *ctrlLock = (Lock *)(machine->accessLock);
-	DEBUG('d', "curr:%d %d\n", currentThread->getTid(), (int)(ctrlLock->isHeldByCurrentThread()));
-	ctrlLock->Acquire();
+//	Lock *ctrlLock = (Lock *)(machine->accessLock);
+	//DEBUG('d', "curr:%d %d\n", currentThread->getTid(), (int)(ctrlLock->isHeldByCurrentThread()));
+//	ctrlLock->Acquire();
+	AcquireLock();
 	DEBUG('d', "curr:%d %d\n", currentThread->getTid(), (int)(ctrlLock->isHeldByCurrentThread()));
     int i;
     unsigned int vpn, offset;
@@ -238,6 +253,7 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
 		entry = &pageTable[vpn];
 	} else {
 		machine->numTLBAccess += 1;
+		bool firstAccess = TRUE;
     	while(TRUE){
 	        for (entry = NULL, i = 0; i < TLBSize; i++){
 	    	    if (tlb[i].valid && (tlb[i].virtualPage == vpn)) {
@@ -245,8 +261,14 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
 					break;
 		    	}
 		    }
-			if (entry != NULL) 				//  found
+			if (entry != NULL){ 				//  found
+				if (firstAccess){
+					machine->numTLBHit += 1;
+					machine->numPageHit += 1;
+				}
 				break;
+			}
+			firstAccess = FALSE;
 			DEBUG('a', "*** no valid TLB entry found for this virtual page!\n");
 	    	    /*return PageFaultException;		// really, this is a TLB fault,
 							// the page may be in memory,
@@ -283,7 +305,11 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
     *physAddr = pageFrame * PageSize + offset;
     ASSERT((*physAddr >= 0) && ((*physAddr + size) <= MemorySize));
     DEBUG('a', "phys addr = 0x%x\n", *physAddr);
-	ctrlLock->Release();
+
+    machine->numPageAccess += 1;
+
+	//ctrlLock->Release();
+	ReleaseLock();
     return NoException;
 }
 

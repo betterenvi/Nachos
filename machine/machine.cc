@@ -79,12 +79,17 @@ Machine::Machine(bool debug)
     singleStep = debug;
     CheckEndian();
     //.
+    numTLBHit = 0;
     numTLBMiss = 0;
     numTLBEvict = 0;
     numTLBAccess = 0;
     //memBitMap = new BitMap(NumPhysPages);
     accessLock = new Lock("accessLock");
     pageUsageTable = new PageUsageEntry[NumPhysPages];
+    numPageFault = 0;
+    numPageHit = 0;
+    numPageAccess = 0;
+    numPageSwap = 0;
     //..
 }
 
@@ -259,7 +264,10 @@ void Machine::CachePageEntryInTLB(unsigned int vpn){
     // When page fault happens, we can know corresponding page is not mapped into main memory,
     // and thus the virtual addr does have a corresponding physical addr.
     if (!pageTable[vpn].valid){   // page fault
+        machine->numPageFault += 1;
         PageFaultExceptionHandler(vpn);
+    } else{
+        machine->numPageHit += 1;
     }
 
     //update TLB
@@ -404,7 +412,7 @@ void Machine::LoadPageToMemory(int vpn){
     }*/
 
     targetPage = memBitMap->Find();
-    
+
     //Swapping
     if (targetPage < 0){
         //choose a target to swap
@@ -418,6 +426,7 @@ void Machine::LoadPageToMemory(int vpn){
         }
 
         // swap
+        numPageSwap += 1;
         SwapPageToFile(targetPage);
     }  
 

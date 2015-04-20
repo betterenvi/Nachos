@@ -218,12 +218,16 @@ class Machine {
     void DumpPageTable();
 
     int replaceAlgorithmOfTLB;
+    int numTLBHit;
     int numTLBMiss;
     int numTLBEvict;
     int numTLBAccess;
     void *accessLock;   //recursive include failed, forward declaration failed, 
                         //  therefore use void *, when what to use it in .cpp file, 
                         //  cast to (Lock *) type.
+    void AcquireLock();
+    void ReleaseLock();
+    
    // BitMap *memBitMap;
     PageUsageEntry *pageUsageTable;
     int GetReplaceTargetInMemByLRU();
@@ -231,6 +235,10 @@ class Machine {
     bool InvalidateSwappedPageEntryInTLB(int ppn);
     void SwapPageToFile(int ppn);
     void LoadPageToMemory(int vpn);
+    int numPageFault;
+    int numPageHit;
+    int numPageAccess;
+    int numPageSwap;
     //..
 
   private:

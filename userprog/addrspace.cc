@@ -156,7 +156,16 @@ AddrSpace::AddrSpace(OpenFile *executable, int tid)
 AddrSpace::~AddrSpace()
 {
    delete pageTable;
+   //.
+   machine->AcquireLock();
+   fileSystem->Remove(swapFileName);
+   for (int i = 0; i < numPages; ++i){
+        if (pageTable[i].valid)
+            memBitMap->Clear(pageTable[i].physicalPage);
+   }
+   machine->ReleaseLock();
    delete swapFileName;
+   //..
 }
 
 //----------------------------------------------------------------------

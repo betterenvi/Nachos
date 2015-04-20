@@ -84,7 +84,7 @@ ExceptionHandler(ExceptionType which)
    					break;
    				case SC_Exit:
    					DEBUG('a', "Exit in ExceptionHandler.\n");
-   					interrupt->Halt();
+   					currentThread->Finish();
    					break;
    				default:
    					break;

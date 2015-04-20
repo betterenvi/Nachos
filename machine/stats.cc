@@ -43,11 +43,16 @@ Statistics::Print()
 	numPacketsSent);
 
     #ifdef USER_PROGRAM
-    int numTLBHit = machine->numTLBAccess - machine->numTLBMiss;
-    printf("TLB: accesses %d, hits %d, misses %d, evicts %d, hit rate %.2f\n", machine->numTLBAccess,
+    //int numTLBHit = machine->numTLBAccess - machine->numTLBMiss;
+    int numTLBHit = machine->numTLBHit;
+    printf("TLB: accesses %d, hits %d, misses %d, evicts %d, hit rate %.4f\n", machine->numTLBAccess,
         numTLBHit, machine->numTLBMiss, machine->numTLBEvict, 
         numTLBHit / (float) machine->numTLBAccess);
 
     printf("Memory: total %d, used %d (unit: page)\n", memBitMap->GetSize(), memBitMap->GetUsed());
+    ASSERT(numTLBHit + machine->numTLBMiss == machine->numTLBAccess);
+    printf("Memory access: total %d, hits %d, faults %d, swaps %d, hit rate %.4f\n", machine->numPageAccess, 
+        machine->numPageHit, machine->numPageFault, machine->numPageSwap,
+        machine->numPageHit / (float) machine->numPageAccess);
     #endif
 }
