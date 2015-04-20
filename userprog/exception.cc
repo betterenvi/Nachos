@@ -86,6 +86,9 @@ ExceptionHandler(ExceptionType which)
    					DEBUG('a', "Exit in ExceptionHandler.\n");
    					currentThread->Finish();
    					break;
+          case SC_Print:
+            printf("Value: %d\n",machine->ReadRegister(4));
+            break;
    				default:
    					break;
     		}

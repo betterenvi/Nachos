@@ -117,7 +117,7 @@ Initialize(int argc, char **argv)
 	if (!strcmp(*argv, "-s"))
 	    debugUserProg = TRUE;
     if (!strcmp(*argv, "-rplt")){
-        if (!strcmp(*(argv + 1), "SIM")){
+        if (!strcmp(*(argv + 1), "SIM"))
             replaceAlgorithmOfTLB = SIM;
         else if (!strcmp(*(argv + 1), "NRU"))
             replaceAlgorithmOfTLB = NRU;

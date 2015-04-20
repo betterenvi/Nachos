@@ -32,5 +32,8 @@ main()
     for (i = 0; i < N; i++){
         printf("%d \n", A[i]);
     }*/
+    for (i = 0; i < N; i++){
+        Print(A[i]);
+    }
     Exit(A[0]);		/* and then we're done -- should be 0! */
 }
