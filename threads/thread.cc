@@ -90,6 +90,10 @@ char* Thread::getStatusName(){
             return "READY";
         case BLOCKED:
             return "BLOCKED";
+        case SUSPENDED_BLK:
+            return "SUSPENDED_BLK";
+        case SUSPENDED_RDY:
+            return "SUSPENDED_RDY";
     }
 }
 //----------------------------------------------------------------------

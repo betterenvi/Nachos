@@ -78,7 +78,8 @@ AddrSpace::AddrSpace(OpenFile *executable, int tid)
     numPages = divRoundUp(size, PageSize);
     size = numPages * PageSize;
 
-    ASSERT(numPages <= NumPhysPages);		// check we're not trying
+    // when using lazy-loading, no need to check this.
+ //.   ASSERT(numPages <= NumPhysPages);		// check we're not trying
 						// to run anything too big --
 						// at least until we have
 						// virtual memory
@@ -276,16 +277,20 @@ void AddrSpace::CreateSwapFile(OpenFile *executable, int fileSize){
 
 void AddrSpace::ForcedSwapPageToFile(int vpn){
     DEBUG('d', "Enter AddrSpace::ForcedSwapPageToFile\n");
+    int ppn = pageTable[vpn].physicalPage;
     if (pageTable[vpn].dirty){
         OpenFile * fileHandler = fileSystem->Open(swapFileName);
-        int ppn = pageTable[vpn].physicalPage;
         fileHandler->WriteAt(&(machine->mainMemory[ppn * PageSize]), PageSize, vpn * PageSize);
-        pageTable[vpn].valid = FALSE;
+    //    pageTable[vpn].valid = FALSE; //if not dirty, we also need to invalidate it!!!!
+    //      cost me so much time!!!!!
+        pageTable[vpn].physicalPage= -1;
         delete fileHandler;
-        DEBUG('d', "Dirty page, write back.\n");
+        DEBUG('d', "Dirty page %d, write back.\n", ppn);
     }else{
-        DEBUG('d', "Not a dirty page.\n");
+        DEBUG('d', "Not a dirty page %d.\n", ppn);
     }
+
+    pageTable[vpn].valid = FALSE;
 
     DEBUG('d', "Leave AddrSpace::ForcedSwapPageToFile\n");
 }
@@ -300,7 +305,7 @@ void AddrSpace::ForcedLoadPageToMemory(int vpn, int ppn){
     pageTable[vpn].use = FALSE;
     pageTable[vpn].readOnly = FALSE;  // how to save its value.?
     delete fileHandler;
-    DEBUG('d', "Leave AddrSpace::ForcedSwapPageToFile\n");
+    DEBUG('d', "Leave AddrSpace::ForcedLoadPageToMemory\n");
 }
 
 // base = 10;

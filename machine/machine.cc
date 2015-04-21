@@ -265,9 +265,16 @@ void Machine::CachePageEntryInTLB(unsigned int vpn){
     // When page fault happens, we can know corresponding page is not mapped into main memory,
     // and thus the virtual addr does have a corresponding physical addr.
     if (!pageTable[vpn].valid){   // page fault
+        //printf("in valid\n");
         machine->numPageFault += 1;
         PageFaultExceptionHandler(vpn);
     } else{
+        //printf("valid\n");
+
+        if (pageUsageTable[pageTable[vpn].physicalPage].space != currentThread->space){
+            printf("Space Error Here\n");
+            ASSERT(FALSE);
+        }
         machine->numPageHit += 1;
     }
 
@@ -432,7 +439,11 @@ void Machine::LoadPageToMemory(int vpn){
     }  
 
     currentThread->space->ForcedLoadPageToMemory(vpn, targetPage);
+  //  printf("BefspaceofThread %d: %8.8x %8.8x %d\n", currentThread->getTid(),
+  //      pageUsageTable[targetPage].space, currentThread->space, targetPage);
     pageUsageTable[targetPage].space = currentThread->space;
+  //  printf("spaceofThread %d: %8.8x %8.8x %d\n", currentThread->getTid(),
+  //      pageUsageTable[targetPage].space, currentThread->space, targetPage);
     pageUsageTable[targetPage].vpn = vpn;
     DEBUG('d', "Thread %d Leave Machine::LoadPageToMemory\n", currentThread->getTid());
 }

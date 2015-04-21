@@ -94,6 +94,10 @@ Machine::ReadMem(int addr, int size, int *value)
     
     DEBUG('a', "Reading VA 0x%x, size %d\n", addr, size);
     
+    //.
+    AcquireLock();
+    //..
+
     exception = Translate(addr, &physicalAddress, size, FALSE);
     if (exception != NoException) {
 	machine->RaiseException(exception, addr);
@@ -117,7 +121,10 @@ Machine::ReadMem(int addr, int size, int *value)
 
       default: ASSERT(FALSE);
     }
-    
+    //.
+    ReleaseLock();
+    //..
+
     DEBUG('a', "\tvalue read = %8.8x\n", *value);
     return (TRUE);
 }
@@ -142,6 +149,9 @@ Machine::WriteMem(int addr, int size, int value)
     int physicalAddress;
      
     DEBUG('a', "Writing VA 0x%x, size %d, value 0x%x\n", addr, size, value);
+    //.
+    AcquireLock();
+    //..
 
     exception = Translate(addr, &physicalAddress, size, TRUE);
     if (exception != NoException) {
@@ -171,6 +181,8 @@ Machine::WriteMem(int addr, int size, int value)
 	ctrlLock->Acquire();
 	machine->numPageAccess += 1;
 	ctrlLock->Release();*/
+	//..
+	ReleaseLock();
 	//..
     return TRUE;
 }
@@ -216,7 +228,7 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
 //	Lock *ctrlLock = (Lock *)(machine->accessLock);
 	//DEBUG('d', "curr:%d %d\n", currentThread->getTid(), (int)(ctrlLock->isHeldByCurrentThread()));
 //	ctrlLock->Acquire();
-	AcquireLock();
+//	AcquireLock();
 //	DEBUG('d', "curr:%d %d\n", currentThread->getTid(), (int)(ctrlLock->isHeldByCurrentThread()));
     int i;
     unsigned int vpn, offset;
@@ -240,6 +252,7 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
     vpn = (unsigned) virtAddr / PageSize;
     offset = (unsigned) virtAddr % PageSize;
     
+    bool hit = FALSE;
     if (tlb == NULL) {		// => page table => vpn is index into table
 		if (vpn >= pageTableSize) {
 		    DEBUG('a', "virtual page # %d too large for page table size %d!\n", 
@@ -263,12 +276,14 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
 		    }
 			if (entry != NULL){ 				//  found
 				if (firstAccess){
+					hit = TRUE;
 					machine->numTLBHit += 1;
 					machine->numPageHit += 1;
 				}
 				break;
 			}
 			firstAccess = FALSE;
+		//	printf("TLB miss\n");
 			DEBUG('a', "*** no valid TLB entry found for this virtual page!\n");
 	    	    /*return PageFaultException;		// really, this is a TLB fault,
 							// the page may be in memory,
@@ -307,9 +322,16 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
     DEBUG('a', "phys addr = 0x%x\n", *physAddr);
 
     machine->numPageAccess += 1;
-
+    if (pageUsageTable[pageFrame].space != currentThread->space){
+    	printf("Thread %d hit %d\n", currentThread->getTid(), hit);
+    	printf("%8.8x %8.8x %d\n", (unsigned) pageUsageTable[pageFrame].space, 
+    		(unsigned) currentThread->space, pageFrame);
+    	ASSERT(FALSE);
+    }else{
+   // 	printf("equivalent\n");
+    }
 	//ctrlLock->Release();
-	ReleaseLock();
+//	ReleaseLock();
     return NoException;
 }
 
