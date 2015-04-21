@@ -246,12 +246,15 @@ void Machine::CachePageEntryInTLB(unsigned int vpn){
         numTLBEvict += 1;
         switch(replaceAlgorithmOfTLB){
             case SIM:
+                DEBUG('d', "replaceAlgorithmOfTLB = SIM\n");
                 target = 0;
                 break;
             case NRU:
+                DEBUG('d', "replaceAlgorithmOfTLB = NRU\n");
                 target = GetReplaceTargetInTLBByNRU();
                 break;
             default:        //replace the first, very naive.
+                DEBUG('d', "replaceAlgorithmOfTLB = LRU\n");
                 target = GetReplaceTargetInTLBByLRU();
                 break;
         }
@@ -426,9 +429,11 @@ void Machine::LoadPageToMemory(int vpn){
         //choose a target to swap
         switch(replaceAlgorithmOfMemPage){
             case SIM:
+                DEBUG('d', "replaceAlgorithmOfMemPage = SIM\n");
                 targetPage = 0;
                 break;
             default:
+                DEBUG('d', "replaceAlgorithmOfMemPage = LRU\n");
                 targetPage = machine->GetReplaceTargetInMemByLRU();
                 break;
         }

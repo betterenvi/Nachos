@@ -161,8 +161,13 @@ AddrSpace::~AddrSpace()
    machine->AcquireLock();
    fileSystem->Remove(swapFileName);
    for (int i = 0; i < numPages; ++i){
-        if (pageTable[i].valid)
+        if (pageTable[i].valid){
             memBitMap->Clear(pageTable[i].physicalPage);
+
+            // although the statement has little influence on Nachos because of previous statement,
+            //  we would love to be perfect!
+            machine->pageUsageTable[pageTable[i].physicalPage].space = NULL;
+        }
    }
    machine->ReleaseLock();
    delete swapFileName;

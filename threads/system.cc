@@ -117,8 +117,11 @@ Initialize(int argc, char **argv)
 	if (!strcmp(*argv, "-s"))
 	    debugUserProg = TRUE;
     if (!strcmp(*argv, "-rplt")){
-        if (!strcmp(*(argv + 1), "SIM"))
+        if (!strcmp(*(argv + 1), "SIM")){
             replaceAlgorithmOfTLB = SIM;
+            //DEBUG('d', "in system.cc replaceAlgorithmOfTLB = SIM\n");   //this statement does not work here
+            //printf("in system.cc replaceAlgorithmOfTLB = SIM\n");
+        }
         else if (!strcmp(*(argv + 1), "NRU"))
             replaceAlgorithmOfTLB = NRU;
         else
@@ -126,8 +129,11 @@ Initialize(int argc, char **argv)
         argCount = 2;
     }
     if (!strcmp(*argv, "-rplp")){
-        if (!strcmp(*(argv + 1), "SIM"))
+        if (!strcmp(*(argv + 1), "SIM")){
             replaceAlgorithmOfMemPage = SIM;
+            //DEBUG('d', "in system.cc replaceAlgorithmOfMemPage = SIM\n");
+    //        printf("in system.cc replaceAlgorithmOfMemPage = SIM\n");
+        }
         else if (!strcmp(*(argv + 1), "NRU"))
             replaceAlgorithmOfMemPage = NRU;
         else
@@ -178,6 +184,7 @@ Initialize(int argc, char **argv)
     machine = new Machine(debugUserProg);	// this must come first
     memBitMap = new BitMap(NumPhysPages);
     machine->replaceAlgorithmOfTLB = replaceAlgorithmOfTLB;
+    machine->replaceAlgorithmOfMemPage = replaceAlgorithmOfMemPage;
 #endif
 
 #ifdef FILESYS
