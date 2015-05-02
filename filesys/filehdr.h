@@ -17,9 +17,13 @@
 #include "disk.h"
 #include "bitmap.h"
 
-#define NumDirect 	((SectorSize - 2 * sizeof(int)) / sizeof(int))
+#define NumDirect 	((SectorSize - 7 * sizeof(int)) / sizeof(int))
 #define MaxFileSize 	(NumDirect * SectorSize)
-
+//.
+#define REGULAR_FILE 0
+#define DIRECTORY 1
+#define NO_PATH_SECTOR -1
+//..
 // The following class defines the Nachos "file header" (in UNIX terms,  
 // the "i-node"), describing where on disk to find all of the data in the file.
 // The file header is organized as a simple table of pointers to
@@ -55,12 +59,30 @@ class FileHeader {
 					// in bytes
 
     void Print();			// Print the contents of the file.
+    //.
+    void initialize(int fileType, int filePathSector);
+    int getFileType(){return type;}
+    int getCreatTime(){return creatTime;}
+    int getLastAccessTime(){return lastAccessTime;}
+    void setLastAccessTime(int time){lastAccessTime = time;}
+    int getLastModifyTime(){return lastModifyTime;}
+    void setLastModifyTime(int time){lastModifyTime = time;}
+    int getPathSector(){return pathSector;}
+    void setPathSector(int filePathSector){pathSector = filePathSector;}
 
+    //..
   private:
     int numBytes;			// Number of bytes in the file
     int numSectors;			// Number of data sectors in the file
     int dataSectors[NumDirect];		// Disk sector numbers for each data 
 					// block in the file
+    //.
+    int type;       //REGULAR_FILE or DIRECTORY
+    int creatTime;
+    int lastAccessTime;
+    int lastModifyTime;
+    int pathSector; //father directory's header sector // can be NO_PATH_SECTOR
+    //..
 };
 
 #endif // FILEHDR_H

@@ -148,3 +148,10 @@ FileHeader::Print()
     }
     delete [] data;
 }
+
+//.
+void FileHeader::initialize(int fileType, int filePathSector){
+    type = fileType;
+    creatTime = lastAccessTime = lastModifyTime = stats->totalTicks;
+    pathSector = filePathSector;
+}

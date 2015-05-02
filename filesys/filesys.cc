@@ -98,7 +98,10 @@ FileSystem::FileSystem(bool format)
 
 	ASSERT(mapHdr->Allocate(freeMap, FreeMapFileSize));
 	ASSERT(dirHdr->Allocate(freeMap, DirectoryFileSize));
-
+    //.
+    mapHdr->initialize(REGULAR_FILE, NO_PATH_SECTOR);
+    dirHdr->initialize(DIRECTORY, NO_PATH_SECTOR);
+    //..
     // Flush the bitmap and directory FileHeaders back to disk
     // We need to do this before we can "Open" the file, since open
     // reads the file header off of disk (and currently the disk has garbage
