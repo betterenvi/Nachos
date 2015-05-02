@@ -16,13 +16,18 @@
 
 #include "disk.h"
 #include "bitmap.h"
-
-#define NumDirect 	((SectorSize - 7 * sizeof(int)) / sizeof(int))
-#define MaxFileSize 	(NumDirect * SectorSize)
+//. last entry as fisrt level index
+#define NumFirstLevel (SectorSize / sizeof(int))
+#define FisrtLevelMaxSize   (NumFirstLevel * SectorSize)
+#define NumDirect 	((SectorSize - 8 * sizeof(int)) / sizeof(int))
+#define DirectMaxSize  (NumDirect * SectorSize)
+#define NumSectors   (NumDirect + NumFirstLevel)
+#define MaxFileSize 	(NumBlocks * SectorSize)
 //.
 #define REGULAR_FILE 0
 #define DIRECTORY 1
-#define NO_PATH_SECTOR -1
+#define NO_PATH_SECTOR (-1)
+#define INVALID_POINTER (-1)       // sector 0 is header of bitmap
 //..
 // The following class defines the Nachos "file header" (in UNIX terms,  
 // the "i-node"), describing where on disk to find all of the data in the file.
@@ -73,7 +78,7 @@ class FileHeader {
     //..
   private:
     int numBytes;			// Number of bytes in the file
-    int numSectors;			// Number of data sectors in the file
+    int numbersSectors;			// Number of data sectors in the file
     int dataSectors[NumDirect];		// Disk sector numbers for each data 
 					// block in the file
     //.
@@ -82,6 +87,7 @@ class FileHeader {
     int lastAccessTime;
     int lastModifyTime;
     int pathSector; //father directory's header sector // can be NO_PATH_SECTOR
+
     //..
 };
 

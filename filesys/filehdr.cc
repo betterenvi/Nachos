@@ -41,13 +41,33 @@
 bool
 FileHeader::Allocate(BitMap *freeMap, int fileSize)
 { 
+    ASSERT(fileSize <= MaxFileSize);
     numBytes = fileSize;
     numSectors  = divRoundUp(fileSize, SectorSize);
     if (freeMap->NumClear() < numSectors)
 	return FALSE;		// not enough space
-
-    for (int i = 0; i < numSectors; i++)
-	dataSectors[i] = freeMap->Find();
+//.
+ //   for (int i = 0; i < numSectors; i++)
+//	dataSectors[i] = freeMap->Find();
+    if (numSectors <= NumDirect){
+        for (int i = 0; i < numSectors; i++)
+            dataSectors[i] = freeMap->Find();
+        for (int i = numSectors; i < NumDirect; ++i)
+            dataSectors[i] = INVALID_POINTER;
+        dataSectors[NumDirect] = INVALID_POINTER;
+    } else {
+        for (int i = 0; i < NumDirect; i++)
+            dataSectors[i] = freeMap->Find();
+        dataSectors[NumDirect] = freeMap->Find();
+        int remain = numSectors - NumDirect;
+        int sector_data[NumFirstLevel];
+        for (int i = 0; i < remain; ++i)
+            sector_data[i] = freeMap->Find();
+        for (int i = remain; i < NumFirstLevel; ++i)
+            sector_data[i] = INVALID_POINTER;
+        synchDisk->WriteSector(dataSectors[NumDirect], (char *)sector_data)
+    }
+//..
     return TRUE;
 }
 
@@ -65,6 +85,25 @@ FileHeader::Deallocate(BitMap *freeMap)
 	ASSERT(freeMap->Test((int) dataSectors[i]));  // ought to be marked!
 	freeMap->Clear((int) dataSectors[i]);
     }
+    //.
+    for (int i = 0; i < NumDirect; ++i){
+        if (dataSectors[i] == INVALID_POINTER)
+            return;
+        ASSERT(freeMap->Test((int) dataSectors[i]));
+        freeMap->Clear((int) dataSectors[i]);
+    }
+    //first level
+    if (dataSectors[NumDirect] == INVALID_POINTER)
+        return;
+    int sector_data[NumFirstLevel];
+    synchDisk->ReadSector(dataSectors[NumDirect], (char *) sector_data);
+    for (int i = 0; i < NumFirstLevel; ++i){
+        if (sector_data[i] == INVALID_POINTER)
+            return;
+        ASSERT(freeMap->Test((int) sector_data[i]));
+        freeMap->Clear((int) sector_data[i]);
+    }
+    //..
 }
 
 //----------------------------------------------------------------------
@@ -106,7 +145,14 @@ FileHeader::WriteBack(int sector)
 int
 FileHeader::ByteToSector(int offset)
 {
-    return(dataSectors[offset / SectorSize]);
+    //.return(dataSectors[offset / SectorSize]);
+    if (offset < DirectMaxSize)
+        return (dataSectors[offset / SectorSize]);
+    int remain = offset - DirectMaxSize;
+    int firstLevelSector[NumFirstLevel];
+    synchDisk->ReadSector(dataSectors[NumDirect], (char *) firstLevelSector);
+    return (firstLevelSector[remain / SectorSize]);
+    //..
 }
 
 //----------------------------------------------------------------------
