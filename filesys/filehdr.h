@@ -19,10 +19,10 @@
 //. last entry as fisrt level index
 #define NumFirstLevel (SectorSize / sizeof(int))
 #define FisrtLevelMaxSize   (NumFirstLevel * SectorSize)
-#define NumDirect 	((SectorSize - 8 * sizeof(int)) / sizeof(int))
+#define NumDirect 	((SectorSize - 7 * sizeof(int)) / sizeof(int))
 #define DirectMaxSize  (NumDirect * SectorSize)
 #define NumSectors   (NumDirect + NumFirstLevel)
-#define MaxFileSize 	(NumBlocks * SectorSize)
+#define MaxFileSize 	(NumSectors * SectorSize)
 //.
 #define REGULAR_FILE 0
 #define DIRECTORY 1
@@ -78,7 +78,7 @@ class FileHeader {
     //..
   private:
     int numBytes;			// Number of bytes in the file
-    int numbersSectors;			// Number of data sectors in the file
+    int numSectors;			// Number of data sectors in the file
     int dataSectors[NumDirect];		// Disk sector numbers for each data 
 					// block in the file
     //.

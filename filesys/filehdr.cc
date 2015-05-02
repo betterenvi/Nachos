@@ -65,7 +65,7 @@ FileHeader::Allocate(BitMap *freeMap, int fileSize)
             sector_data[i] = freeMap->Find();
         for (int i = remain; i < NumFirstLevel; ++i)
             sector_data[i] = INVALID_POINTER;
-        synchDisk->WriteSector(dataSectors[NumDirect], (char *)sector_data)
+        synchDisk->WriteSector(dataSectors[NumDirect], (char *)sector_data);
     }
 //..
     return TRUE;

@@ -13,7 +13,7 @@
 #include "system.h"
 
 // testnum is set in main.cc
-int testnum = 1;
+int testnum = 0;
 
 //----------------------------------------------------------------------
 // SimpleThread
@@ -203,8 +203,8 @@ ThreadTest()
         mid();
         break;
     default:
-	    printf("No test specified.\n");
-        printf("CQY added a test.\n");
+	    printf("No thread test specified.\n");
+        //printf("CQY added a test.\n");
 	    break;
     }
 }

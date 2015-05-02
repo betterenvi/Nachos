@@ -90,8 +90,11 @@ main(int argc, char **argv)
     DEBUG('t', "Entering main");
     (void) Initialize(argc, argv);
     
+    int tmp_argc = argc;
+    char ** tmp_argv = argv;
+
 #ifdef THREADS
-    printf("CQY' note: THREADS.\n");
+    printf("CQY' noticete: THREADS.\n");
     for (argc--, argv++; argc > 0; argc -= argCount, argv += argCount) {
       argCount = 1;
       switch (argv[0][1]) {
@@ -100,13 +103,16 @@ main(int argc, char **argv)
         argCount++;
         break;
       default:
-        testnum = 1;
+        testnum = 0;
         break;
       }
     }
 
     ThreadTest();
 #endif
+    argc = tmp_argc;
+    argv = tmp_argv;
+
     printf("CQY' note: INNER\n");
     for (argc--, argv++; argc > 0; argc -= argCount, argv += argCount) {
 	argCount = 1;
@@ -181,7 +187,7 @@ main(int argc, char **argv)
 	}
 #endif // FILESYS
 #ifdef NETWORK
-        printf("CQY' note: FILESYS\n");
+        printf("CQY' note: NETWORK\n");
         if (!strcmp(*argv, "-o")) {
 	    ASSERT(argc > 1);
             Delay(2); 				// delay for 2 seconds
