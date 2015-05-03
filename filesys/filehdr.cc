@@ -54,8 +54,8 @@ FileHeader::Allocate(BitMap *freeMap, int fileSize)
     int * firstLevelSector = NULL;
     if (numSectors > RealNumDirect){
         firstLevelSector = new int[NumFirstLevel];
-        dataSectors[NumDirect] = freeMap->Find();
-        DEBUG('a', "dataSectors[NumDirect] %d\n", dataSectors[NumDirect]);
+        dataSectors[RealNumDirect] = freeMap->Find();
+        DEBUG('a', "dataSectors[RealNumDirect] %d\n", dataSectors[RealNumDirect]);
         // set next unused pointer as invalid.
         if (numSectors < MaxFileSectors)
             firstLevelSector[numSectors - RealNumDirect] = INVALID_POINTER;
@@ -68,34 +68,30 @@ FileHeader::Allocate(BitMap *freeMap, int fileSize)
         DEBUG('a', "%d %d %d\n", i, (int)location, *location);
     }
     if (numSectors > RealNumDirect){
-        synchDisk->WriteSector(dataSectors[NumDirect], (char *)firstLevelSector);
+        synchDisk->WriteSector(dataSectors[RealNumDirect], (char *)firstLevelSector);
         DEBUG('a', "firstLevelSector %d\n", firstLevelSector[0]);
         delete firstLevelSector;
     }
-    firstLevelSector = new int[NumFirstLevel];
-    synchDisk->ReadSector(dataSectors[NumDirect], (char *) firstLevelSector);
-    DEBUG('a', "%d firstLevelSector %d\n", dataSectors[NumDirect],firstLevelSector[0]);
-    delete firstLevelSector;
-    
+
 /*    if (numSectors <= RealNumDirect){
         DEBUG('a', "FileHeader::Allocate enough direct sectors\n");
         for (int i = 0; i < numSectors; i++)
             dataSectors[i] = freeMap->Find();
         for (int i = numSectors; i < RealNumDirect; ++i)
             dataSectors[i] = INVALID_POINTER;
-        dataSectors[NumDirect] = INVALID_POINTER;
+        dataSectors[RealNumDirect] = INVALID_POINTER;
     } else {
         DEBUG('a', "FileHeader::Allocate not enough direct sectors\n");
         for (int i = 0; i < RealNumDirect; i++)
             dataSectors[i] = freeMap->Find();
-        dataSectors[NumDirect] = freeMap->Find();
+        dataSectors[RealNumDirect] = freeMap->Find();
         int remain = numSectors - RealNumDirect;
         int sector_data[NumFirstLevel];
         for (int i = 0; i < remain; ++i)
             sector_data[i] = freeMap->Find();
         for (int i = remain; i < NumFirstLevel; ++i)
             sector_data[i] = INVALID_POINTER;
-        synchDisk->WriteSector(dataSectors[NumDirect], (char *)sector_data);
+        synchDisk->WriteSector(dataSectors[RealNumDirect], (char *)sector_data);
     }*/
 //..
     return TRUE;
@@ -168,7 +164,7 @@ FileHeader::ByteToSector(int offset)
         return (dataSectors[offset / SectorSize]);
     int remain = offset - DirectMaxSize;
     int firstLevelSector[NumFirstLevel];
-    synchDisk->ReadSector(dataSectors[NumDirect], (char *) firstLevelSector);
+    synchDisk->ReadSector(dataSectors[RealNumDirect], (char *) firstLevelSector);
     return (firstLevelSector[remain / SectorSize]);
     //..
 }
@@ -233,8 +229,8 @@ int FileHeader::IndexToSector(int idx){
         return dataSectors[idx];
     int remain = idx - RealNumDirect;
     int firstLevelSector[NumFirstLevel];
-    synchDisk->ReadSector(6, (char *) firstLevelSector);
-    DEBUG('a', "\n%d FileHeader::IndexToSector %d %d %d\n", dataSectors[NumDirect], idx, remain,firstLevelSector[remain]);
+    synchDisk->ReadSector(dataSectors[RealNumDirect], (char *) firstLevelSector);
+    DEBUG('a', "\n%d FileHeader::IndexToSector %d %d %d\n", dataSectors[RealNumDirect], idx, remain,firstLevelSector[remain]);
     return firstLevelSector[remain]; 
 }
 

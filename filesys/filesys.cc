@@ -102,7 +102,7 @@ FileSystem::FileSystem(bool format)
     mapHdr->initialize(REGULAR_FILE, NO_PATH_SECTOR);
     dirHdr->initialize(DIRECTORY, NO_PATH_SECTOR);
 
-    testMaxFileSize(freeMap, directory);
+    //testMaxFileSize(freeMap, directory);
 
     //..
     // Flush the bitmap and directory FileHeaders back to disk
