@@ -482,6 +482,10 @@ bool FileSystem::rmdirRecursive(char * name){
 // to sub or father dir.
 bool FileSystem::cd(char * name){
     DEBUG('t', "Enter FileSystem::cd.\n");
+    if (!strcmp(name, "/")){
+        currentDirHeaderSector = DirectorySector;
+        return TRUE;
+    }
     OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
     Directory * currentDir = new Directory(NumDirEntries);
     currentDir->FetchFrom(currentDirFile);
@@ -544,10 +548,19 @@ void FileSystem::testDirOps(){
     Create("txt", 8);
     printf("%s $ ls\n", dirName);
     List();
-    Remove()
-    printf("%s $ cd ../..\n", dirName);
+    printf("%s $ rm txt\n", dirName);
+    Remove("txt");
+    printf("%s $ ls\n", dirName);
+    List();
+    printf("%s $ cd ..\n", dirName);
     cd("..");
-    cd("..");
+    dirName = getCurrentDirName();
+    printf("%s $ rm sub1\n", dirName);
+    Remove("sub1");
+    printf("%s $ ls\n", dirName);
+    List();
+    printf("%s $ cd /\n", dirName);
+    cd("/");
     dirName = getCurrentDirName();
     printf("%s $\n", dirName);
 }
