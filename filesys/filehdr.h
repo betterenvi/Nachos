@@ -23,7 +23,7 @@
 #define FisrtLevelMaxSize   (NumFirstLevel * SectorSize)
 #define NumDirect 	((SectorSize  / sizeof(int)) - 7)
 #define RealNumDirect (NumDirect - 1)
-#define DirectMaxSize  (RealNumDirect * SectorSize)
+#define RealDirectMaxSize  (RealNumDirect * SectorSize)
 #define MaxFileSectors   (RealNumDirect + NumFirstLevel)
 #define MaxFileSize 	(MaxFileSectors * SectorSize)
 //.
@@ -79,7 +79,7 @@ class FileHeader {
     void updateLastModifyTime(){lastModifyTime = time(NULL);}
     int getPathSector(){return pathSector;}
     void setPathSector(int filePathSector){pathSector = filePathSector;}
-    int IndexToSector(int idx);
+    int IndexToSector(int idx, int * firstLevelSector);
     int *IndexToLocation(int idx, int * firstLevelSector);
 
     //..

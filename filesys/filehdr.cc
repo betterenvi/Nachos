@@ -112,8 +112,13 @@ FileHeader::Deallocate(BitMap *freeMap)
 //	ASSERT(freeMap->Test((int) dataSectors[i]));  // ought to be marked!
 //	freeMap->Clear((int) dataSectors[i]);
 //    }
+    int * firstLevelSector = NULL;
+    if (numSectors > RealNumDirect){
+        firstLevelSector = new int[NumFirstLevel];
+        synchDisk->ReadSector(dataSectors[RealNumDirect], (char *)firstLevelSector);
+    }
     for(int i = 0; i < numSectors; ++i){
-        int sector = IndexToSector(i);
+        int sector = IndexToSector(i, firstLevelSector);
         ASSERT(freeMap->Test((int) sector));
         freeMap->Clear((int)sector);
     }
@@ -160,9 +165,9 @@ int
 FileHeader::ByteToSector(int offset)
 {
     //.return(dataSectors[offset / SectorSize]);
-    if (offset < DirectMaxSize)
+    if (offset < RealDirectMaxSize)
         return (dataSectors[offset / SectorSize]);
-    int remain = offset - DirectMaxSize;
+    int remain = offset - RealDirectMaxSize;
     int firstLevelSector[NumFirstLevel];
     synchDisk->ReadSector(dataSectors[RealNumDirect], (char *) firstLevelSector);
     return (firstLevelSector[remain / SectorSize]);
@@ -199,12 +204,17 @@ FileHeader::Print()
     printf("Last Modified at: %d\n", lastModifyTime);
     printf("Path sector: %d\n", pathSector);
     printf("FileHeader contents.  File size: %d.  File blocks:\n", numBytes);
+    int * firstLevelSector = NULL;
+    if (numSectors > RealNumDirect){
+        firstLevelSector = new int[NumFirstLevel];
+        synchDisk->ReadSector(dataSectors[RealNumDirect], (char *)firstLevelSector);
+    }
     for (i = 0; i < numSectors; ++i){
-        printf("%d ", IndexToSector(i));
+        printf("%d ", IndexToSector(i, firstLevelSector));
     }
     printf("\nFile contents:\n");
     for (i = k = 0; i < numSectors; i++) {
-        synchDisk->ReadSector(IndexToSector(i), data);
+        synchDisk->ReadSector(IndexToSector(i, firstLevelSector), data);
         for (j = 0; (j < SectorSize) && (k < numBytes); j++, k++) {
     	    if ('\040' <= data[j] && data[j] <= '\176')   // isprint(data[j])
     	       printf("%c", data[j]);
@@ -224,12 +234,11 @@ void FileHeader::initialize(int fileType, int filePathSector){
 }
 
 // idx:0, 1, 2, ...., numSectors - 1
-int FileHeader::IndexToSector(int idx){
+int FileHeader::IndexToSector(int idx, int * firstLevelSector){
     if (idx < RealNumDirect)
         return dataSectors[idx];
+    ASSERT(firstLevelSector != NULL);
     int remain = idx - RealNumDirect;
-    int firstLevelSector[NumFirstLevel];
-    synchDisk->ReadSector(dataSectors[RealNumDirect], (char *) firstLevelSector);
     DEBUG('a', "\n%d FileHeader::IndexToSector %d %d %d\n", dataSectors[RealNumDirect], idx, remain,firstLevelSector[remain]);
     return firstLevelSector[remain]; 
 }
