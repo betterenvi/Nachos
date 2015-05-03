@@ -188,7 +188,9 @@ main(int argc, char **argv)
       //      fileSystem->testMaxFileSize();
     } else if (!strcmp(*argv, "-mdir")){
             fileSystem->testDirOps();
-    } 
+    } else if (!strcmp(*argv, "-extSz")){
+            fileSystem->testExtensibleFileSize();
+    }
 #endif // FILESYS
 #ifdef NETWORK
         printf("CQY' note: NETWORK\n");

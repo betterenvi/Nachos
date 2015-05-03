@@ -118,6 +118,10 @@ FileHeader::Deallocate(BitMap *freeMap)
         ASSERT(freeMap->Test((int) sector));
         freeMap->Clear((int)sector);
     }
+    if (numSectors > RealNumDirect){
+        ASSERT(freeMap->Test((int)dataSectors[RealNumDirect]));
+        freeMap->Clear((int)dataSectors[RealNumDirect]);
+    }
     dataSectors[0] = INVALID_POINTER;
     numSectors = 0;
     deleteFirstLevelSector(firstLevelSector);
@@ -191,7 +195,7 @@ FileHeader::FileLength()
 //----------------------------------------------------------------------
 
 void
-FileHeader::Print()
+FileHeader::Print(bool printContent)
 {
     int i, j, k;
     char *data = new char[SectorSize];
@@ -207,7 +211,13 @@ FileHeader::Print()
     for (i = 0; i < numSectors; ++i){
         printf("%d ", IndexToSector(i, firstLevelSector));
     }
-    printf("\nFile contents:\n");
+    printf("\n");
+    if (!printContent){
+        delete [] data;
+        deleteFirstLevelSector(firstLevelSector);
+        return;
+    }
+    printf("File contents:\n");
     for (i = k = 0; i < numSectors; i++) {
         synchDisk->ReadSector(IndexToSector(i, firstLevelSector), data);
         for (j = 0; (j < SectorSize) && (k < numBytes); j++, k++) {
@@ -248,7 +258,7 @@ int * FileHeader::IndexToLocation(int idx, int * firstLevelSector){
     return (firstLevelSector + remain);
 }
 
-bool FileHeader::extendSector(int numExtendSectors, int * firstLevelSector, void * freeMap_){
+bool FileHeader::extendSector(int numExtendSectors, int * firstLevelSector, BitMap *freeMap){
     if (numExtendSectors < 0)
         return FALSE;
     if (numExtendSectors == 0)
@@ -256,7 +266,6 @@ bool FileHeader::extendSector(int numExtendSectors, int * firstLevelSector, void
     int newNumSectors = numSectors + numExtendSectors;
     if (newNumSectors > MaxFileSectors)
         return FALSE;
-    BitMap * freeMap = (BitMap *)freeMap_;
     if (numSectors <= RealNumDirect && newNumSectors > RealNumDirect){
         firstLevelSector = new int[NumFirstLevel];
         dataSectors[RealNumDirect] = freeMap->Find();
@@ -270,14 +279,14 @@ bool FileHeader::extendSector(int numExtendSectors, int * firstLevelSector, void
         *location = freeMap->Find();
     }
     if (newNumSectors > RealNumDirect){
-        synchDisk->WriteBack(dataSectors[RealNumDirect], (char *)firstLevelSector);
+        synchDisk->WriteSector(dataSectors[RealNumDirect], (char *)firstLevelSector);
         //delete firstLevelSector;
     }
     numSectors = newNumSectors;
     return TRUE;
 }
 
-bool FileHeader::shrinkSector(int numShrinkSectors, int * firstLevelSector, void * freeMap_){
+bool FileHeader::shrinkSector(int numShrinkSectors, int * firstLevelSector, BitMap *freeMap){
     if (numShrinkSectors < 0)
         return FALSE;
     if (numShrinkSectors == 0)
@@ -285,23 +294,30 @@ bool FileHeader::shrinkSector(int numShrinkSectors, int * firstLevelSector, void
     int newNumSectors = numSectors - numShrinkSectors;
     if (newNumSectors < 0)
         return FALSE;
-    BitMap *freeMap = (BitMap *)freeMap_;
     for (int i = newNumSectors; i < numSectors; ++i){
         int sector = IndexToSector(i, firstLevelSector);
         ASSERT(freeMap->Test((int)sector));
         freeMap->Clear((int)sector);
     }
-    numSectors = newNumSectors;
-    if (numSectors < MaxFileSectors){//must be true
-        int * location = IndexToLocation(numSectors, firstLevelSector);
+    if (newNumSectors < MaxFileSectors){//must be true
+        int * location = IndexToLocation(newNumSectors, firstLevelSector);
         *location = INVALID_POINTER;
     }
+    if (numSectors > RealNumDirect){
+        if (newNumSectors <= RealNumDirect){
+            ASSERT(freeMap->Test((int)dataSectors[RealNumDirect]));
+            freeMap->Clear((int)dataSectors[RealNumDirect]);
+        } else {
+            synchDisk->WriteSector(dataSectors[RealNumDirect], (char *)firstLevelSector);
+        }
+    }
+    numSectors = newNumSectors;    
     return TRUE;
 }
 
 int *FileHeader::getFirstLevelSector(){
     if (numSectors > RealNumDirect){
-        int * firstLevelSector = new int[NumFirstLevel]
+        int * firstLevelSector = new int[NumFirstLevel];
         synchDisk->ReadSector(dataSectors[RealNumDirect], (char *)firstLevelSector);
         return firstLevelSector;
     }
@@ -312,7 +328,7 @@ bool FileHeader::deleteFirstLevelSector(int * firstLevelSector){
         delete firstLevelSector;
 }
 
-int FileHeader::extendSize(int numextendBytes){
+bool FileHeader::extendSize(int numextendBytes, BitMap * freeMap){
     if (numextendBytes < 0)
         return FALSE;
     if (numextendBytes == 0)
@@ -321,13 +337,15 @@ int FileHeader::extendSize(int numextendBytes){
     if (newNumBytes > MaxFileSize)
         return FALSE;
     int numExtendSectors = divRoundUp(newNumBytes, SectorSize) - numSectors;
-    if (!extendSector(numExtendSectors))
+    int * firstLevelSector = getFirstLevelSector();
+    if (!extendSector(numExtendSectors, firstLevelSector, freeMap))
         return FALSE;
     numBytes = newNumBytes;
+    deleteFirstLevelSector(firstLevelSector);
     return TRUE;
 }
 
-int FileHeader::shrinkSize(int numShrinkBytes){
+bool FileHeader::shrinkSize(int numShrinkBytes, BitMap * freeMap){
     if (numShrinkBytes < 0)
         return FALSE;
     if (numShrinkBytes == 0)
@@ -336,8 +354,10 @@ int FileHeader::shrinkSize(int numShrinkBytes){
     if (newNumBytes < 0)
         return FALSE;
     int numShrinkSectors = numSectors - divRoundUp(newNumBytes, SectorSize);
-    if (!shrinkSector(numShrinkSectors))
+    int * firstLevelSector = getFirstLevelSector();
+    if (!shrinkSector(numShrinkSectors, firstLevelSector, freeMap))
         return FALSE;
     numBytes = newNumBytes;
+    deleteFirstLevelSector(firstLevelSector);
     return TRUE;
 }

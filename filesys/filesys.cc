@@ -353,11 +353,11 @@ FileSystem::Print()
 
     printf("Bit map file header:\n");
     bitHdr->FetchFrom(FreeMapSector);
-    bitHdr->Print();
+    bitHdr->Print(FALSE);
 
     printf("Directory file header:\n");
     dirHdr->FetchFrom(DirectorySector);
-    dirHdr->Print();
+    dirHdr->Print(FALSE);
 
     freeMap->FetchFrom(freeMapFile);
     freeMap->Print();
@@ -563,4 +563,44 @@ void FileSystem::testDirOps(){
     cd("/");
     dirName = getCurrentDirName();
     printf("%s $\n", dirName);
+}
+
+void FileSystem::testExtensibleFileSize(){
+    char testFile[10] = "extSize";
+    Create(testFile, 100);
+    BitMap * freeMap = new BitMap(NumSectors);
+    freeMap->FetchFrom(freeMapFile);
+    OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
+    Directory * currentDir = new Directory(NumDirEntries);
+    currentDir->FetchFrom(currentDirFile);
+    int dstHeaderSector = currentDir->Find(testFile);
+    FileHeader * dstHdr = new FileHeader;
+    dstHdr->FetchFrom(dstHeaderSector);
+
+    printf("***** before extending *****\n");    
+    dstHdr->Print(FALSE);
+    freeMap->Print();
+
+    dstHdr->extendSize(4000, freeMap);
+    dstHdr->WriteBack(dstHeaderSector);
+    printf("***** after extending 4000 bytes*****\n");    
+    dstHdr->Print(FALSE);
+    freeMap->Print();
+
+    dstHdr->shrinkSize(50, freeMap);
+    dstHdr->WriteBack(dstHeaderSector);
+    printf("***** after shrinking 50 bytes *****\n");    
+    dstHdr->Print(FALSE);
+    freeMap->Print();
+
+    dstHdr->shrinkSize(4000, freeMap);
+    dstHdr->WriteBack(dstHeaderSector);
+    printf("***** after shrinking 4000 bytes *****\n");    
+    dstHdr->Print(FALSE);
+    freeMap->Print();
+    
+    delete dstHdr;
+    delete currentDir;
+    delete currentDirFile;
+    delete freeMap;
 }

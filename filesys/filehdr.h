@@ -66,7 +66,7 @@ class FileHeader {
     int FileLength();			// Return the length of the file 
 					// in bytes
 
-    void Print();			// Print the contents of the file.
+    void Print(bool printContent);			// Print the contents of the file.
     //.
     void initialize(int fileType, int filePathSector);
     int getFileType(){return type;}
@@ -83,9 +83,8 @@ class FileHeader {
     int *IndexToLocation(int idx, int * firstLevelSector);
     int *getFirstLevelSector();
     bool deleteFirstLevelSector(int * firstLevelSector);
-    int extendSize(int numextendBytes);
-    int shrinkSize(int numShrinkBytes);
-
+    bool extendSize(int numextendBytes, BitMap * freeMap);
+    bool shrinkSize(int numShrinkBytes, BitMap * freeMap);
     //..
   private:
     int numBytes;			// Number of bytes in the file
@@ -98,8 +97,8 @@ class FileHeader {
     int lastAccessTime;
     int lastModifyTime;
     int pathSector; //father directory's header sector // can be NO_PATH_SECTOR
-    bool extendSector(int numExtendSectors, int * firstLevelSector, void * freeMap_);
-    bool shrinkSector(int numShrinkSectors, int * firstLevelSector, void * freeMap_);
+    bool extendSector(int numExtendSectors, int * firstLevelSector, BitMap * freeMap);
+    bool shrinkSector(int numShrinkSectors, int * firstLevelSector, BitMap * freeMap);
     
     //..
 };

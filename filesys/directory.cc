@@ -196,7 +196,7 @@ Directory::Print()
 	if (table[i].inUse) {
 	    printf("Name: %s, Sector: %d\n", table[i].name, table[i].sector);
 	    hdr->FetchFrom(table[i].sector);
-	    hdr->Print();
+	    hdr->Print(FALSE);
 	}
     printf("\n");
     delete hdr;

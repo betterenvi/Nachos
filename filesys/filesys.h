@@ -94,6 +94,7 @@ class FileSystem {
     //for test
     void testMaxFileSize(void *freeMap, void * directory);
     void testDirOps();
+    void testExtensibleFileSize();
     //..
   private:
    OpenFile* freeMapFile;		// Bit map of free disk blocks,
