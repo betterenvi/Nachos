@@ -124,7 +124,7 @@ OpenFile::ReadAt(char *into, int numBytes, int position)
     	return 0; 				// check request
 
     //.
-    hdr->setLastAccessTime(stats->totalTicks);
+    hdr->updateLastAccessTime();
     //..
 
     if ((position + numBytes) > fileLength)		
@@ -160,8 +160,8 @@ OpenFile::WriteAt(char *from, int numBytes, int position)
 	return 0;				// check request
     
     //.
-    hdr->setLastAccessTime(stats->totalTicks);
-    hdr->setLastModifyTime(stats->totalTicks);
+    hdr->updateLastAccessTime();
+    hdr->updateLastModifyTime();
     //..
 
     if ((position + numBytes) > fileLength)

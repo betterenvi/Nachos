@@ -177,7 +177,13 @@ FileHeader::Print()
 {
     int i, j, k;
     char *data = new char[SectorSize];
-
+    //.
+    printf("\n***** File meta info ******\n");
+    printf("Type: %s\n", (type == REGULAR_FILE)?"file":"dir");
+    printf("Created at: %d\n", creatTime);
+    printf("Last Accessed at: %d\n", lastAccessTime);
+    printf("Last Modified at: %d\n", lastModifyTime);
+    printf("Path sector: %d\n", pathSector);
     printf("FileHeader contents.  File size: %d.  File blocks:\n", numBytes);
     for (i = 0; i < numSectors; i++)
         printf("%d ", dataSectors[i]);
@@ -198,6 +204,6 @@ FileHeader::Print()
 //.
 void FileHeader::initialize(int fileType, int filePathSector){
     type = fileType;
-    creatTime = lastAccessTime = lastModifyTime = stats->totalTicks;
+    creatTime = lastAccessTime = lastModifyTime = time(NULL);
     pathSector = filePathSector;
 }

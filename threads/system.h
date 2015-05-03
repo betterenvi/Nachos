@@ -8,6 +8,7 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
 
+#include <unistd.h>
 #include "copyright.h"
 #include "utility.h"
 #include "thread.h"

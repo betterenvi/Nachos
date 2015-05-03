@@ -16,6 +16,8 @@
 
 #include "disk.h"
 #include "bitmap.h"
+//.
+#include <time.h>
 //. last entry as fisrt level index
 #define NumFirstLevel (SectorSize / sizeof(int))
 #define FisrtLevelMaxSize   (NumFirstLevel * SectorSize)
@@ -70,8 +72,10 @@ class FileHeader {
     int getCreatTime(){return creatTime;}
     int getLastAccessTime(){return lastAccessTime;}
     void setLastAccessTime(int time){lastAccessTime = time;}
+    void updateLastAccessTime(){lastAccessTime = time(NULL);}
     int getLastModifyTime(){return lastModifyTime;}
     void setLastModifyTime(int time){lastModifyTime = time;}
+    void updateLastModifyTime(){lastModifyTime = time(NULL);}
     int getPathSector(){return pathSector;}
     void setPathSector(int filePathSector){pathSector = filePathSector;}
 
