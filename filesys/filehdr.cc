@@ -122,6 +122,8 @@ FileHeader::Deallocate(BitMap *freeMap)
         ASSERT(freeMap->Test((int) sector));
         freeMap->Clear((int)sector);
     }
+    if (numSectors > RealNumDirect)
+        delete firstLevelSector;
     //..
 }
 
@@ -224,6 +226,8 @@ FileHeader::Print()
         printf("\n"); 
     }
     delete [] data;
+    if (numSectors > RealNumDirect)
+        delete firstLevelSector;
 }
 
 //.

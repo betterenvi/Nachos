@@ -129,6 +129,9 @@ Directory::Find(char *name)
 bool
 Directory::Add(char *name, int newSector)
 { 
+    //.
+    ASSERT(strlen(name) <= FileNameMaxLen);
+    //..
     if (FindIndex(name) != -1)
 	return FALSE;
 
@@ -194,4 +197,22 @@ Directory::Print()
 	}
     printf("\n");
     delete hdr;
+}
+
+bool Directory::numUsed(){
+    int usedCnt = 0;
+    for (int i = 0; i < tableSize; ++i){
+        if (table[i].inUse)
+            usedCnt += 1;
+    }
+    return usedCnt;
+}
+//get a sub file or sub dir's name
+char *Directory::getFileName(int sector){
+    for (int i = 0; i < tableSize; ++i){
+        if (table[i].sector == sector)
+            return table[i].name;
+    }
+    ASSERT(FALSE);
+    return NULL;
 }

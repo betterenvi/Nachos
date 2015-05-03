@@ -72,7 +72,10 @@ class Directory {
     void Print();			// Verbose print of the contents
 					//  of the directory -- all the file
 					//  names and their contents.
-
+    //.
+    bool numUsed();
+    char *getFileName(int sector);//get a sub file or sub dir's name
+    //..
   private:
     int tableSize;			// Number of directory entries
     DirectoryEntry *table;		// Table of pairs: 
@@ -80,6 +83,7 @@ class Directory {
 
     int FindIndex(char *name);		// Find the index into the directory 
 					//  table corresponding to "name"
+
 };
 
 #endif // DIRECTORY_H

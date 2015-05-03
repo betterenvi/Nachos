@@ -146,6 +146,8 @@ FileSystem::FileSystem(bool format)
         freeMapFile = new OpenFile(FreeMapSector);
         directoryFile = new OpenFile(DirectorySector);
     }
+    currentDirHeaderSector = DirectorySector;
+    testDirOps();
 }
 
 //----------------------------------------------------------------------
@@ -179,7 +181,12 @@ FileSystem::FileSystem(bool format)
 
 bool
 FileSystem::Create(char *name, int initialSize)
-{
+{//.
+    DEBUG('t', "Enter FileSystem::Create.\n");
+    bool success = CreateFileOrDir(name, initialSize, REGULAR_FILE);
+    DEBUG('t', "Leave FileSystem::Create.\n");
+    return success;
+/*    
     Directory *directory;
     BitMap *freeMap;
     FileHeader *hdr;
@@ -203,8 +210,12 @@ FileSystem::Create(char *name, int initialSize)
             success = FALSE;	// no space in directory
         else {
     	    hdr = new FileHeader;
-            if (!hdr->Allocate(freeMap, initialSize))
+            if (!hdr->Allocate(freeMap, initialSize)){
             	success = FALSE;	// no space on disk for data
+                //.
+                directory->Remove(name);
+                //..
+            }
     	    else {	
     	    	success = TRUE;
                 // everthing worked, flush all changes back to disk
@@ -217,7 +228,7 @@ FileSystem::Create(char *name, int initialSize)
         delete freeMap;
     }
     delete directory;
-    return success;
+    return success;*///..
 }
 
 //----------------------------------------------------------------------
@@ -263,6 +274,7 @@ FileSystem::Open(char *name)
 bool
 FileSystem::Remove(char *name)
 { 
+    DEBUG('t', "Enter FileSystem::Remove.\n");
     Directory *directory;
     BitMap *freeMap;
     FileHeader *fileHdr;
@@ -272,6 +284,7 @@ FileSystem::Remove(char *name)
     directory->FetchFrom(directoryFile);
     sector = directory->Find(name);
     if (sector == -1) {
+        printf("File '%s' not found.\n", name);
        delete directory;
        return FALSE;			 // file not found 
     }
@@ -290,6 +303,8 @@ FileSystem::Remove(char *name)
     delete fileHdr;
     delete directory;
     delete freeMap;
+    printf("File '%s' removed successfully.\n", name);
+    DEBUG('t', "Leave FileSystem::Remove.\n");
     return TRUE;
 } 
 
@@ -355,4 +370,164 @@ void FileSystem::testMaxFileSize(void *freeMap_, void * directory_){
     fileHdr->WriteBack(headerSector);
     directory->Add("testMax", headerSector);
     delete fileHdr;
+}
+
+//mkdir at current dir
+bool FileSystem::mkdir(char * name){
+    DEBUG('t', "Enter FileSystem::mkdir.\n");
+    CreateFileOrDir(name, DirectoryFileSize, DIRECTORY);
+    DEBUG('t', "Leave FileSystem::mkdir.\n");
+    return TRUE;
+}
+
+bool FileSystem::CreateFileOrDir(char * name, int initialSize, int fileType){
+    DEBUG('t', "Enter FileSystem::CreateFileOrDir.\n");
+    OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
+    Directory * currentDir = new Directory(NumDirEntries);
+    currentDir->FetchFrom(currentDirFile);
+
+    BitMap * freeMap = new BitMap(NumSectors);
+    freeMap->FetchFrom(freeMapFile);
+
+    bool success = TRUE;
+
+    int headerSector = freeMap->Find();
+    if (headerSector < 0){
+        success = FALSE;
+    } else if (!currentDir->Add(name, headerSector)){
+        success = FALSE;
+    } else {
+        FileHeader *hdr = new FileHeader;
+        if (!hdr->Allocate(freeMap, initialSize)){
+            success = FALSE;
+            currentDir->Remove(name);
+        } else {
+            hdr->initialize(fileType, currentDirHeaderSector);
+            hdr->WriteBack(headerSector);
+            currentDir->WriteBack(currentDirFile);
+            freeMap->WriteBack(freeMapFile);
+        }
+        delete hdr;
+    }
+    delete freeMap;
+    delete currentDir;
+    delete currentDirFile;
+    DEBUG('t', "Leave FileSystem::CreateFileOrDir.\n");
+    return TRUE;
+}
+
+// rm dir if empty
+bool FileSystem::rmdir(char * name){
+    DEBUG('t', "Enter FileSystem::rmdir.\n");
+    OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
+    Directory * currentDir = new Directory(NumDirEntries);
+    currentDir->FetchFrom(currentDirFile);
+
+    bool success = TRUE;
+
+    //get sub dir
+    int dstHeaderSector = currentDir->Find(name);
+    if (dstHeaderSector < 0){
+        printf("Dir '%s' not found.\n", name);
+        success = FALSE;
+    } else {
+        OpenFile * dstDirFile = new OpenFile(dstHeaderSector);
+        Directory * dstDir = new Directory(NumDirEntries);
+        dstDir->FetchFrom(dstDirFile);
+        if (dstDir->numUsed() > 0){
+            printf("Dir '%s' is not empty.\n", name);
+            success = FALSE;
+        } else {
+            BitMap * freeMap = new BitMap(NumSectors);
+            freeMap->FetchFrom(freeMapFile);
+            FileHeader * dstHdr = new FileHeader;
+            dstHdr->FetchFrom(dstHeaderSector);
+            dstHdr->Deallocate(freeMap);
+            freeMap->Clear(dstHeaderSector);
+            currentDir->Remove(name);
+
+            freeMap->WriteBack(freeMapFile);
+            currentDir->WriteBack(currentDirFile);
+
+            delete freeMap;
+            delete dstHdr;
+            printf("Dir '%s' removed successfully.\n", name);
+        }
+        delete dstDir;
+        delete dstDirFile;
+    }
+    delete currentDir;
+    delete currentDirFile;
+    DEBUG('t', "Leave FileSystem::rmdir.\n");
+    return success;
+}
+
+// rm dir recursive
+bool FileSystem::rmdirRecursive(char * name){
+    //TODO
+}
+
+// to sub or father dir.
+bool FileSystem::cd(char * name){
+    DEBUG('t', "Enter FileSystem::cd.\n");
+    OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
+    Directory * currentDir = new Directory(NumDirEntries);
+    currentDir->FetchFrom(currentDirFile);
+    bool success = TRUE;
+    FileHeader * currentHdr = new FileHeader;
+    currentHdr->FetchFrom(currentDirHeaderSector);
+
+    //father dir
+    if (!strcmp(name, "..")){
+        int fatherPathSector = currentHdr->getPathSector();
+        if (fatherPathSector == NO_PATH_SECTOR){
+            printf("Dir '%s' has no father directory.\n", name);
+            success = FALSE;
+        } else {
+            currentDirHeaderSector = fatherPathSector;
+        }
+    } else {//get sub dir
+        int dstHeaderSector = currentDir->Find(name);
+        if (dstHeaderSector < 0){
+            printf("Dir '%s' not found.\n", name);
+            success = FALSE;
+        } else {
+            DEBUG('a', "cd dst sector %d", dstHeaderSector);
+            currentDirHeaderSector = dstHeaderSector;
+        }
+    }
+    delete currentHdr;
+    delete currentDir;
+    delete currentDirFile;
+    DEBUG('t', "Leave FileSystem::cd.\n");
+    return success;
+}
+
+char *FileSystem::getCurrentDirName(){
+    if (currentDirHeaderSector == DirectorySector)
+        return "/";
+    FileHeader *curHdr = new FileHeader;
+    curHdr->FetchFrom(currentDirHeaderSector);
+    OpenFile * fathDirFile = new OpenFile(curHdr->getPathSector());
+    DEBUG('a', "getPathSector is %d\n", curHdr->getPathSector());
+    Directory * fathDir = new Directory(DirectoryFileSize);
+    fathDir->FetchFrom(fathDirFile);
+    return fathDir->getFileName(currentDirHeaderSector); 
+}
+void FileSystem::testDirOps(){
+    printf("Current dir: %s\n", getCurrentDirName());
+    printf("mkdir test1\n");
+    mkdir("test1");
+    printf("cd test1\n");
+    cd("test1");
+    printf("Current dir: %s\n", getCurrentDirName());
+    printf("mkdir sub1\n");
+    mkdir("sub1");
+    printf("cd sub1\n");
+    cd("sub1");
+    printf("Current dir: %s\n", getCurrentDirName());
+    printf("cd ../..\n");
+    cd("..");
+    cd("..");
+    printf("Current dir: %s\n", getCurrentDirName());
 }

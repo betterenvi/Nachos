@@ -85,13 +85,25 @@ class FileSystem {
 
     void Print();			// List all the files and their contents
     //.
+    bool CreateFileOrDir(char * name, int initialSize, int fileType);
+    bool mkdir(char * name);  //mkdir at current dir
+    bool rmdir(char * name);  // rm sub dir if empty
+    bool rmdirRecursive(char * name); // rm dir recursive
+    bool cd(char * name); // to sub or father dir.
+    char *getCurrentDirName();
+    //for test
     void testMaxFileSize(void *freeMap, void * directory);
+    void testDirOps();
     //..
   private:
    OpenFile* freeMapFile;		// Bit map of free disk blocks,
 					// represented as a file
    OpenFile* directoryFile;		// "Root" directory -- list of 
 					// file names, represented as a file
+   //.
+   int currentDirHeaderSector;    // current directory's header sector
+
+   //..
 };
 
 #endif // FILESYS
