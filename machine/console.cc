@@ -40,11 +40,11 @@ Console::Console(char *readFile, char *writeFile, VoidFunctionPtr readAvail,
 		VoidFunctionPtr writeDone, int callArg)
 {
     if (readFile == NULL)
-	readFileNo = 0;					// keyboard = stdin
+	   readFileNo = 0;					// keyboard = stdin
     else
     	readFileNo = OpenForReadWrite(readFile, TRUE);	// should be read-only
     if (writeFile == NULL)
-	writeFileNo = 1;				// display = stdout
+	   writeFileNo = 1;				// display = stdout
     else
     	writeFileNo = OpenForWrite(writeFile);
 
@@ -94,7 +94,7 @@ Console::CheckCharAvail()
 
     // do nothing if character is already buffered, or none to be read
     if ((incoming != EOF) || !PollFile(readFileNo))
-	return;	  
+	   return;	  
 
     // otherwise, read character and tell user about it
     Read(readFileNo, &c, sizeof(char));

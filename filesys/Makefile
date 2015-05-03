@@ -1292,6 +1292,7 @@ disk.o: ../machine/disk.cc /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/stl_multimap.h ../userprog/bitmap.h \
  ../filesys/openfile.h ../filesys/synchdisk.h ../machine/disk.h \
  ../threads/synch.h
+synchconsole.o: ../filesys/synchconsole.cc
 # DEPENDENCIES MUST END AT END OF FILE
 # IF YOU PUT STUFF HERE IT WILL GO AWAY
 # see make depend above
