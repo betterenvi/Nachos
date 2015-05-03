@@ -184,7 +184,11 @@ main(int argc, char **argv)
             fileSystem->Print();
 	} else if (!strcmp(*argv, "-t")) {	// performance test
             PerformanceTest();
-	}
+	} else if (!strcmp(*argv, "-fsz")){
+      //      fileSystem->testMaxFileSize();
+    } else if (!strcmp(*argv, "-mdir")){
+            fileSystem->testDirOps();
+    } 
 #endif // FILESYS
 #ifdef NETWORK
         printf("CQY' note: NETWORK\n");

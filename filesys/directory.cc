@@ -132,8 +132,10 @@ Directory::Add(char *name, int newSector)
     //.
     ASSERT(strlen(name) <= FileNameMaxLen);
     //..
-    if (FindIndex(name) != -1)
-	return FALSE;
+    if (FindIndex(name) != -1){
+        printf("%s already exists.\n", name);
+    	return FALSE;
+    }
 
     for (int i = 0; i < tableSize; i++)
         if (!table[i].inUse) {
@@ -142,6 +144,7 @@ Directory::Add(char *name, int newSector)
             table[i].sector = newSector;
         return TRUE;
 	}
+    printf("No space to store new file in current dir.\n");
     return FALSE;	// no space.  Fix when we have extensible files.
 }
 

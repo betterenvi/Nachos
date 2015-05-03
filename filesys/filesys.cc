@@ -147,7 +147,6 @@ FileSystem::FileSystem(bool format)
         directoryFile = new OpenFile(DirectorySector);
     }
     currentDirHeaderSector = DirectorySector;
-    testDirOps();
 }
 
 //----------------------------------------------------------------------
@@ -244,16 +243,20 @@ FileSystem::Create(char *name, int initialSize)
 OpenFile *
 FileSystem::Open(char *name)
 { 
+    DEBUG('t', "Enter FileSystem::Open.\n");
+    OpenFile *currentDirFile = new OpenFile(currentDirHeaderSector);
     Directory *directory = new Directory(NumDirEntries);
     OpenFile *openFile = NULL;
     int sector;
 
     DEBUG('f', "Opening file %s\n", name);
-    directory->FetchFrom(directoryFile);
+    directory->FetchFrom(currentDirFile);
     sector = directory->Find(name); 
     if (sector >= 0) 		
 	   openFile = new OpenFile(sector);	// name was found in directory 
     delete directory;
+    delete currentDirFile;
+    DEBUG('t', "Leave FileSystem::Open.\n");
     return openFile;				// return NULL if not found
 }
 
@@ -275,17 +278,19 @@ bool
 FileSystem::Remove(char *name)
 { 
     DEBUG('t', "Enter FileSystem::Remove.\n");
-    Directory *directory;
+    OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
+    Directory *directory = new Directory(NumDirEntries);
+    directory->FetchFrom(currentDirFile);
+
     BitMap *freeMap;
     FileHeader *fileHdr;
     int sector;
     
-    directory = new Directory(NumDirEntries);
-    directory->FetchFrom(directoryFile);
     sector = directory->Find(name);
     if (sector == -1) {
         printf("File '%s' not found.\n", name);
        delete directory;
+       delete currentDirFile;
        return FALSE;			 // file not found 
     }
     fileHdr = new FileHeader;
@@ -299,10 +304,11 @@ FileSystem::Remove(char *name)
     directory->Remove(name);
 
     freeMap->WriteBack(freeMapFile);		// flush to disk
-    directory->WriteBack(directoryFile);        // flush to disk
+    directory->WriteBack(currentDirFile);        // flush to disk
     delete fileHdr;
     delete directory;
     delete freeMap;
+    delete currentDirFile;
     printf("File '%s' removed successfully.\n", name);
     DEBUG('t', "Leave FileSystem::Remove.\n");
     return TRUE;
@@ -316,11 +322,13 @@ FileSystem::Remove(char *name)
 void
 FileSystem::List()
 {
-    Directory *directory = new Directory(NumDirEntries);
-
-    directory->FetchFrom(directoryFile);
-    directory->List();
-    delete directory;
+    //.
+    OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
+    Directory *currentDir = new Directory(NumDirEntries);
+    currentDir->FetchFrom(currentDirFile);
+    currentDir->List();
+    delete currentDir;
+    delete currentDirFile;
 }
 
 //----------------------------------------------------------------------
@@ -336,6 +344,8 @@ FileSystem::List()
 void
 FileSystem::Print()
 {
+    DEBUG('t', "Enter FileSystem::Print.\n");
+    OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
     FileHeader *bitHdr = new FileHeader;
     FileHeader *dirHdr = new FileHeader;
     BitMap *freeMap = new BitMap(NumSectors);
@@ -352,13 +362,15 @@ FileSystem::Print()
     freeMap->FetchFrom(freeMapFile);
     freeMap->Print();
 
-    directory->FetchFrom(directoryFile);
+    directory->FetchFrom(currentDirFile);
     directory->Print();
 
     delete bitHdr;
     delete dirHdr;
     delete freeMap;
     delete directory;
+    delete currentDirFile;
+    DEBUG('t', "Leave FileSystem::Print.\n");
 } 
 void FileSystem::testMaxFileSize(void *freeMap_, void * directory_){
     BitMap * freeMap = (BitMap *)freeMap_;
@@ -515,19 +527,27 @@ char *FileSystem::getCurrentDirName(){
     return fathDir->getFileName(currentDirHeaderSector); 
 }
 void FileSystem::testDirOps(){
-    printf("Current dir: %s\n", getCurrentDirName());
-    printf("mkdir test1\n");
+    char * dirName = getCurrentDirName();
+    printf("%s $ mkdir test1\n", dirName);
     mkdir("test1");
-    printf("cd test1\n");
+    printf("%s $ cd test1\n", dirName);
     cd("test1");
-    printf("Current dir: %s\n", getCurrentDirName());
-    printf("mkdir sub1\n");
+    dirName = getCurrentDirName();
+    printf("%s $ mkdir sub1\n", dirName);
     mkdir("sub1");
-    printf("cd sub1\n");
+    printf("%s $ cd sub1\n", dirName);
     cd("sub1");
-    printf("Current dir: %s\n", getCurrentDirName());
-    printf("cd ../..\n");
+    dirName = getCurrentDirName();
+    printf("%s $ ls\n", dirName);
+    List();
+    printf("%s $ create txt\n", dirName);
+    Create("txt", 8);
+    printf("%s $ ls\n", dirName);
+    List();
+    Remove()
+    printf("%s $ cd ../..\n", dirName);
     cd("..");
     cd("..");
-    printf("Current dir: %s\n", getCurrentDirName());
+    dirName = getCurrentDirName();
+    printf("%s $\n", dirName);
 }
