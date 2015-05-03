@@ -84,7 +84,9 @@ class FileSystem {
     void List();			// List all the files in the file system
 
     void Print();			// List all the files and their contents
-
+    //.
+    void testMaxFileSize(void *freeMap, void * directory);
+    //..
   private:
    OpenFile* freeMapFile;		// Bit map of free disk blocks,
 					// represented as a file

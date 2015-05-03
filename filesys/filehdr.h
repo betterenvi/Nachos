@@ -21,15 +21,16 @@
 //. last entry as fisrt level index
 #define NumFirstLevel (SectorSize / sizeof(int))
 #define FisrtLevelMaxSize   (NumFirstLevel * SectorSize)
-#define NumDirect 	((SectorSize - 7 * sizeof(int)) / sizeof(int))
-#define DirectMaxSize  (NumDirect * SectorSize)
-#define NumSectors   (NumDirect + NumFirstLevel)
-#define MaxFileSize 	(NumSectors * SectorSize)
+#define NumDirect 	((SectorSize  / sizeof(int)) - 7)
+#define RealNumDirect (NumDirect - 1)
+#define DirectMaxSize  (RealNumDirect * SectorSize)
+#define MaxFileSectors   (RealNumDirect + NumFirstLevel)
+#define MaxFileSize 	(MaxFileSectors * SectorSize)
 //.
 #define REGULAR_FILE 0
 #define DIRECTORY 1
 #define NO_PATH_SECTOR (-1)
-#define INVALID_POINTER (-1)       // sector 0 is header of bitmap
+#define INVALID_POINTER 0       // sector 0 is header of bitmap
 //..
 // The following class defines the Nachos "file header" (in UNIX terms,  
 // the "i-node"), describing where on disk to find all of the data in the file.
@@ -78,9 +79,11 @@ class FileHeader {
     void updateLastModifyTime(){lastModifyTime = time(NULL);}
     int getPathSector(){return pathSector;}
     void setPathSector(int filePathSector){pathSector = filePathSector;}
+    int IndexToSector(int idx);
+    int *IndexToLocation(int idx, int * firstLevelSector);
 
     //..
-  private:
+ // private:
     int numBytes;			// Number of bytes in the file
     int numSectors;			// Number of data sectors in the file
     int dataSectors[NumDirect];		// Disk sector numbers for each data 

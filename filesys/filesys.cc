@@ -101,6 +101,9 @@ FileSystem::FileSystem(bool format)
     //.
     mapHdr->initialize(REGULAR_FILE, NO_PATH_SECTOR);
     dirHdr->initialize(DIRECTORY, NO_PATH_SECTOR);
+
+    testMaxFileSize(freeMap, directory);
+
     //..
     // Flush the bitmap and directory FileHeaders back to disk
     // We need to do this before we can "Open" the file, since open
@@ -342,3 +345,14 @@ FileSystem::Print()
     delete freeMap;
     delete directory;
 } 
+void FileSystem::testMaxFileSize(void *freeMap_, void * directory_){
+    BitMap * freeMap = (BitMap *)freeMap_;
+    Directory * directory = (Directory *)directory_;
+    int headerSector = freeMap->Find();
+    FileHeader *fileHdr = new FileHeader;
+    ASSERT(fileHdr->Allocate(freeMap, MaxFileSize));
+    fileHdr->initialize(REGULAR_FILE, DirectorySector);
+    fileHdr->WriteBack(headerSector);
+    directory->Add("testMax", headerSector);
+    delete fileHdr;
+}

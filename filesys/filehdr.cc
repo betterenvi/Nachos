@@ -41,6 +41,7 @@
 bool
 FileHeader::Allocate(BitMap *freeMap, int fileSize)
 { 
+    DEBUG('a', "FileHeader::Allocate request fileSize %d\n", fileSize);
     ASSERT(fileSize <= MaxFileSize);
     numBytes = fileSize;
     numSectors  = divRoundUp(fileSize, SectorSize);
@@ -49,24 +50,53 @@ FileHeader::Allocate(BitMap *freeMap, int fileSize)
 //.
  //   for (int i = 0; i < numSectors; i++)
 //	dataSectors[i] = freeMap->Find();
-    if (numSectors <= NumDirect){
+    DEBUG('a', "FileHeader::Allocate enough bit map\n");
+    int * firstLevelSector = NULL;
+    if (numSectors > RealNumDirect){
+        firstLevelSector = new int[NumFirstLevel];
+        dataSectors[NumDirect] = freeMap->Find();
+        DEBUG('a', "dataSectors[NumDirect] %d\n", dataSectors[NumDirect]);
+        // set next unused pointer as invalid.
+        if (numSectors < MaxFileSectors)
+            firstLevelSector[numSectors - RealNumDirect] = INVALID_POINTER;
+    }else{
+        dataSectors[numSectors] = INVALID_POINTER;
+    }
+    for (int i = 0; i < numSectors; ++i){
+        int * location = IndexToLocation(i, firstLevelSector);
+        *location = freeMap->Find();
+        DEBUG('a', "%d %d %d\n", i, (int)location, *location);
+    }
+    if (numSectors > RealNumDirect){
+        synchDisk->WriteSector(dataSectors[NumDirect], (char *)firstLevelSector);
+        DEBUG('a', "firstLevelSector %d\n", firstLevelSector[0]);
+        delete firstLevelSector;
+    }
+    firstLevelSector = new int[NumFirstLevel];
+    synchDisk->ReadSector(dataSectors[NumDirect], (char *) firstLevelSector);
+    DEBUG('a', "%d firstLevelSector %d\n", dataSectors[NumDirect],firstLevelSector[0]);
+    delete firstLevelSector;
+    
+/*    if (numSectors <= RealNumDirect){
+        DEBUG('a', "FileHeader::Allocate enough direct sectors\n");
         for (int i = 0; i < numSectors; i++)
             dataSectors[i] = freeMap->Find();
-        for (int i = numSectors; i < NumDirect; ++i)
+        for (int i = numSectors; i < RealNumDirect; ++i)
             dataSectors[i] = INVALID_POINTER;
         dataSectors[NumDirect] = INVALID_POINTER;
     } else {
-        for (int i = 0; i < NumDirect; i++)
+        DEBUG('a', "FileHeader::Allocate not enough direct sectors\n");
+        for (int i = 0; i < RealNumDirect; i++)
             dataSectors[i] = freeMap->Find();
         dataSectors[NumDirect] = freeMap->Find();
-        int remain = numSectors - NumDirect;
+        int remain = numSectors - RealNumDirect;
         int sector_data[NumFirstLevel];
         for (int i = 0; i < remain; ++i)
             sector_data[i] = freeMap->Find();
         for (int i = remain; i < NumFirstLevel; ++i)
             sector_data[i] = INVALID_POINTER;
         synchDisk->WriteSector(dataSectors[NumDirect], (char *)sector_data);
-    }
+    }*/
 //..
     return TRUE;
 }
@@ -81,27 +111,15 @@ FileHeader::Allocate(BitMap *freeMap, int fileSize)
 void 
 FileHeader::Deallocate(BitMap *freeMap)
 {
-    for (int i = 0; i < numSectors; i++) {
-	ASSERT(freeMap->Test((int) dataSectors[i]));  // ought to be marked!
-	freeMap->Clear((int) dataSectors[i]);
-    }
     //.
-    for (int i = 0; i < NumDirect; ++i){
-        if (dataSectors[i] == INVALID_POINTER)
-            return;
-        ASSERT(freeMap->Test((int) dataSectors[i]));
-        freeMap->Clear((int) dataSectors[i]);
-    }
-    //first level
-    if (dataSectors[NumDirect] == INVALID_POINTER)
-        return;
-    int sector_data[NumFirstLevel];
-    synchDisk->ReadSector(dataSectors[NumDirect], (char *) sector_data);
-    for (int i = 0; i < NumFirstLevel; ++i){
-        if (sector_data[i] == INVALID_POINTER)
-            return;
-        ASSERT(freeMap->Test((int) sector_data[i]));
-        freeMap->Clear((int) sector_data[i]);
+//    for (int i = 0; i < numSectors; i++) {
+//	ASSERT(freeMap->Test((int) dataSectors[i]));  // ought to be marked!
+//	freeMap->Clear((int) dataSectors[i]);
+//    }
+    for(int i = 0; i < numSectors; ++i){
+        int sector = IndexToSector(i);
+        ASSERT(freeMap->Test((int) sector));
+        freeMap->Clear((int)sector);
     }
     //..
 }
@@ -185,11 +203,12 @@ FileHeader::Print()
     printf("Last Modified at: %d\n", lastModifyTime);
     printf("Path sector: %d\n", pathSector);
     printf("FileHeader contents.  File size: %d.  File blocks:\n", numBytes);
-    for (i = 0; i < numSectors; i++)
-        printf("%d ", dataSectors[i]);
+    for (i = 0; i < numSectors; ++i){
+        printf("%d ", IndexToSector(i));
+    }
     printf("\nFile contents:\n");
     for (i = k = 0; i < numSectors; i++) {
-        synchDisk->ReadSector(dataSectors[i], data);
+        synchDisk->ReadSector(IndexToSector(i), data);
         for (j = 0; (j < SectorSize) && (k < numBytes); j++, k++) {
     	    if ('\040' <= data[j] && data[j] <= '\176')   // isprint(data[j])
     	       printf("%c", data[j]);
@@ -206,4 +225,24 @@ void FileHeader::initialize(int fileType, int filePathSector){
     type = fileType;
     creatTime = lastAccessTime = lastModifyTime = time(NULL);
     pathSector = filePathSector;
+}
+
+// idx:0, 1, 2, ...., numSectors - 1
+int FileHeader::IndexToSector(int idx){
+    if (idx < RealNumDirect)
+        return dataSectors[idx];
+    int remain = idx - RealNumDirect;
+    int firstLevelSector[NumFirstLevel];
+    synchDisk->ReadSector(6, (char *) firstLevelSector);
+    DEBUG('a', "\n%d FileHeader::IndexToSector %d %d %d\n", dataSectors[NumDirect], idx, remain,firstLevelSector[remain]);
+    return firstLevelSector[remain]; 
+}
+
+// get where the idx sector id is stored.
+int * FileHeader::IndexToLocation(int idx, int * firstLevelSector){
+    if (idx < RealNumDirect)
+        return (dataSectors + idx);
+    ASSERT(firstLevelSector != NULL);
+    int remain = idx - RealNumDirect;
+    return (firstLevelSector + remain);
 }
