@@ -81,9 +81,13 @@ class FileHeader {
     void setPathSector(int filePathSector){pathSector = filePathSector;}
     int IndexToSector(int idx, int * firstLevelSector);
     int *IndexToLocation(int idx, int * firstLevelSector);
+    int *getFirstLevelSector();
+    bool deleteFirstLevelSector(int * firstLevelSector);
+    int extendSize(int numextendBytes);
+    int shrinkSize(int numShrinkBytes);
 
     //..
- // private:
+  private:
     int numBytes;			// Number of bytes in the file
     int numSectors;			// Number of data sectors in the file
     int dataSectors[NumDirect];		// Disk sector numbers for each data 
@@ -94,7 +98,9 @@ class FileHeader {
     int lastAccessTime;
     int lastModifyTime;
     int pathSector; //father directory's header sector // can be NO_PATH_SECTOR
-
+    bool extendSector(int numExtendSectors, int * firstLevelSector, void * freeMap_);
+    bool shrinkSector(int numShrinkSectors, int * firstLevelSector, void * freeMap_);
+    
     //..
 };
 
