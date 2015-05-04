@@ -37,21 +37,6 @@
 
 #include "copyright.h"
 #include "openfile.h"
-//.
-#include "synch.h"
-#include "synchlist.h"
-// file access control entry
-class FileACEntry
-{
-public:
-  FileACEntry(int headerSector_);
-  ~FileACEntry();
-  int headerSector;
-  int numThreads;
-  Lock * numLock;
-  ReadWriteLock * readWriteLock;
-};
-//..
 
 #ifdef FILESYS_STUB 		// Temporarily implement file system calls as 
 				// calls to UNIX, until the real file system
@@ -107,7 +92,7 @@ class FileSystem {
     bool cd(char * name); // to sub or father dir.
     char *getCurrentDirName();
     // for synch
-    FileACEntry * getACEntry(int headerSector);
+    void * getACEntry(int headerSector);
     void UpdateFileACListWhenOpenFile(int headerSector);
     void UpdateFileACListWhenCloseFile(int headerSector);
     //bool Close(int headerSector);
@@ -128,7 +113,6 @@ class FileSystem {
 					// file names, represented as a file
    //.
    int currentDirHeaderSector;    // current directory's header sector
-   SynchList * fileACList;
    //..
 };
 

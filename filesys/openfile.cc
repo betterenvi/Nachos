@@ -128,7 +128,7 @@ OpenFile::ReadAt(char *into, int numBytes, int position)
 
     //.Only one sector will be writen. Sector synchronization is provided by synchDisk
     hdr->updateLastAccessTime();
-    bdr->WriteBack(headerSector);
+    hdr->WriteBack(headerSector);
     //..
 
     if ((position + numBytes) > fileLength)		

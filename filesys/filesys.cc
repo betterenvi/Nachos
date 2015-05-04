@@ -50,6 +50,8 @@
 #include "directory.h"
 #include "filehdr.h"
 #include "filesys.h"
+#include "system.h" //..
+#include "fileac.h" //..
 
 // Sectors containing the file headers for the bitmap of free sectors,
 // and the directory of files.  These file headers are placed in well-known 
@@ -64,16 +66,6 @@
 #define NumDirEntries 		10
 #define DirectoryFileSize 	(sizeof(DirectoryEntry) * NumDirEntries)
 
-FileACEntry::FileACEntry(int headerSector_){
-    readWriteLock = new ReadWriteLock("File AC entry");
-    numLock = new Lock("FileACEntry numLock");
-    headerSector = headerSector_;
-    numThreads = 0;
-}
-FileACEntry::~FileACEntry(){
-    delete readWriteLock;
-    delete numLock;
-}
 static int headerSectorToFind;
 static FileACEntry * foundACEntry;
 static void FindACEntry(int acEntry){
@@ -165,11 +157,9 @@ FileSystem::FileSystem(bool format)
         directoryFile = new OpenFile(DirectorySector);
     }
     currentDirHeaderSector = DirectorySector;
-    fileACList = new SynchList;
 }
 
 FileSystem::~FileSystem(){
-    delete fileACList;
     delete freeMapFile;
     delete directoryFile;
 }
@@ -629,7 +619,7 @@ void FileSystem::testExtensibleFileSize(){
     delete currentDirFile;
     delete freeMap;
 }
-FileACEntry * FileSystem::getACEntry(headerSector){
+void * FileSystem::getACEntry(int headerSector){
     headerSectorToFind = headerSector;
     foundACEntry = NULL;
     fileACList->Mapcar(FindACEntry);
@@ -637,27 +627,27 @@ FileACEntry * FileSystem::getACEntry(headerSector){
 }
 
 void FileSystem::beforeRead(int headerSector){
-    FindACEntry * entry = getACEntry(headerSector);
+    FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
     ASSERT(entry != NULL);
     entry->readWriteLock->BeforeRead();
 }
 void FileSystem::afterRead(int headerSector){
-    FindACEntry * entry = getACEntry(headerSector);
+    FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
     ASSERT(entry != NULL);
     entry->readWriteLock->AfterRead();
 }
 void FileSystem::beforeWrite(int headerSector){
-    FindACEntry * entry = getACEntry(headerSector);
+    FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
     ASSERT(entry != NULL);
     entry->readWriteLock->BeforeWrite();    
 }
 void FileSystem::afterWrite(int headerSector){
-    FindACEntry * entry = getACEntry(headerSector);
+    FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
     ASSERT(entry != NULL);
     entry->readWriteLock->AfterWrite();    
 }
 /*bool FileSystem::Close(int headerSector){
-    FindACEntry * entry = getACEntry(headerSector);
+    FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
     ASSERT(entry != NULL);
     entry->numLock->Acquire();
     entry->numThreads -= 1;
@@ -666,7 +656,7 @@ void FileSystem::afterWrite(int headerSector){
     return TRUE;
 }*/
 void FileSystem::UpdateFileACListWhenOpenFile(int headerSector){
-    FileACEntry * entry = getACEntry(headerSector);
+    FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
     if (entry == NULL){
         entry = new FileACEntry(headerSector);
         fileACList->Append((void *) entry);
@@ -676,7 +666,7 @@ void FileSystem::UpdateFileACListWhenOpenFile(int headerSector){
     entry->numLock->Release();
 }
 void FileSystem::UpdateFileACListWhenCloseFile(int headerSector){
-    FindACEntry * entry = getACEntry(headerSector);
+    FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
     ASSERT(entry != NULL);
     entry->numLock->Acquire();
     entry->numThreads -= 1;

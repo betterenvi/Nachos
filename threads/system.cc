@@ -25,6 +25,7 @@ FileSystem  *fileSystem;
 #endif
 
 #ifdef FILESYS
+SynchList *fileACList;
 SynchDisk   *synchDisk;
 #endif
 
@@ -189,6 +190,7 @@ Initialize(int argc, char **argv)
 
 #ifdef FILESYS
     synchDisk = new SynchDisk("DISK");
+    fileACList = new SynchList;
 #endif
 
 #ifdef FILESYS_NEEDED
@@ -224,6 +226,7 @@ Cleanup()
 
 #ifdef FILESYS
     delete synchDisk;
+    delete fileACList;
 #endif
     
     delete timer;

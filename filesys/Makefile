@@ -1324,6 +1324,7 @@ synchconsole.o: ../filesys/synchconsole.cc /usr/include/stdc-predef.h \
  ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
  ../filesys/filesys.h ../filesys/openfile.h ../threads/synchlist.h \
  ../threads/list.h ../threads/synch.h
+fileac.o: fileac.cc
 # DEPENDENCIES MUST END AT END OF FILE
 # IF YOU PUT STUFF HERE IT WILL GO AWAY
 # see make depend above

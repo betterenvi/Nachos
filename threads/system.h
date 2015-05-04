@@ -47,6 +47,8 @@ extern FileSystem  *fileSystem;
 #ifdef FILESYS
 #include "synchdisk.h"
 extern SynchDisk   *synchDisk;
+#include "synchlist.h"
+extern SynchList * fileACList;
 #endif
 
 #ifdef NETWORK
