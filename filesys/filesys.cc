@@ -67,7 +67,7 @@
 #define DirectoryFileSize 	(sizeof(DirectoryEntry) * NumDirEntries)
 
 static Lock sectorAllocateLock;
-static Lock dirAllocateLock;
+//static Lock dirAllocateLock;
 static int headerSectorToFind;
 static FileACEntry * foundACEntry;
 static void FindACEntry(int acEntry){
@@ -314,7 +314,7 @@ FileSystem::Remove(char *name)
     fileHdr->FetchFrom(sector);
     //. check if any thread is using this file
     FileACEntry * entry = (FileACEntry *) getACEntry(sector);
-    ASSERT(*entry);
+    ASSERT(entry != NULL);
     entry->numLock->Acquire();
     if (entry->numThreads > 0){
         printf("File '%s' is in use.\n", name);
@@ -325,6 +325,8 @@ FileSystem::Remove(char *name)
         return FALSE;
     }
     freeMap = new BitMap(NumSectors);
+
+    sectorAllocateLock.Acquire();
     freeMap->FetchFrom(freeMapFile);
 
     fileHdr->Deallocate(freeMap);  		// remove data blocks
@@ -332,6 +334,8 @@ FileSystem::Remove(char *name)
     directory->Remove(name);
 
     freeMap->WriteBack(freeMapFile);		// flush to disk
+    sectorAllocateLock.Release();
+
     directory->WriteBack(currentDirFile);        // flush to disk
     
     entry->numLock->Release();
@@ -429,7 +433,11 @@ bool FileSystem::CreateFileOrDir(char * name, int initialSize, int fileType){
     Directory * currentDir = new Directory(NumDirEntries);
     currentDir->FetchFrom(currentDirFile);
 
+
     BitMap * freeMap = new BitMap(NumSectors);
+    // get lock before we can allocate or recycle sectors
+    sectorAllocateLock.Acquire();
+
     freeMap->FetchFrom(freeMapFile);
 
     bool success = TRUE;
@@ -452,6 +460,7 @@ bool FileSystem::CreateFileOrDir(char * name, int initialSize, int fileType){
         }
         delete hdr;
     }
+    sectorAllocateLock.Release();
     delete freeMap;
     delete currentDir;
     delete currentDirFile;
@@ -482,7 +491,10 @@ bool FileSystem::rmdir(char * name){
             success = FALSE;
         } else {
             BitMap * freeMap = new BitMap(NumSectors);
+
+            sectorAllocateLock.Acquire();
             freeMap->FetchFrom(freeMapFile);
+
             FileHeader * dstHdr = new FileHeader;
             dstHdr->FetchFrom(dstHeaderSector);
             dstHdr->Deallocate(freeMap);
@@ -490,6 +502,8 @@ bool FileSystem::rmdir(char * name){
             currentDir->Remove(name);
 
             freeMap->WriteBack(freeMapFile);
+            sectorAllocateLock.Release();
+
             currentDir->WriteBack(currentDirFile);
 
             delete freeMap;
@@ -596,6 +610,114 @@ void FileSystem::testDirOps(){
     printf("%s $\n", dirName);
 }
 
+bool FileSystem::ExtendSize(char * name, int numExtendBytes){
+    DEBUG('t', "Enter FileSystem::ExtendSize.\n");
+    OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
+    Directory *directory = new Directory(NumDirEntries);
+    directory->FetchFrom(currentDirFile);
+
+    BitMap *freeMap;
+    FileHeader *fileHdr;
+    int sector;
+    
+    sector = directory->Find(name);
+    if (sector == -1) {
+        printf("File '%s' not found.\n", name);
+       delete directory;
+       delete currentDirFile;
+       return FALSE;             // file not found 
+    }
+    fileHdr = new FileHeader;
+    fileHdr->FetchFrom(sector);
+    // although we don't want to read or write the file, 
+    // open the file when try to extend size. the reason is
+    // extending size is also some kind of writing.
+    OpenFile * dstFile = new OpenFile(sector);
+    //. check if any thread is using this file
+    FileACEntry * entry = (FileACEntry *) getACEntry(sector);
+    ASSERT(entry != NULL);
+    entry->readWriteLock->BeforeWrite();
+
+    freeMap = new BitMap(NumSectors);
+
+    sectorAllocateLock.Acquire();
+    freeMap->FetchFrom(freeMapFile);
+
+    bool success = fileHdr->extendSize(numExtendBytes, freeMap);
+
+    if (success){
+        freeMap->WriteBack(freeMapFile);        // flush to disk
+        printf("File '%s' size extension succeeded.\n", name);
+    } else {
+        printf("File '%s' extended failed.\n", name);
+    }
+    sectorAllocateLock.Release();
+
+    entry->readWriteLock->AfterWrite();
+
+    delete freeMap;
+    delete dstFile;
+    delete fileHdr;
+    delete directory;
+    delete currentDirFile;
+    DEBUG('t', "Leave FileSystem::ExtendSize.\n");
+    return TRUE;
+}
+bool FileSystem::ShrinkSize(char * name, int numShrinkBytes){
+    DEBUG('t', "Enter FileSystem::ShrinkSize.\n");
+    OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
+    Directory *directory = new Directory(NumDirEntries);
+    directory->FetchFrom(currentDirFile);
+
+    BitMap *freeMap;
+    FileHeader *fileHdr;
+    int sector;
+    
+    sector = directory->Find(name);
+    if (sector == -1) {
+        printf("File '%s' not found.\n", name);
+       delete directory;
+       delete currentDirFile;
+       return FALSE;             // file not found 
+    }
+    fileHdr = new FileHeader;
+    fileHdr->FetchFrom(sector);
+    // although we don't want to read or write the file, 
+    // open the file when try to shrink size. the reason is
+    // shrinking size is also some kind of writing.
+    OpenFile * dstFile = new OpenFile(sector);
+    //. check if any thread is using this file
+    FileACEntry * entry = (FileACEntry *) getACEntry(sector);
+    ASSERT(entry != NULL);
+    entry->readWriteLock->BeforeWrite();
+
+    freeMap = new BitMap(NumSectors);
+
+    sectorAllocateLock.Acquire();
+    freeMap->FetchFrom(freeMapFile);
+
+    bool success = fileHdr->shrinkSize(numShrinkBytes, freeMap);
+
+    if (success){
+        freeMap->WriteBack(freeMapFile);        // flush to disk
+        printf("File '%s' size shrinking succeeded.\n", name);
+    } else {
+        printf("File '%s' shrinking failed.\n", name);
+    }
+    sectorAllocateLock.Release();
+
+    entry->readWriteLock->AfterWrite();
+
+    delete freeMap;
+    delete dstFile;
+    delete fileHdr;
+    delete directory;
+    delete currentDirFile;
+    DEBUG('t', "Leave FileSystem::ShrinkSize.\n");
+    return TRUE;
+}
+
+// concurrent op is not surpported.
 void FileSystem::testExtensibleFileSize(){
     char testFile[10] = "extSize";
     Create(testFile, 100);

@@ -91,6 +91,8 @@ class FileSystem {
     bool rmdirRecursive(char * name); // rm dir recursive
     bool cd(char * name); // to sub or father dir.
     char *getCurrentDirName();
+    bool ExtendSize(char * name, int numExtendBytes);
+    bool ShrinkSize(char * name, int numShrinkBytes);
     // for synch
     void * getACEntry(int headerSector);
     void UpdateFileACListWhenOpenFile(int headerSector);
