@@ -103,9 +103,6 @@ class FileSystem {
     void beforeWrite(int headerSector);
     void afterWrite(int headerSector);
 
-    void *AcquireSuperLock(int headerSector);
-    void ReleaseSuperLock(void * entry_);
-
     //for test
     void testMaxFileSize(void *freeMap, void * directory);
     void testDirOps();

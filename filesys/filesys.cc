@@ -260,23 +260,21 @@ OpenFile *
 FileSystem::Open(char *name)
 { 
     DEBUG('t', "Enter FileSystem::Open.\n");
+    sectorAllocateLock.Acquire();
     OpenFile *currentDirFile = new OpenFile(currentDirHeaderSector);
     Directory *directory = new Directory(NumDirEntries);
     OpenFile *openFile = NULL;
     int sector;
 
     DEBUG('f', "Opening file %s\n", name);
-    //. synchronize direcory access
-    void * superEntry = AcquireSuperLock(currentDirHeaderSector);
-    //..
+    
     directory->FetchFrom(currentDirFile);
     sector = directory->Find(name); 
-
-    ReleaseSuperLock(superEntry);//..
 
     if (sector >= 0) {		
         openFile = new OpenFile(sector);	// name was found in directory 
     }
+    sectorAllocateLock.Release();
     delete directory;
     delete currentDirFile;
     DEBUG('t', "Leave FileSystem::Open.\n");
@@ -301,10 +299,10 @@ bool
 FileSystem::Remove(char *name)
 { 
     DEBUG('t', "Enter FileSystem::Remove.\n");
+    sectorAllocateLock.Acquire();
     OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
     Directory *directory = new Directory(NumDirEntries);
     directory->FetchFrom(currentDirFile);
-    void * superEntry = AcquireSuperLock(currentDirHeaderSector);//..
     BitMap *freeMap;
     FileHeader *fileHdr;
     int sector;
@@ -314,6 +312,7 @@ FileSystem::Remove(char *name)
         printf("File '%s' not found.\n", name);
        delete directory;
        delete currentDirFile;
+        sectorAllocateLock.Release();
        return FALSE;			 // file not found 
     }
     fileHdr = new FileHeader;
@@ -325,6 +324,7 @@ FileSystem::Remove(char *name)
     if (entry->numThreads > 0){
         printf("File '%s' is in use.\n", name);
         entry->numLock->Release();
+        sectorAllocateLock.Release();
         delete directory;
         delete currentDirFile;
         delete fileHdr;
@@ -332,7 +332,6 @@ FileSystem::Remove(char *name)
     }
     freeMap = new BitMap(NumSectors);
 
-    sectorAllocateLock.Acquire();
     freeMap->FetchFrom(freeMapFile);
 
     fileHdr->Deallocate(freeMap);  		// remove data blocks
@@ -340,12 +339,11 @@ FileSystem::Remove(char *name)
     directory->Remove(name);
 
     freeMap->WriteBack(freeMapFile);		// flush to disk
-    sectorAllocateLock.Release();
 
     directory->WriteBack(currentDirFile);        // flush to disk
     
     entry->numLock->Release();
-    ReleaseSuperLock(superEntry);//..
+    sectorAllocateLock.Release();
     delete fileHdr;
     delete directory;
     delete freeMap;
@@ -364,12 +362,12 @@ void
 FileSystem::List()
 {
     //.
+    sectorAllocateLock.Acquire();
     OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
     Directory *currentDir = new Directory(NumDirEntries);
-    void * superEntry = AcquireSuperLock(currentDirHeaderSector);//..
     currentDir->FetchFrom(currentDirFile);
     currentDir->List();
-    ReleaseSuperLock(superEntry);//..
+    sectorAllocateLock.Release();
     delete currentDir;
     delete currentDirFile;
 }
@@ -388,6 +386,7 @@ void
 FileSystem::Print()
 {
     DEBUG('t', "Enter FileSystem::Print.\n");
+    sectorAllocateLock.Acquire();
     OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
     FileHeader *bitHdr = new FileHeader;
     FileHeader *dirHdr = new FileHeader;
@@ -407,7 +406,7 @@ FileSystem::Print()
 
     directory->FetchFrom(currentDirFile);
     directory->Print();
-
+    sectorAllocateLock.Release();
     delete bitHdr;
     delete dirHdr;
     delete freeMap;
@@ -416,6 +415,7 @@ FileSystem::Print()
     DEBUG('t', "Leave FileSystem::Print.\n");
 } 
 void FileSystem::testMaxFileSize(void *freeMap_, void * directory_){
+    sectorAllocateLock.Acquire();
     BitMap * freeMap = (BitMap *)freeMap_;
     Directory * directory = (Directory *)directory_;
     int headerSector = freeMap->Find();
@@ -424,6 +424,7 @@ void FileSystem::testMaxFileSize(void *freeMap_, void * directory_){
     fileHdr->initialize(REGULAR_FILE, DirectorySector);
     fileHdr->WriteBack(headerSector);
     directory->Add("testMax", headerSector);
+    sectorAllocateLock.Release();
     delete fileHdr;
 }
 
@@ -437,6 +438,7 @@ bool FileSystem::mkdir(char * name){
 
 bool FileSystem::CreateFileOrDir(char * name, int initialSize, int fileType){
     DEBUG('t', "Enter FileSystem::CreateFileOrDir.\n");
+    sectorAllocateLock.Acquire();
     OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
     Directory * currentDir = new Directory(NumDirEntries);
     currentDir->FetchFrom(currentDirFile);
@@ -444,7 +446,6 @@ bool FileSystem::CreateFileOrDir(char * name, int initialSize, int fileType){
 
     BitMap * freeMap = new BitMap(NumSectors);
     // get lock before we can allocate or recycle sectors
-    sectorAllocateLock.Acquire();
 
     freeMap->FetchFrom(freeMapFile);
 
@@ -479,6 +480,7 @@ bool FileSystem::CreateFileOrDir(char * name, int initialSize, int fileType){
 // rm dir if empty
 bool FileSystem::rmdir(char * name){
     DEBUG('t', "Enter FileSystem::rmdir.\n");
+    sectorAllocateLock.Acquire();
     OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
     Directory * currentDir = new Directory(NumDirEntries);
     currentDir->FetchFrom(currentDirFile);
@@ -500,7 +502,6 @@ bool FileSystem::rmdir(char * name){
         } else {
             BitMap * freeMap = new BitMap(NumSectors);
 
-            sectorAllocateLock.Acquire();
             freeMap->FetchFrom(freeMapFile);
 
             FileHeader * dstHdr = new FileHeader;
@@ -510,7 +511,6 @@ bool FileSystem::rmdir(char * name){
             currentDir->Remove(name);
 
             freeMap->WriteBack(freeMapFile);
-            sectorAllocateLock.Release();
 
             currentDir->WriteBack(currentDirFile);
 
@@ -521,6 +521,7 @@ bool FileSystem::rmdir(char * name){
         delete dstDir;
         delete dstDirFile;
     }
+    sectorAllocateLock.Release();
     delete currentDir;
     delete currentDirFile;
     DEBUG('t', "Leave FileSystem::rmdir.\n");
@@ -539,6 +540,8 @@ bool FileSystem::cd(char * name){
         currentDirHeaderSector = DirectorySector;
         return TRUE;
     }
+    sectorAllocateLock.Acquire();
+
     OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
     Directory * currentDir = new Directory(NumDirEntries);
     currentDir->FetchFrom(currentDirFile);
@@ -565,13 +568,14 @@ bool FileSystem::cd(char * name){
             currentDirHeaderSector = dstHeaderSector;
         }
     }
+    sectorAllocateLock.Release();
     delete currentHdr;
     delete currentDir;
     delete currentDirFile;
     DEBUG('t', "Leave FileSystem::cd.\n");
     return success;
 }
-
+// asynchronous
 char *FileSystem::getCurrentDirName(){
     if (currentDirHeaderSector == DirectorySector)
         return "/";
@@ -581,8 +585,10 @@ char *FileSystem::getCurrentDirName(){
     DEBUG('a', "getPathSector is %d\n", curHdr->getPathSector());
     Directory * fathDir = new Directory(DirectoryFileSize);
     fathDir->FetchFrom(fathDirFile);
-    return fathDir->getFileName(currentDirHeaderSector); 
+    char * name = fathDir->getFileName(currentDirHeaderSector); 
+    return name;
 }
+// asynchronous
 void FileSystem::testDirOps(){
     char * dirName = getCurrentDirName();
     printf("%s $ mkdir test1\n", dirName);
@@ -620,6 +626,7 @@ void FileSystem::testDirOps(){
 
 bool FileSystem::ExtendSize(char * name, int numExtendBytes){
     DEBUG('t', "Enter FileSystem::ExtendSize.\n");
+    sectorAllocateLock.Acquire();
     OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
     Directory *directory = new Directory(NumDirEntries);
     directory->FetchFrom(currentDirFile);
@@ -633,6 +640,7 @@ bool FileSystem::ExtendSize(char * name, int numExtendBytes){
         printf("File '%s' not found.\n", name);
        delete directory;
        delete currentDirFile;
+        sectorAllocateLock.Release();
        return FALSE;             // file not found 
     }
     fileHdr = new FileHeader;
@@ -648,7 +656,6 @@ bool FileSystem::ExtendSize(char * name, int numExtendBytes){
 
     freeMap = new BitMap(NumSectors);
 
-    sectorAllocateLock.Acquire();
     freeMap->FetchFrom(freeMapFile);
 
     bool success = fileHdr->extendSize(numExtendBytes, freeMap);
@@ -659,9 +666,10 @@ bool FileSystem::ExtendSize(char * name, int numExtendBytes){
     } else {
         printf("File '%s' extended failed.\n", name);
     }
-    sectorAllocateLock.Release();
 
     entry->readWriteLock->AfterWrite();
+
+    sectorAllocateLock.Release();
 
     delete freeMap;
     delete dstFile;
@@ -673,6 +681,7 @@ bool FileSystem::ExtendSize(char * name, int numExtendBytes){
 }
 bool FileSystem::ShrinkSize(char * name, int numShrinkBytes){
     DEBUG('t', "Enter FileSystem::ShrinkSize.\n");
+    sectorAllocateLock.Acquire();
     OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
     Directory *directory = new Directory(NumDirEntries);
     directory->FetchFrom(currentDirFile);
@@ -686,6 +695,7 @@ bool FileSystem::ShrinkSize(char * name, int numShrinkBytes){
         printf("File '%s' not found.\n", name);
        delete directory;
        delete currentDirFile;
+        sectorAllocateLock.Release();
        return FALSE;             // file not found 
     }
     fileHdr = new FileHeader;
@@ -701,7 +711,6 @@ bool FileSystem::ShrinkSize(char * name, int numShrinkBytes){
 
     freeMap = new BitMap(NumSectors);
 
-    sectorAllocateLock.Acquire();
     freeMap->FetchFrom(freeMapFile);
 
     bool success = fileHdr->shrinkSize(numShrinkBytes, freeMap);
@@ -712,9 +721,9 @@ bool FileSystem::ShrinkSize(char * name, int numShrinkBytes){
     } else {
         printf("File '%s' shrinking failed.\n", name);
     }
-    sectorAllocateLock.Release();
 
     entry->readWriteLock->AfterWrite();
+    sectorAllocateLock.Release();
 
     delete freeMap;
     delete dstFile;
@@ -725,6 +734,7 @@ bool FileSystem::ShrinkSize(char * name, int numShrinkBytes){
     return TRUE;
 }
 
+// asynchronous
 // concurrent op is not surpported.
 void FileSystem::testExtensibleFileSize(){
     char testFile[10] = "extSize";
@@ -812,22 +822,26 @@ void FileSystem::afterWrite(int headerSector){
     return TRUE;
 }*/
 void FileSystem::UpdateFileACListWhenOpenFile(int headerSector){
+    sectorAllocateLock.Acquire();
     FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
-    if (entry == NULL){
+    if (entry == NULL){// need to synchronize
         entry = new FileACEntry(headerSector);
         fileACList->Append((void *) entry);
     }
     entry->numLock->Acquire();
     entry->numThreads += 1;
     entry->numLock->Release();
+    sectorAllocateLock.Release();
 }
 void FileSystem::UpdateFileACListWhenCloseFile(int headerSector){
+    sectorAllocateLock.Acquire();
     FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
     ASSERT(entry != NULL);
     entry->numLock->Acquire();
     entry->numThreads -= 1;
     ASSERT(entry->numThreads >= 0);
     entry->numLock->Release();
+    sectorAllocateLock.Release();
 }
 void FileSystem::testConcurrentReadWrite(){
     char testFile[10] = "concurIO";
@@ -842,14 +856,4 @@ void FileSystem::testConcurrentReadWrite(){
     dstHdr->FetchFrom(dstHeaderSector);
 }
 
-void *FileSystem::AcquireSuperLock(int headerSector){
-    FileACEntry * entry = (FileACEntry *)getACEntry(currentDirHeaderSector);
-    ASSERT(entry != NULL);
-    entry->readWriteLock->AcquireSuperLock();
-   return (void *) entry; 
-}
-void FileSystem::ReleaseSuperLock(void * entry_){
-    FileACEntry * entry = (FileACEntry *)entry_;
-    entry->readWriteLock->ReleaseSuperLock();
-}
     
