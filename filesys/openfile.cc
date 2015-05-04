@@ -141,11 +141,12 @@ OpenFile::ReadAt(char *into, int numBytes, int position)
     numSectors = 1 + lastSector - firstSector;
 
     // read in all the full and partial sectors that we need
+    fileSystem->beforeRead();
     buf = new char[numSectors * SectorSize];
     for (i = firstSector; i <= lastSector; i++)	
         synchDisk->ReadSector(hdr->ByteToSector(i * SectorSize), 
 					&buf[(i - firstSector) * SectorSize]);
-
+    fileSystem->afterRead();
     // copy the part we want
     bcopy(&buf[position - (firstSector * SectorSize)], into, numBytes);
     delete [] buf;

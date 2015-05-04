@@ -105,6 +105,7 @@ class FileSystem {
     void testMaxFileSize(void *freeMap, void * directory);
     void testDirOps();
     void testExtensibleFileSize();
+    void testConcurrentReadWrite();
     //..
   private:
    OpenFile* freeMapFile;		// Bit map of free disk blocks,

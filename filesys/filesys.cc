@@ -66,6 +66,8 @@
 #define NumDirEntries 		10
 #define DirectoryFileSize 	(sizeof(DirectoryEntry) * NumDirEntries)
 
+static Lock sectorAllocateLock;
+static Lock dirAllocateLock;
 static int headerSectorToFind;
 static FileACEntry * foundACEntry;
 static void FindACEntry(int acEntry){
@@ -310,7 +312,18 @@ FileSystem::Remove(char *name)
     }
     fileHdr = new FileHeader;
     fileHdr->FetchFrom(sector);
-
+    //. check if any thread is using this file
+    FileACEntry * entry = (FileACEntry *) getACEntry(sector);
+    ASSERT(*entry);
+    entry->numLock->Acquire();
+    if (entry->numThreads > 0){
+        printf("File '%s' is in use.\n", name);
+        entry->numLock->Release();
+        delete directory;
+        delete currentDirFile;
+        delete fileHdr;
+        return FALSE;
+    }
     freeMap = new BitMap(NumSectors);
     freeMap->FetchFrom(freeMapFile);
 
@@ -320,6 +333,9 @@ FileSystem::Remove(char *name)
 
     freeMap->WriteBack(freeMapFile);		// flush to disk
     directory->WriteBack(currentDirFile);        // flush to disk
+    
+    entry->numLock->Release();
+
     delete fileHdr;
     delete directory;
     delete freeMap;
@@ -646,6 +662,16 @@ void FileSystem::afterWrite(int headerSector){
     ASSERT(entry != NULL);
     entry->readWriteLock->AfterWrite();    
 }
+/*bool deletable(int headerSector){
+    bool isDeletable = TRUE;
+    FileACEntry * entry = (FileACEntry *) getACEntry(headerSector);
+    ASSERT(entry != NULL);
+    entry->numLock->Acquire();
+    if (entry->numThreads > 0)
+        isDeletable = FALSE;
+    entry->numLock->Release();
+    return isDeletable;
+}*/
 /*bool FileSystem::Close(int headerSector){
     FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
     ASSERT(entry != NULL);
@@ -672,4 +698,16 @@ void FileSystem::UpdateFileACListWhenCloseFile(int headerSector){
     entry->numThreads -= 1;
     ASSERT(entry->numThreads >= 0);
     entry->numLock->Release();
+}
+void FileSystem::testConcurrentReadWrite(){
+    char testFile[10] = "concurIO";
+    Create(testFile, 256);
+    BitMap * freeMap = new BitMap(NumSectors);
+    freeMap->FetchFrom(freeMapFile);
+    OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
+    Directory * currentDir = new Directory(NumDirEntries);
+    currentDir->FetchFrom(currentDirFile);
+    int dstHeaderSector = currentDir->Find(testFile);
+    FileHeader * dstHdr = new FileHeader;
+    dstHdr->FetchFrom(dstHeaderSector);
 }
