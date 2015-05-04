@@ -173,11 +173,14 @@ ReadWriteLock::ReadWriteLock(char *lockName){
     name = lockName;
     cntLock = new Lock("cnt lock");
     writeLock = new Lock("write lock");
+    superLock = new Lock("super Lock");
+    curWritingThread = NULL;
 }
 
 ReadWriteLock::~ReadWriteLock(){
     delete cntLock;
     delete writeLock;
+    delete superLock;
 }
 
 void ReadWriteLock::BeforeRead(){
@@ -199,4 +202,10 @@ void ReadWriteLock::BeforeWrite(){
 }
 void ReadWriteLock::AfterWrite(){
     writeLock->Release();
+}
+void ReadWriteLock::AcquireSuperLock(){
+    superLock->Acquire();
+}
+void ReadWriteLock::ReleaseSuperLock(){
+    superLock->Release();
 }

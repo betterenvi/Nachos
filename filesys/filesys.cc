@@ -266,8 +266,14 @@ FileSystem::Open(char *name)
     int sector;
 
     DEBUG('f', "Opening file %s\n", name);
+    //. synchronize direcory access
+    void * superEntry = AcquireSuperLock(currentDirHeaderSector);
+    //..
     directory->FetchFrom(currentDirFile);
     sector = directory->Find(name); 
+
+    ReleaseSuperLock(superEntry);//..
+
     if (sector >= 0) {		
         openFile = new OpenFile(sector);	// name was found in directory 
     }
@@ -298,7 +304,7 @@ FileSystem::Remove(char *name)
     OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
     Directory *directory = new Directory(NumDirEntries);
     directory->FetchFrom(currentDirFile);
-
+    void * superEntry = AcquireSuperLock(currentDirHeaderSector);//..
     BitMap *freeMap;
     FileHeader *fileHdr;
     int sector;
@@ -339,7 +345,7 @@ FileSystem::Remove(char *name)
     directory->WriteBack(currentDirFile);        // flush to disk
     
     entry->numLock->Release();
-
+    ReleaseSuperLock(superEntry);//..
     delete fileHdr;
     delete directory;
     delete freeMap;
@@ -360,8 +366,10 @@ FileSystem::List()
     //.
     OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
     Directory *currentDir = new Directory(NumDirEntries);
+    void * superEntry = AcquireSuperLock(currentDirHeaderSector);//..
     currentDir->FetchFrom(currentDirFile);
     currentDir->List();
+    ReleaseSuperLock(superEntry);//..
     delete currentDir;
     delete currentDirFile;
 }
@@ -833,3 +841,15 @@ void FileSystem::testConcurrentReadWrite(){
     FileHeader * dstHdr = new FileHeader;
     dstHdr->FetchFrom(dstHeaderSector);
 }
+
+void *FileSystem::AcquireSuperLock(int headerSector){
+    FileACEntry * entry = (FileACEntry *)getACEntry(currentDirHeaderSector);
+    ASSERT(entry != NULL);
+    entry->readWriteLock->AcquireSuperLock();
+   return (void *) entry; 
+}
+void FileSystem::ReleaseSuperLock(void * entry_){
+    FileACEntry * entry = (FileACEntry *)entry_;
+    entry->readWriteLock->ReleaseSuperLock();
+}
+    

@@ -147,11 +147,15 @@ public:
     void AfterRead();
     void BeforeWrite();
     void AfterWrite();
-
+    void ReleaseSuperLock();
+    void AcquireSuperLock();
+    
 private:
     int readerCnt;
     Lock * cntLock;
     Lock * writeLock; 
+    Lock * superLock;
+    Thread * curWritingThread;
     char * name;
 };
 #endif // SYNCH_H

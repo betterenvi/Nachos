@@ -126,11 +126,6 @@ OpenFile::ReadAt(char *into, int numBytes, int position)
     if ((numBytes <= 0) || (position >= fileLength))
     	return 0; 				// check request
 
-    //.Only one sector will be writen. Sector synchronization is provided by synchDisk
-    hdr->updateLastAccessTime();
-    hdr->WriteBack(headerSector);
-    //..
-
     if ((position + numBytes) > fileLength)		
 	   numBytes = fileLength - position;
     DEBUG('f', "Reading %d bytes at %d, from file of length %d.\n", 	
@@ -142,6 +137,10 @@ OpenFile::ReadAt(char *into, int numBytes, int position)
 
     // read in all the full and partial sectors that we need
     fileSystem->beforeRead();
+    //.Only one sector will be writen. Sector synchronization is provided by synchDisk
+    hdr->updateLastAccessTime();    // problematic, because it is "write"
+    hdr->WriteBack(headerSector);
+    //..
     buf = new char[numSectors * SectorSize];
     for (i = firstSector; i <= lastSector; i++)	
         synchDisk->ReadSector(hdr->ByteToSector(i * SectorSize), 
@@ -164,11 +163,6 @@ OpenFile::WriteAt(char *from, int numBytes, int position)
     if ((numBytes <= 0) || (position >= fileLength))
 	return 0;				// check request
     
-    //. Only one sector will be writen. 
-    hdr->updateLastAccessTime();
-    hdr->updateLastModifyTime();
-    hdr->WriteBack(headerSector);
-    //..
 
     if ((position + numBytes) > fileLength)
 	numBytes = fileLength - position;
@@ -196,6 +190,11 @@ OpenFile::WriteAt(char *from, int numBytes, int position)
 
 // write modified sectors back
     fileSystem->beforeWrite(headerSector);//..
+    //. Only one sector will be writen. 
+    hdr->updateLastAccessTime();     // problematic, because it is "write"
+    hdr->updateLastModifyTime();
+    hdr->WriteBack(headerSector);
+    //..
     for (i = firstSector; i <= lastSector; i++)	
         synchDisk->WriteSector(hdr->ByteToSector(i * SectorSize), 
 					&buf[(i - firstSector) * SectorSize]);
