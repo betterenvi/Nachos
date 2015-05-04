@@ -34,7 +34,7 @@ OpenFile::OpenFile(int sector)
     hdr->FetchFrom(sector);
     seekPosition = 0;
     headerSector = sector;
-    UpdateFileACListWhenOpenFile(headerSector);
+    fileACList->UpdateFileACListWhenOpenFile(headerSector);
     DEBUG('f', "Leave OpenFile::OpenFile\n");
 }
 
@@ -45,7 +45,7 @@ OpenFile::OpenFile(int sector)
 
 OpenFile::~OpenFile()
 {
-    UpdateFileACListWhenCloseFile(headerSector);
+    fileACList->UpdateFileACListWhenCloseFile(headerSector);
     delete hdr;
 }
 

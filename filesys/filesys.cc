@@ -68,46 +68,7 @@
 
 static Lock sectorAllocateLock("super lock");
 //static Lock dirAllocateLock;
-static SynchList fileACList;
-static int headerSectorToFind;
-static FileACEntry * foundACEntry;
-static void FindACEntry(int acEntry){
-    FileACEntry * entry = (FileACEntry *)acEntry;
-    if (entry->headerSector == headerSectorToFind)
-        foundACEntry = entry;
-};
-static void * getACEntry(int headerSector){
-    headerSectorToFind = headerSector;
-    foundACEntry = NULL;
-    fileACList.Mapcar(FindACEntry);
-    return foundACEntry;
-};
-// invoked by OpenFile::OpenFile()
-extern static void UpdateFileACListWhenOpenFile(int headerSector){
-    sectorAllocateLock.Acquire();
-    FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
-    if (entry == NULL){// need to synchronize
-        entry = new FileACEntry(headerSector);
-        fileACList.Append((void *) entry);
-    }
-    entry->numLock->Acquire();
-    entry->numThreads += 1;
-    entry->numLock->Release();
-    sectorAllocateLock.Release();
-};
-// invoked by OpenFile::~OpenFile()
-extern static void UpdateFileACListWhenCloseFile(int headerSector){
-    DEBUG('f', "Enter UpdateFileACListWhenCloseFile\n");
-    sectorAllocateLock.Acquire();
-    FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
-    ASSERT(entry != NULL);
-    entry->numLock->Acquire();
-    entry->numThreads -= 1;
-    ASSERT(entry->numThreads >= 0);
-    entry->numLock->Release();
-    sectorAllocateLock.Release();
-    DEBUG('f', "Leave UpdateFileACListWhenCloseFile\n");
-};
+
 //----------------------------------------------------------------------
 // FileSystem::FileSystem
 // 	Initialize the file system.  If format = TRUE, the disk has
@@ -350,7 +311,7 @@ FileSystem::Remove(char *name)
     fileHdr = new FileHeader;
     fileHdr->FetchFrom(sector);
     //. check if any thread is using this file
-    FileACEntry * entry = (FileACEntry *) getACEntry(sector);
+    FileACEntry * entry = (FileACEntry *) fileACList->getACEntry(sector);
     ASSERT(entry != NULL);
     entry->numLock->Acquire();
     if (entry->numThreads > 0){
@@ -682,7 +643,7 @@ bool FileSystem::ExtendSize(char * name, int numExtendBytes){
     // extending size is also some kind of writing.
     OpenFile * dstFile = new OpenFile(sector);
     //. check if any thread is using this file
-    FileACEntry * entry = (FileACEntry *) getACEntry(sector);
+    FileACEntry * entry = (FileACEntry *) fileACList->getACEntry(sector);
     ASSERT(entry != NULL);
     entry->readWriteLock->BeforeWrite();
 
@@ -737,7 +698,7 @@ bool FileSystem::ShrinkSize(char * name, int numShrinkBytes){
     // shrinking size is also some kind of writing.
     OpenFile * dstFile = new OpenFile(sector);
     //. check if any thread is using this file
-    FileACEntry * entry = (FileACEntry *) getACEntry(sector);
+    FileACEntry * entry = (FileACEntry *) fileACList->getACEntry(sector);
     ASSERT(entry != NULL);
     entry->readWriteLock->BeforeWrite();
 
@@ -810,28 +771,28 @@ void FileSystem::testExtensibleFileSize(){
 
 
 void FileSystem::beforeRead(int headerSector){
-    FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
+    FileACEntry * entry = (FileACEntry *)fileACList->getACEntry(headerSector);
     ASSERT(entry != NULL);
     entry->readWriteLock->BeforeRead();
 }
 void FileSystem::afterRead(int headerSector){
-    FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
+    FileACEntry * entry = (FileACEntry *)fileACList->getACEntry(headerSector);
     ASSERT(entry != NULL);
     entry->readWriteLock->AfterRead();
 }
 void FileSystem::beforeWrite(int headerSector){
-    FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
+    FileACEntry * entry = (FileACEntry *)fileACList->getACEntry(headerSector);
     ASSERT(entry != NULL);
     entry->readWriteLock->BeforeWrite();    
 }
 void FileSystem::afterWrite(int headerSector){
-    FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
+    FileACEntry * entry = (FileACEntry *)fileACList->getACEntry(headerSector);
     ASSERT(entry != NULL);
     entry->readWriteLock->AfterWrite();    
 }
 /*bool deletable(int headerSector){
     bool isDeletable = TRUE;
-    FileACEntry * entry = (FileACEntry *) getACEntry(headerSector);
+    FileACEntry * entry = (FileACEntry *) fileACList->getACEntry(headerSector);
     ASSERT(entry != NULL);
     entry->numLock->Acquire();
     if (entry->numThreads > 0)
@@ -840,7 +801,7 @@ void FileSystem::afterWrite(int headerSector){
     return isDeletable;
 }*/
 /*bool FileSystem::Close(int headerSector){
-    FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
+    FileACEntry * entry = (FileACEntry *)fileACList->getACEntry(headerSector);
     ASSERT(entry != NULL);
     entry->numLock->Acquire();
     entry->numThreads -= 1;

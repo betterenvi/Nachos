@@ -17,16 +17,15 @@ Interrupt *interrupt;			// interrupt status
 Statistics *stats;			// performance metrics
 Timer *timer;				// the hardware timer device,
 					// for invoking context switches
-
 TidManager *tidManager;// = TidManager();
+
+#ifdef FILESYS
+FileACList *fileACList;
+SynchDisk   *synchDisk;
+#endif
 
 #ifdef FILESYS_NEEDED
 FileSystem  *fileSystem;
-#endif
-
-#ifdef FILESYS
-//SynchList *fileACList;
-SynchDisk   *synchDisk;
 #endif
 
 #ifdef USER_PROGRAM	// requires either FILESYS or FILESYS_STUB
@@ -190,7 +189,7 @@ Initialize(int argc, char **argv)
 
 #ifdef FILESYS
     synchDisk = new SynchDisk("DISK");
-//    fileACList = new SynchList;
+    fileACList = new FileACList;
 #endif
 
 #ifdef FILESYS_NEEDED
@@ -226,7 +225,7 @@ Cleanup()
 
 #ifdef FILESYS
     delete synchDisk;
-//    delete fileACList;
+    delete fileACList;
 #endif
     
     delete timer;

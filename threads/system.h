@@ -17,7 +17,7 @@
 #include "stats.h"
 #include "timer.h"
 #include "tid.h"
-
+#include "fileac.h"
 
 // Initialization and cleanup routines
 extern void Initialize(int argc, char **argv); 	// Initialization,
@@ -39,17 +39,18 @@ extern Machine* machine;	// user program memory and registers
 extern BitMap* memBitMap;		// case make failure.
 #endif
 
+#ifdef FILESYS
+#include "synchdisk.h"
+extern SynchDisk   *synchDisk;
+#include "synchlist.h"
+extern FileACList * fileACList;
+#endif
+
 #ifdef FILESYS_NEEDED 		// FILESYS or FILESYS_STUB 
 #include "filesys.h"
 extern FileSystem  *fileSystem;
 #endif
 
-#ifdef FILESYS
-#include "synchdisk.h"
-extern SynchDisk   *synchDisk;
-#include "synchlist.h"
-//extern SynchList * fileACList;
-#endif
 
 #ifdef NETWORK
 #include "post.h"
