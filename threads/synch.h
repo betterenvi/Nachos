@@ -140,14 +140,14 @@ class Condition {
 class ReadWriteLock
 {
 public:
-    ReadWriteLock(arguments);
+    ReadWriteLock(char *name);
     ~ReadWriteLock();
 
     void BeforeRead();
     void AfterRead();
     void BeforeWrite();
     void AfterWrite();
-    
+
 private:
     int readerCnt;
     Lock * cntLock;

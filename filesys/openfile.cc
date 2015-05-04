@@ -33,6 +33,7 @@ OpenFile::OpenFile(int sector)
     hdr->FetchFrom(sector);
     seekPosition = 0;
     headerSector = sector;
+    fileSystem->UpdateFileACListWhenOpenFile(headerSector);
 }
 
 //----------------------------------------------------------------------
@@ -42,6 +43,7 @@ OpenFile::OpenFile(int sector)
 
 OpenFile::~OpenFile()
 {
+    fileSystem->UpdateFileACListWhenCloseFile(headerSector);
     delete hdr;
 }
 
@@ -192,9 +194,11 @@ OpenFile::WriteAt(char *from, int numBytes, int position)
     bcopy(from, &buf[position - (firstSector * SectorSize)], numBytes);
 
 // write modified sectors back
+    fileSystem->beforeWrite(headerSector);//..
     for (i = firstSector; i <= lastSector; i++)	
         synchDisk->WriteSector(hdr->ByteToSector(i * SectorSize), 
 					&buf[(i - firstSector) * SectorSize]);
+    fileSystem->afterWrite(headerSector);//..
     delete [] buf;
     return numBytes;
 }

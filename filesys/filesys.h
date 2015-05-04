@@ -37,6 +37,21 @@
 
 #include "copyright.h"
 #include "openfile.h"
+//.
+#include "synch.h"
+#include "synchlist.h"
+// file access control entry
+class FileACEntry
+{
+public:
+  FileACEntry(int headerSector_);
+  ~FileACEntry();
+  int headerSector;
+  int numThreads;
+  Lock * numLock;
+  ReadWriteLock * readWriteLock;
+};
+//..
 
 #ifdef FILESYS_STUB 		// Temporarily implement file system calls as 
 				// calls to UNIX, until the real file system
@@ -73,7 +88,7 @@ class FileSystem {
     					// If "format", there is nothing on
 					// the disk, so initialize the directory
     					// and the bitmap of free blocks.
-
+    ~FileSystem();
     bool Create(char *name, int initialSize);  	
 					// Create a file (UNIX creat)
 
@@ -91,6 +106,16 @@ class FileSystem {
     bool rmdirRecursive(char * name); // rm dir recursive
     bool cd(char * name); // to sub or father dir.
     char *getCurrentDirName();
+    // for synch
+    FileACEntry * getACEntry(int headerSector);
+    void UpdateFileACListWhenOpenFile(int headerSector);
+    void UpdateFileACListWhenCloseFile(int headerSector);
+    //bool Close(int headerSector);
+    void beforeRead(int headerSector);
+    void afterRead(int headerSector);
+    void beforeWrite(int headerSector);
+    void afterWrite(int headerSector);
+
     //for test
     void testMaxFileSize(void *freeMap, void * directory);
     void testDirOps();
@@ -103,7 +128,7 @@ class FileSystem {
 					// file names, represented as a file
    //.
    int currentDirHeaderSector;    // current directory's header sector
-
+   SynchList * fileACList;
    //..
 };
 

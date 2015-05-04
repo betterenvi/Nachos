@@ -64,6 +64,24 @@
 #define NumDirEntries 		10
 #define DirectoryFileSize 	(sizeof(DirectoryEntry) * NumDirEntries)
 
+FileACEntry::FileACEntry(int headerSector_){
+    readWriteLock = new ReadWriteLock("File AC entry");
+    numLock = new Lock("FileACEntry numLock");
+    headerSector = headerSector_;
+    numThreads = 0;
+}
+FileACEntry::~FileACEntry(){
+    delete readWriteLock;
+    delete numLock;
+}
+static int headerSectorToFind;
+static FileACEntry * foundACEntry;
+static void FindACEntry(int acEntry){
+    FileACEntry * entry = (FileACEntry *)acEntry;
+    if (entry->headerSector == headerSectorToFind)
+        foundACEntry = entry;
+}
+
 //----------------------------------------------------------------------
 // FileSystem::FileSystem
 // 	Initialize the file system.  If format = TRUE, the disk has
@@ -147,8 +165,14 @@ FileSystem::FileSystem(bool format)
         directoryFile = new OpenFile(DirectorySector);
     }
     currentDirHeaderSector = DirectorySector;
+    fileACList = new SynchList;
 }
 
+FileSystem::~FileSystem(){
+    delete fileACList;
+    delete freeMapFile;
+    delete directoryFile;
+}
 //----------------------------------------------------------------------
 // FileSystem::Create
 // 	Create a file in the Nachos file system (similar to UNIX create).
@@ -252,8 +276,9 @@ FileSystem::Open(char *name)
     DEBUG('f', "Opening file %s\n", name);
     directory->FetchFrom(currentDirFile);
     sector = directory->Find(name); 
-    if (sector >= 0) 		
-	   openFile = new OpenFile(sector);	// name was found in directory 
+    if (sector >= 0) {		
+        openFile = new OpenFile(sector);	// name was found in directory 
+    }
     delete directory;
     delete currentDirFile;
     DEBUG('t', "Leave FileSystem::Open.\n");
@@ -598,9 +623,63 @@ void FileSystem::testExtensibleFileSize(){
     printf("***** after shrinking 4000 bytes *****\n");    
     dstHdr->Print(FALSE);
     freeMap->Print();
-    
+
     delete dstHdr;
     delete currentDir;
     delete currentDirFile;
     delete freeMap;
+}
+FileACEntry * FileSystem::getACEntry(headerSector){
+    headerSectorToFind = headerSector;
+    foundACEntry = NULL;
+    fileACList->Mapcar(FindACEntry);
+    return foundACEntry;
+}
+
+void FileSystem::beforeRead(int headerSector){
+    FindACEntry * entry = getACEntry(headerSector);
+    ASSERT(entry != NULL);
+    entry->readWriteLock->BeforeRead();
+}
+void FileSystem::afterRead(int headerSector){
+    FindACEntry * entry = getACEntry(headerSector);
+    ASSERT(entry != NULL);
+    entry->readWriteLock->AfterRead();
+}
+void FileSystem::beforeWrite(int headerSector){
+    FindACEntry * entry = getACEntry(headerSector);
+    ASSERT(entry != NULL);
+    entry->readWriteLock->BeforeWrite();    
+}
+void FileSystem::afterWrite(int headerSector){
+    FindACEntry * entry = getACEntry(headerSector);
+    ASSERT(entry != NULL);
+    entry->readWriteLock->AfterWrite();    
+}
+/*bool FileSystem::Close(int headerSector){
+    FindACEntry * entry = getACEntry(headerSector);
+    ASSERT(entry != NULL);
+    entry->numLock->Acquire();
+    entry->numThreads -= 1;
+    ASSERT(entry->numThreads >= 0);
+    entry->numLock->Release();
+    return TRUE;
+}*/
+void FileSystem::UpdateFileACListWhenOpenFile(int headerSector){
+    FileACEntry * entry = getACEntry(headerSector);
+    if (entry == NULL){
+        entry = new FileACEntry(headerSector);
+        fileACList->Append((void *) entry);
+    }
+    entry->numLock->Acquire();
+    entry->numThreads += 1;
+    entry->numLock->Release();
+}
+void FileSystem::UpdateFileACListWhenCloseFile(int headerSector){
+    FindACEntry * entry = getACEntry(headerSector);
+    ASSERT(entry != NULL);
+    entry->numLock->Acquire();
+    entry->numThreads -= 1;
+    ASSERT(entry->numThreads >= 0);
+    entry->numLock->Release();
 }
