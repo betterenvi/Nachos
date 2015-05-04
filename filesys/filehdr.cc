@@ -138,7 +138,9 @@ FileHeader::Deallocate(BitMap *freeMap)
 void
 FileHeader::FetchFrom(int sector)
 {
+    DEBUG('f', "Enter FileHeader::FetchFrom %d\n", sector);
     synchDisk->ReadSector(sector, (char *)this);
+    DEBUG('f', "Leave FileHeader::FetchFrom %d\n", sector);
 }
 
 //----------------------------------------------------------------------

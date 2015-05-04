@@ -94,9 +94,9 @@ class FileSystem {
     bool ExtendSize(char * name, int numExtendBytes);
     bool ShrinkSize(char * name, int numShrinkBytes);
     // for synch
-    void * getACEntry(int headerSector);
-    void UpdateFileACListWhenOpenFile(int headerSector);
-    void UpdateFileACListWhenCloseFile(int headerSector);
+//    static void * getACEntry(int headerSector);
+//    static void UpdateFileACListWhenOpenFile(int headerSector);
+//    static void UpdateFileACListWhenCloseFile(int headerSector);
     //bool Close(int headerSector);
     void beforeRead(int headerSector);
     void afterRead(int headerSector);

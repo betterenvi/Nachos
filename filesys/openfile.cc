@@ -29,11 +29,13 @@
 
 OpenFile::OpenFile(int sector)
 { 
+    DEBUG('f', "Enter OpenFile::OpenFile %d\n", sector);
     hdr = new FileHeader;
     hdr->FetchFrom(sector);
     seekPosition = 0;
     headerSector = sector;
-    fileSystem->UpdateFileACListWhenOpenFile(headerSector);
+    UpdateFileACListWhenOpenFile(headerSector);
+    DEBUG('f', "Leave OpenFile::OpenFile\n");
 }
 
 //----------------------------------------------------------------------
@@ -43,7 +45,7 @@ OpenFile::OpenFile(int sector)
 
 OpenFile::~OpenFile()
 {
-    fileSystem->UpdateFileACListWhenCloseFile(headerSector);
+    UpdateFileACListWhenCloseFile(headerSector);
     delete hdr;
 }
 
@@ -136,7 +138,7 @@ OpenFile::ReadAt(char *into, int numBytes, int position)
     numSectors = 1 + lastSector - firstSector;
 
     // read in all the full and partial sectors that we need
-    fileSystem->beforeRead();
+    fileSystem->beforeRead(headerSector);
     //.Only one sector will be writen. Sector synchronization is provided by synchDisk
     hdr->updateLastAccessTime();    // problematic, because it is "write"
     hdr->WriteBack(headerSector);
@@ -145,7 +147,7 @@ OpenFile::ReadAt(char *into, int numBytes, int position)
     for (i = firstSector; i <= lastSector; i++)	
         synchDisk->ReadSector(hdr->ByteToSector(i * SectorSize), 
 					&buf[(i - firstSector) * SectorSize]);
-    fileSystem->afterRead();
+    fileSystem->afterRead(headerSector);
     // copy the part we want
     bcopy(&buf[position - (firstSector * SectorSize)], into, numBytes);
     delete [] buf;

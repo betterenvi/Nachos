@@ -66,16 +66,48 @@
 #define NumDirEntries 		10
 #define DirectoryFileSize 	(sizeof(DirectoryEntry) * NumDirEntries)
 
-static Lock sectorAllocateLock;
+static Lock sectorAllocateLock("super lock");
 //static Lock dirAllocateLock;
+static SynchList fileACList;
 static int headerSectorToFind;
 static FileACEntry * foundACEntry;
 static void FindACEntry(int acEntry){
     FileACEntry * entry = (FileACEntry *)acEntry;
     if (entry->headerSector == headerSectorToFind)
         foundACEntry = entry;
-}
-
+};
+static void * getACEntry(int headerSector){
+    headerSectorToFind = headerSector;
+    foundACEntry = NULL;
+    fileACList.Mapcar(FindACEntry);
+    return foundACEntry;
+};
+// invoked by OpenFile::OpenFile()
+extern static void UpdateFileACListWhenOpenFile(int headerSector){
+    sectorAllocateLock.Acquire();
+    FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
+    if (entry == NULL){// need to synchronize
+        entry = new FileACEntry(headerSector);
+        fileACList.Append((void *) entry);
+    }
+    entry->numLock->Acquire();
+    entry->numThreads += 1;
+    entry->numLock->Release();
+    sectorAllocateLock.Release();
+};
+// invoked by OpenFile::~OpenFile()
+extern static void UpdateFileACListWhenCloseFile(int headerSector){
+    DEBUG('f', "Enter UpdateFileACListWhenCloseFile\n");
+    sectorAllocateLock.Acquire();
+    FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
+    ASSERT(entry != NULL);
+    entry->numLock->Acquire();
+    entry->numThreads -= 1;
+    ASSERT(entry->numThreads >= 0);
+    entry->numLock->Release();
+    sectorAllocateLock.Release();
+    DEBUG('f', "Leave UpdateFileACListWhenCloseFile\n");
+};
 //----------------------------------------------------------------------
 // FileSystem::FileSystem
 // 	Initialize the file system.  If format = TRUE, the disk has
@@ -129,7 +161,7 @@ FileSystem::FileSystem(bool format)
     // OK to open the bitmap and directory files now
     // The file system operations assume these two files are left open
     // while Nachos is running.
-
+        DEBUG('f', "Open freeMapFile directoryFile.\n");
         freeMapFile = new OpenFile(FreeMapSector);
         directoryFile = new OpenFile(DirectorySector);
      
@@ -775,12 +807,7 @@ void FileSystem::testExtensibleFileSize(){
     delete currentDirFile;
     delete freeMap;
 }
-void * FileSystem::getACEntry(int headerSector){
-    headerSectorToFind = headerSector;
-    foundACEntry = NULL;
-    fileACList->Mapcar(FindACEntry);
-    return foundACEntry;
-}
+
 
 void FileSystem::beforeRead(int headerSector){
     FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
@@ -821,28 +848,7 @@ void FileSystem::afterWrite(int headerSector){
     entry->numLock->Release();
     return TRUE;
 }*/
-void FileSystem::UpdateFileACListWhenOpenFile(int headerSector){
-    sectorAllocateLock.Acquire();
-    FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
-    if (entry == NULL){// need to synchronize
-        entry = new FileACEntry(headerSector);
-        fileACList->Append((void *) entry);
-    }
-    entry->numLock->Acquire();
-    entry->numThreads += 1;
-    entry->numLock->Release();
-    sectorAllocateLock.Release();
-}
-void FileSystem::UpdateFileACListWhenCloseFile(int headerSector){
-    sectorAllocateLock.Acquire();
-    FileACEntry * entry = (FileACEntry *)getACEntry(headerSector);
-    ASSERT(entry != NULL);
-    entry->numLock->Acquire();
-    entry->numThreads -= 1;
-    ASSERT(entry->numThreads >= 0);
-    entry->numLock->Release();
-    sectorAllocateLock.Release();
-}
+
 void FileSystem::testConcurrentReadWrite(){
     char testFile[10] = "concurIO";
     Create(testFile, 256);
