@@ -166,3 +166,37 @@ void Condition::Broadcast(Lock* conditionLock) {
     }
     interrupt->SetLevel(oldLevel);
 }
+
+
+ReadWriteLock::ReadWriteLock(char *lockName){
+    readerCnt = 0;
+    name = lockName;
+    cntLock = new Lock("cnt lock");
+    writeLock = new Lock("write lock");
+}
+
+ReadWriteLock::~ReadWriteLock(){
+    delete cntLock;
+    delete writeLock;
+}
+
+void ReadWriteLock::BeforeRead(){
+    cntLock->Acquire();
+    if (readerCnt <= 0)
+        writeLock->Acquire();
+    readerCnt += 1;
+    cntLock->Release();
+}
+void ReadWriteLock::AfterRead(){
+    cntLock->Acquire();
+    readerCnt -= 1;
+    if (readerCnt <= 0)
+        writeLock->Release();
+    cntLock->Release();
+}
+void ReadWriteLock::BeforeWrite(){
+    writeLock->Acquire();
+}
+void ReadWriteLock::AfterWrite(){
+    writeLock->Release();
+}

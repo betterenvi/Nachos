@@ -32,6 +32,7 @@ OpenFile::OpenFile(int sector)
     hdr = new FileHeader;
     hdr->FetchFrom(sector);
     seekPosition = 0;
+    headerSector = sector;
 }
 
 //----------------------------------------------------------------------
@@ -123,8 +124,9 @@ OpenFile::ReadAt(char *into, int numBytes, int position)
     if ((numBytes <= 0) || (position >= fileLength))
     	return 0; 				// check request
 
-    //.
+    //.Only one sector will be writen. Sector synchronization is provided by synchDisk
     hdr->updateLastAccessTime();
+    bdr->WriteBack(headerSector);
     //..
 
     if ((position + numBytes) > fileLength)		
@@ -159,9 +161,10 @@ OpenFile::WriteAt(char *from, int numBytes, int position)
     if ((numBytes <= 0) || (position >= fileLength))
 	return 0;				// check request
     
-    //.
+    //. Only one sector will be writen. 
     hdr->updateLastAccessTime();
     hdr->updateLastModifyTime();
+    hdr->WriteBack(headerSector);
     //..
 
     if ((position + numBytes) > fileLength)

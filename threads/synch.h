@@ -136,4 +136,22 @@ class Condition {
     List* queue;
     // plus some other stuff you'll need to define
 };
+
+class ReadWriteLock
+{
+public:
+    ReadWriteLock(arguments);
+    ~ReadWriteLock();
+
+    void BeforeRead();
+    void AfterRead();
+    void BeforeWrite();
+    void AfterWrite();
+    
+private:
+    int readerCnt;
+    Lock * cntLock;
+    Lock * writeLock; 
+    char * name;
+};
 #endif // SYNCH_H
