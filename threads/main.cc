@@ -192,9 +192,6 @@ main(int argc, char **argv)
             fileSystem->testExtensibleFileSize();
     } else if (!strcmp(*argv, "-concurRW")){
             fileSystem->testConcurrentReadWrite();
-    } else if (!strcmp(*argv, "-cacheDisk")){
-            synchDisk = (SynchDisk *) cacheSynchDisk;
-
     }
 #endif // FILESYS
 #ifdef NETWORK

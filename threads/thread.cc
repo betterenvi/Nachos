@@ -71,7 +71,8 @@ Thread::Thread(char* threadName, int priorityVal)
 Thread::~Thread()
 {
     DEBUG('t', "Deleting thread \"%s\"\n", name);
-
+    DEBUG('t', "thread id %d currentThread id %d.\n", tid, currentThread->getTid());
+    DEBUG('t', "this thread %d, currentThread %d.\n ", (int)this, (int)currentThread);
     ASSERT(this != currentThread);
     //CQY
     tidManager->putBack(this->getTid());

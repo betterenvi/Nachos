@@ -22,7 +22,8 @@ TidManager *tidManager;// = TidManager();
 #ifdef FILESYS
 FileACList *fileACList;
 SynchDisk   *synchDisk;
-CacheSynchDisk * cacheSynchDisk;
+bool useCacheSynchDisk = FALSE;
+//CacheSynchDisk * cacheSynchDisk;
 #endif
 
 #ifdef FILESYS_NEEDED
@@ -146,6 +147,12 @@ Initialize(int argc, char **argv)
 	if (!strcmp(*argv, "-f"))
 	    format = TRUE;
 #endif
+//.
+#ifdef FILESYS
+    if (!strcmp(*argv, "-cacheDisk"))
+        useCacheSynchDisk = TRUE;
+#endif
+//..
 #ifdef NETWORK
 	if (!strcmp(*argv, "-l")) {
 	    ASSERT(argc > 1);
@@ -189,8 +196,10 @@ Initialize(int argc, char **argv)
 #endif
 
 #ifdef FILESYS
-    synchDisk = new SynchDisk("DISK");
-    cacheSynchDisk = new CacheSynchDisk(synchDisk);
+    if (!useCacheSynchDisk)
+        synchDisk = new SynchDisk("DISK");
+    else
+        synchDisk = new CacheSynchDisk("DISK");
     fileACList = new FileACList;
 #endif
 
@@ -224,17 +233,18 @@ Cleanup()
 #ifdef FILESYS_NEEDED
     delete fileSystem;
 #endif
+    printf("****2\n");
 
 #ifdef FILESYS
     delete synchDisk;
-    delete cacheSynchDisk;
     delete fileACList;
 #endif
+    printf("****2.5\n");
     
     delete timer;
     delete scheduler;
     delete interrupt;
-    
+    printf("*****3\n");
     Exit(0);
 }
 

@@ -55,9 +55,11 @@ SynchDisk::SynchDisk(char* name)
 
 SynchDisk::~SynchDisk()
 {
+    DEBUG('f', "Thread %d enter SynchDisk::~SynchDisk.\n", currentThread->getTid());
     delete disk;
     delete lock;
     delete semaphore;
+    DEBUG('f', "Thread %d leave SynchDisk::~SynchDisk.\n", currentThread->getTid());
 }
 
 //----------------------------------------------------------------------
@@ -73,8 +75,10 @@ void
 SynchDisk::ReadSector(int sectorNumber, char* data)
 {
     lock->Acquire();			// only one disk I/O at a time
+    DEBUG('f', "Thread %d enter SynchDisk::ReadSector.\n", currentThread->getTid());
     disk->ReadRequest(sectorNumber, data);
     semaphore->P();			// wait for interrupt
+    DEBUG('f', "Thread %d leave SynchDisk::ReadSector.\n", currentThread->getTid());
     lock->Release();
 }
 
@@ -91,8 +95,10 @@ void
 SynchDisk::WriteSector(int sectorNumber, char* data)
 {
     lock->Acquire();			// only one disk I/O at a time
+    DEBUG('f', "Thread %d enter SynchDisk::WriteSector.\n", currentThread->getTid());
     disk->WriteRequest(sectorNumber, data);
     semaphore->P();			// wait for interrupt
+    DEBUG('f', "Thread %d leave SynchDisk::WriteSector.\n", currentThread->getTid());
     lock->Release();
 }
 
@@ -119,12 +125,17 @@ DiskCacheEntry::~DiskCacheEntry(){
 
 }
 
-CacheSynchDisk::CacheSynchDisk(SynchDisk * synDisk_):SynchDisk("CacheSynchDisk"){
+CacheSynchDisk::CacheSynchDisk(char * name):SynchDisk(name){
     readWriteLock = new ReadWriteLock("CacheSynchDisk");
-    synDisk = synDisk_;
 }
 CacheSynchDisk::~CacheSynchDisk(){
+    DEBUG('f', "Thread %d enter CacheSynchDisk::~CacheSynchDisk.\n", currentThread->getTid());
+    for (int i = 0; i < DISK_CACHE_SIZE; ++i){
+        if (cache[i].inUse && cache[i].dirty)
+            SynchDisk::WriteSector(cache[i].sectorNumber, cache[i].data);
+    }
     delete readWriteLock;
+    DEBUG('f', "Thread %d leave CacheSynchDisk::~CacheSynchDisk.\n", currentThread->getTid());
 }
 //private 
 int CacheSynchDisk::GetDstIndex(){
@@ -150,39 +161,47 @@ int CacheSynchDisk::GetDstIndexByLRU(){
 }
 //private 
 void CacheSynchDisk::WriteBack(int index){
-    synDisk->WriteSector(cache[index].sectorNumber, cache[index].data);
+    SynchDisk::WriteSector(cache[index].sectorNumber, cache[index].data);
     cache[index].inUse = FALSE;
 }
 //public
 void CacheSynchDisk::ReadSector(int sectorNumber, char * data){
     readWriteLock->BeforeRead();            // a bit problematic, 
                     //because updating timestamp is some kind of writing
-    printf("********************^^^^^^^^^^\n");
     DEBUG('f', "Thread %d enter CacheSynchDisk::ReadSector.\n", currentThread->getTid());
     for (int i = 0; i < DISK_CACHE_SIZE; ++i){
         if (cache[i].inUse && cache[i].sectorNumber == sectorNumber){
+            DEBUG('f', "Thread %d hits sector %d in CacheSynchDisk::ReadSector.\n",
+                currentThread->getTid(), sectorNumber);
             bcopy(cache[i].data, data, SectorSize);//.  read entry
             cache[i].timeStamp = stats->totalTicks;//   write entry
             readWriteLock->AfterRead();
             return;
         }
     }
+    DEBUG('f', "Thread %d misses sector %d in CacheSynchDisk::ReadSector.\n", 
+        currentThread->getTid(), sectorNumber);
     readWriteLock->AfterRead();
     readWriteLock->BeforeWrite();
     int dstIndex = GetDstIndex();                   //write cache
-    synDisk->ReadSector(cache[dstIndex].sectorNumber, cache[dstIndex].data);//write
+    SynchDisk::ReadSector(cache[dstIndex].sectorNumber, cache[dstIndex].data);//write
     bcopy(cache[dstIndex].data, data, SectorSize);  //read 
     cache[dstIndex].dirty = FALSE;                  //write cache
     cache[dstIndex].inUse = TRUE;                   //write cache
+    cache[dstIndex].sectorNumber = sectorNumber;    //write
     cache[dstIndex].timeStamp = stats->totalTicks;  //write
+    DEBUG('f', "Thread %d leave CacheSynchDisk::ReadSector.\n", currentThread->getTid());
     readWriteLock->AfterWrite();
 }
 
 //public
 void CacheSynchDisk::WriteSector(int sectorNumber, char * data){
     readWriteLock->BeforeWrite();
+    DEBUG('f', "Thread %d enter CacheSynchDisk::WriteSector.\n", currentThread->getTid());
     for (int i = 0; i < DISK_CACHE_SIZE; ++i){
         if (cache[i].inUse && cache[i].sectorNumber == sectorNumber){
+            DEBUG('f', "Thread %d hits sector %d in CacheSynchDisk::WriteSector.\n", 
+                currentThread->getTid(), sectorNumber);
             bcopy(data, cache[i].data, SectorSize); //write
             cache[i].dirty = TRUE;                  //write
             cache[i].timeStamp = stats->totalTicks; //write
@@ -190,14 +209,16 @@ void CacheSynchDisk::WriteSector(int sectorNumber, char * data){
             return;
         }
     }
+    DEBUG('f', "Thread %d misses sector %d in CacheSynchDisk::WriteSector.\n", 
+        currentThread->getTid(), sectorNumber);
+
     int dstIndex = GetDstIndex();                   //write
-    //synDisk->ReadSector(cache[dstIndex].sectorNumber, cache[dstIndex].data);
+    //SynchDisk::ReadSector(cache[dstIndex].sectorNumber, cache[dstIndex].data);
     bcopy(data, cache[dstIndex].data, SectorSize);  //write
     cache[dstIndex].dirty = TRUE;                   //write
     cache[dstIndex].inUse = TRUE;                   //write
+    cache[dstIndex].sectorNumber = sectorNumber;    //write
     cache[dstIndex].timeStamp = stats->totalTicks;  //write
+    DEBUG('f', "Thread %d leave CacheSynchDisk::WriteSector.\n", currentThread->getTid());
     readWriteLock->AfterWrite();
-}
-SynchDisk * CacheSynchDisk::GetUncachedSynchDisk(){
-    return synDisk;
 }
