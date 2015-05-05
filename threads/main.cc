@@ -206,6 +206,11 @@ main(int argc, char **argv)
         }
 #endif // NETWORK
     }
+//.
+#ifdef FILESYS
+    if (useCacheSynchDisk)
+        ((CacheSynchDisk *)synchDisk)->WriteAllBack();
+#endif
 
     currentThread->Finish();	// NOTE: if the procedure "main" 
 				// returns, then the program "nachos"

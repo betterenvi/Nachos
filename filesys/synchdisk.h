@@ -41,7 +41,7 @@ class SynchDisk {
     void RequestDone();			// Called by the disk device interrupt
 					// handler, to signal that the
 					// current disk operation is complete.
-
+    //.
   private:
     Disk *disk;		  		// Raw disk device
     Semaphore *semaphore; 		// To synchronize requesting thread 
@@ -68,6 +68,7 @@ public:
     ~CacheSynchDisk();
     void WriteSector(int sectorNumber, char * data);
     void ReadSector(int sectorNumber, char * data);
+    void WriteAllBack();
 
 private:
     DiskCacheEntry cache[DISK_CACHE_SIZE];

@@ -233,18 +233,18 @@ Cleanup()
 #ifdef FILESYS_NEEDED
     delete fileSystem;
 #endif
-    printf("****2\n");
+   // printf("****2\n");
 
 #ifdef FILESYS
     delete synchDisk;
     delete fileACList;
 #endif
-    printf("****2.5\n");
+  //  printf("****2.5\n");
     
     delete timer;
     delete scheduler;
     delete interrupt;
-    printf("*****3\n");
+ //   printf("*****3\n");
     Exit(0);
 }
 

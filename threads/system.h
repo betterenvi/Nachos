@@ -42,7 +42,8 @@ extern BitMap* memBitMap;		// case make failure.
 #ifdef FILESYS
 #include "synchdisk.h"
 extern SynchDisk   *synchDisk;
-extern CacheSynchDisk *cacheSynchDisk;
+//extern CacheSynchDisk *cacheSynchDisk;
+extern bool useCacheSynchDisk;
 #include "synchlist.h"
 extern FileACList * fileACList;
 #endif

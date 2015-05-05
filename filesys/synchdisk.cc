@@ -130,12 +130,16 @@ CacheSynchDisk::CacheSynchDisk(char * name):SynchDisk(name){
 }
 CacheSynchDisk::~CacheSynchDisk(){
     DEBUG('f', "Thread %d enter CacheSynchDisk::~CacheSynchDisk.\n", currentThread->getTid());
+    delete readWriteLock;
+    DEBUG('f', "Thread %d leave CacheSynchDisk::~CacheSynchDisk.\n", currentThread->getTid());
+}
+void CacheSynchDisk::WriteAllBack(){
+    DEBUG('f', "Thread %d enter CacheSynchDisk::WriteAllBack.\n", currentThread->getTid());
     for (int i = 0; i < DISK_CACHE_SIZE; ++i){
         if (cache[i].inUse && cache[i].dirty)
             SynchDisk::WriteSector(cache[i].sectorNumber, cache[i].data);
     }
-    delete readWriteLock;
-    DEBUG('f', "Thread %d leave CacheSynchDisk::~CacheSynchDisk.\n", currentThread->getTid());
+    DEBUG('f', "Thread %d leave CacheSynchDisk::WriteAllBack.\n", currentThread->getTid());
 }
 //private 
 int CacheSynchDisk::GetDstIndex(){
