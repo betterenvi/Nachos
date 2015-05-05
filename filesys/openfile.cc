@@ -144,9 +144,13 @@ OpenFile::ReadAt(char *into, int numBytes, int position)
     hdr->WriteBack(headerSector);
     //..
     buf = new char[numSectors * SectorSize];
-    for (i = firstSector; i <= lastSector; i++)	
+    for (i = firstSector; i <= lastSector; i++)	{
         synchDisk->ReadSector(hdr->ByteToSector(i * SectorSize), 
 					&buf[(i - firstSector) * SectorSize]);
+        //for test concur RW
+        //currentThread->Yield();
+        //printf("askdaksdasdjalsdjalsdjlasjdlkasjdl\n");
+    }
     fileSystem->afterRead(headerSector);
     // copy the part we want
     bcopy(&buf[position - (firstSector * SectorSize)], into, numBytes);
@@ -193,7 +197,7 @@ OpenFile::WriteAt(char *from, int numBytes, int position)
 // write modified sectors back
     fileSystem->beforeWrite(headerSector);//..
     //. Only one sector will be writen. 
-    hdr->updateLastAccessTime();     // problematic, because it is "write"
+    hdr->updateLastAccessTime();
     hdr->updateLastModifyTime();
     hdr->WriteBack(headerSector);
     //..

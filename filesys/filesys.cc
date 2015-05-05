@@ -824,29 +824,48 @@ void funcToTestConcurRW(int arg){
 
     int bufLen = 250;
     char buf[250];
-    char ach = 'a', bch = 'b';
-    if (arg == 2){
-        ach = 'c';
-        bch = 'd';
-    }
+    char ach = 'a' + arg, bch = 'b' + arg;
     for (int i = 0; i < bufLen; i += 2){
         buf[i] = ach;
         buf[i + 1] = bch;
     }
-    printf("thread %d tried to write file '%s'.\n", currentThread->getTid(), testFile);
-    openFl->Write(buf, bufLen);
-    printf("thread %d wrote file '%s'.\n", currentThread->getTid(), testFile);
-    printf("thread %d yielded.\n", currentThread->getTid());
-    currentThread->Yield();
-    printf("thread %d recovered from yield.\n", currentThread->getTid());
+    if (arg < 4){// read
+        printf("thread %d tried to read file '%s'.\n", currentThread->getTid(), testFile);
+        openFl->Read(buf, bufLen);
+        printf("thread %d read file '%s'.\n", currentThread->getTid(), testFile);
+        printf("thread %d yielded.\n", currentThread->getTid());
+        currentThread->Yield();
+        printf("thread %d recovered from yield.\n", currentThread->getTid());
+    } else {
+        printf("thread %d tried to write file '%s'.\n", currentThread->getTid(), testFile);
+        openFl->Write(buf, bufLen);
+        printf("thread %d wrote file '%s'.\n", currentThread->getTid(), testFile);
+        printf("thread %d yielded.\n", currentThread->getTid());
+        currentThread->Yield();
+        printf("thread %d recovered from yield.\n", currentThread->getTid());   
+    }
+    
     for (int i = 0; i < bufLen; i += 2){
         buf[i] = bch;
         buf[i + 1] = ach;
     }
-    printf("thread %d tried to write file '%s'.\n", currentThread->getTid(), testFile);
-    openFl->Write(buf, bufLen);
-    printf("thread %d wrote file '%s'.\n", currentThread->getTid(), testFile);
-    printf("thread %d tried to remove file '%s'.\n", currentThread->getTid(), testFile);
+
+    if (arg < 4){// read
+        printf("thread %d tried to read file '%s'.\n", currentThread->getTid(), testFile);
+        openFl->Read(buf, bufLen);
+        printf("thread %d read file '%s'.\n", currentThread->getTid(), testFile);
+        printf("thread %d yielded.\n", currentThread->getTid());
+        currentThread->Yield();
+        printf("thread %d recovered from yield.\n", currentThread->getTid());
+    } else {
+        printf("thread %d tried to write file '%s'.\n", currentThread->getTid(), testFile);
+        openFl->Write(buf, bufLen);
+        printf("thread %d wrote file '%s'.\n", currentThread->getTid(), testFile);
+        printf("thread %d yielded.\n", currentThread->getTid());
+        currentThread->Yield();
+        printf("thread %d recovered from yield.\n", currentThread->getTid());   
+    }
+    
     if (fileSystem->Remove(testFile)){
         printf("thread %d succeeded in removing file '%s'.\n", currentThread->getTid(), testFile);
     } else {
@@ -862,12 +881,13 @@ void funcToTestConcurRW(int arg){
     fileSystem->Print(TRUE);
 }
 void FileSystem::testConcurrentReadWrite(){
-    Thread * t1 = createThread("concurRW 1", 4);
-    Thread * t2 = createThread("concurRW 2", 4);
-    if (t1 == NULL || t2 == NULL)
-        return;
-    t1->Fork(funcToTestConcurRW, 1);
-    t2->Fork(funcToTestConcurRW, 2);
+    Thread * ts[6];
+    for (int i = 0; i < 6; i++){
+        ts[i] = createThread("concurRW", 4);
+        if (ts[i] == NULL)
+            return;
+        ts[i]->Fork(funcToTestConcurRW, i);
+    }
 }
 
     
