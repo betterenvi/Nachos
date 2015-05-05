@@ -22,6 +22,7 @@ TidManager *tidManager;// = TidManager();
 #ifdef FILESYS
 FileACList *fileACList;
 SynchDisk   *synchDisk;
+CacheSynchDisk * cacheSynchDisk;
 #endif
 
 #ifdef FILESYS_NEEDED
@@ -189,6 +190,7 @@ Initialize(int argc, char **argv)
 
 #ifdef FILESYS
     synchDisk = new SynchDisk("DISK");
+    cacheSynchDisk = new CacheSynchDisk(synchDisk);
     fileACList = new FileACList;
 #endif
 
@@ -225,6 +227,7 @@ Cleanup()
 
 #ifdef FILESYS
     delete synchDisk;
+    delete cacheSynchDisk;
     delete fileACList;
 #endif
     

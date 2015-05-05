@@ -16,7 +16,7 @@
 
 #include "copyright.h"
 #include "synchdisk.h"
-
+#include "system.h"
 //----------------------------------------------------------------------
 // DiskRequestDone
 // 	Disk interrupt handler.  Need this to be a C routine, because 
@@ -106,4 +106,98 @@ void
 SynchDisk::RequestDone()
 { 
     semaphore->V();
+}
+
+DiskCacheEntry::DiskCacheEntry(){
+    data = new char[SectorSize];
+    timeStamp = 0;
+    inUse = FALSE;
+    dirty = FALSE;
+}
+DiskCacheEntry::~DiskCacheEntry(){
+    delete data;
+
+}
+
+CacheSynchDisk::CacheSynchDisk(SynchDisk * synDisk_){
+    readWriteLock = new ReadWriteLock("CacheSynchDisk");
+    synDisk = synDisk_;
+}
+CacheSynchDisk::~CacheSynchDisk(){
+    delete readWriteLock;
+}
+//private 
+int CacheSynchDisk::GetDstIndex(){
+    for (int i = 0; i < DISK_CACHE_SIZE; ++i){
+        if (!cache[i].inUse)
+            return i;
+    }
+    int dstIndex = GetDstIndexByLRU();
+    if (cache[dstIndex].dirty)
+        WriteBack(dstIndex);
+    return dstIndex;
+}
+int CacheSynchDisk::GetDstIndexByLRU(){
+    int dstTime = cache[0].timeStamp;
+    int dstIndex = 0;
+    for (int i = 1; i < DISK_CACHE_SIZE; ++i){
+        if (cache[i].timeStamp < dstTime){
+            dstTime = cache[i].timeStamp;
+            dstIndex = i;
+        }
+    }
+    return dstIndex;
+}
+//private 
+void CacheSynchDisk::WriteBack(int index){
+    synDisk->WriteSector(cache[index].sectorNumber, cache[index].data);
+    cache[index].inUse = FALSE;
+}
+//public
+void CacheSynchDisk::ReadSector(int sectorNumber, char * data){
+    readWriteLock->BeforeRead();            // a bit problematic, 
+                    //because updating timestamp is some kind of writing
+    printf("********************^^^^^^^^^^\n");
+    DEBUG('f', "Thread %d enter CacheSynchDisk::ReadSector.\n", currentThread->getTid());
+    for (int i = 0; i < DISK_CACHE_SIZE; ++i){
+        if (cache[i].inUse && cache[i].sectorNumber == sectorNumber){
+            bcopy(cache[i].data, data, SectorSize);//.  read entry
+            cache[i].timeStamp = stats->totalTicks;//   write entry
+            readWriteLock->AfterRead();
+            return;
+        }
+    }
+    readWriteLock->AfterRead();
+    readWriteLock->BeforeWrite();
+    int dstIndex = GetDstIndex();                   //write cache
+    synDisk->ReadSector(cache[dstIndex].sectorNumber, cache[dstIndex].data);//write
+    bcopy(cache[dstIndex].data, data, SectorSize);  //read 
+    cache[dstIndex].dirty = FALSE;                  //write cache
+    cache[dstIndex].inUse = TRUE;                   //write cache
+    cache[dstIndex].timeStamp = stats->totalTicks;  //write
+    readWriteLock->AfterWrite();
+}
+
+//public
+void CacheSynchDisk::WriteSector(int sectorNumber, char * data){
+    readWriteLock->BeforeWrite();
+    for (int i = 0; i < DISK_CACHE_SIZE; ++i){
+        if (cache[i].inUse && cache[i].sectorNumber == sectorNumber){
+            bcopy(data, cache[i].data, SectorSize); //write
+            cache[i].dirty = TRUE;                  //write
+            cache[i].timeStamp = stats->totalTicks; //write
+            readWriteLock->AfterWrite();
+            return;
+        }
+    }
+    int dstIndex = GetDstIndex();                   //write
+    //synDisk->ReadSector(cache[dstIndex].sectorNumber, cache[dstIndex].data);
+    bcopy(data, cache[dstIndex].data, SectorSize);  //write
+    cache[dstIndex].dirty = TRUE;                   //write
+    cache[dstIndex].inUse = TRUE;                   //write
+    cache[dstIndex].timeStamp = stats->totalTicks;  //write
+    readWriteLock->AfterWrite();
+}
+SynchDisk * CacheSynchDisk::GetUncachedSynchDisk(){
+    return synDisk;
 }
