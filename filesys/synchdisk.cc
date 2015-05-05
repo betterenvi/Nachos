@@ -119,7 +119,7 @@ DiskCacheEntry::~DiskCacheEntry(){
 
 }
 
-CacheSynchDisk::CacheSynchDisk(SynchDisk * synDisk_){
+CacheSynchDisk::CacheSynchDisk(SynchDisk * synDisk_):SynchDisk("CacheSynchDisk"){
     readWriteLock = new ReadWriteLock("CacheSynchDisk");
     synDisk = synDisk_;
 }

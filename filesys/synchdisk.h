@@ -61,7 +61,7 @@ public:
     bool inUse;
     bool dirty;
 };
-class CacheSynchDisk
+class CacheSynchDisk:public SynchDisk
 {
 public:
     CacheSynchDisk(SynchDisk * synDisk_);
