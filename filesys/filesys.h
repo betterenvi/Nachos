@@ -83,7 +83,7 @@ class FileSystem {
 
     void List();			// List all the files in the file system
 
-    void Print();			// List all the files and their contents
+    void Print(bool printContent);			// List all the files and their contents
     //.
     bool CreateFileOrDir(char * name, int initialSize, int fileType);
     bool mkdir(char * name);  //mkdir at current dir

@@ -181,7 +181,7 @@ main(int argc, char **argv)
 	} else if (!strcmp(*argv, "-l")) {	// list Nachos directory
             fileSystem->List();
 	} else if (!strcmp(*argv, "-D")) {	// print entire filesystem
-            fileSystem->Print();
+            fileSystem->Print(TRUE);
 	} else if (!strcmp(*argv, "-t")) {	// performance test
             PerformanceTest();
 	} else if (!strcmp(*argv, "-fsz")){
@@ -190,6 +190,8 @@ main(int argc, char **argv)
             fileSystem->testDirOps();
     } else if (!strcmp(*argv, "-extSz")){
             fileSystem->testExtensibleFileSize();
+    } else if (!strcmp(*argv, "-concurRW")){
+            fileSystem->testConcurrentReadWrite();
     }
 #endif // FILESYS
 #ifdef NETWORK

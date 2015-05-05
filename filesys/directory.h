@@ -69,7 +69,7 @@ class Directory {
 
     void List();			// Print the names of all the files
 					//  in the directory
-    void Print();			// Verbose print of the contents
+    void Print(bool printContent);			// Verbose print of the contents
 					//  of the directory -- all the file
 					//  names and their contents.
     //.

@@ -24,7 +24,7 @@
 #include "utility.h"
 #include "filehdr.h"
 #include "directory.h"
-
+#include "system.h"
 //----------------------------------------------------------------------
 // Directory::Directory
 // 	Initialize a directory; initially, the directory is completely
@@ -133,7 +133,7 @@ Directory::Add(char *name, int newSector)
     ASSERT(strlen(name) <= FileNameMaxLen);
     //..
     if (FindIndex(name) != -1){
-        printf("%s already exists.\n", name);
+        printf("in thread %d, file '%s' already exists.\n", currentThread->getTid(), name);
     	return FALSE;
     }
 
@@ -187,7 +187,7 @@ Directory::List()
 //----------------------------------------------------------------------
 
 void
-Directory::Print()
+Directory::Print(bool printContent)
 { 
     FileHeader *hdr = new FileHeader;
 
@@ -196,7 +196,7 @@ Directory::Print()
 	if (table[i].inUse) {
 	    printf("Name: %s, Sector: %d\n", table[i].name, table[i].sector);
 	    hdr->FetchFrom(table[i].sector);
-	    hdr->Print(FALSE);
+	    hdr->Print(printContent);
 	}
     printf("\n");
     delete hdr;

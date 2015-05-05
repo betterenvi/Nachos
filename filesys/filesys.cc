@@ -138,7 +138,7 @@ FileSystem::FileSystem(bool format)
 
 	if (DebugIsEnabled('f')) {
 	    freeMap->Print();
-	    directory->Print();
+	    directory->Print(FALSE);
 
         delete freeMap; 
 	delete directory; 
@@ -190,9 +190,9 @@ FileSystem::~FileSystem(){
 bool
 FileSystem::Create(char *name, int initialSize)
 {//.
-    DEBUG('t', "Enter FileSystem::Create.\n");
+    DEBUG('f', "Enter FileSystem::Create.\n");
     bool success = CreateFileOrDir(name, initialSize, REGULAR_FILE);
-    DEBUG('t', "Leave FileSystem::Create.\n");
+    DEBUG('f', "Leave FileSystem::Create with success == %d.\n", success);
     return success;
 /*    
     Directory *directory;
@@ -302,7 +302,7 @@ FileSystem::Remove(char *name)
     
     sector = directory->Find(name);
     if (sector == -1) {
-        printf("File '%s' not found.\n", name);
+        printf("in thread %d, file '%s' not found.\n", currentThread->getTid(), name);
        delete directory;
        delete currentDirFile;
         sectorAllocateLock.Release();
@@ -315,7 +315,7 @@ FileSystem::Remove(char *name)
     ASSERT(entry != NULL);
     entry->numLock->Acquire();
     if (entry->numThreads > 0){
-        printf("File '%s' is in use.\n", name);
+        printf("in thread %d, file '%s' is in use.\n", currentThread->getTid(), name);
         entry->numLock->Release();
         sectorAllocateLock.Release();
         delete directory;
@@ -341,7 +341,7 @@ FileSystem::Remove(char *name)
     delete directory;
     delete freeMap;
     delete currentDirFile;
-    printf("File '%s' removed successfully.\n", name);
+    printf("File '%s' removed successfully by thread %d.\n", name, currentThread->getTid());
     DEBUG('t', "Leave FileSystem::Remove.\n");
     return TRUE;
 } 
@@ -376,7 +376,7 @@ FileSystem::List()
 //----------------------------------------------------------------------
 
 void
-FileSystem::Print()
+FileSystem::Print(bool printContent)
 {
     DEBUG('t', "Enter FileSystem::Print.\n");
     sectorAllocateLock.Acquire();
@@ -388,17 +388,17 @@ FileSystem::Print()
 
     printf("Bit map file header:\n");
     bitHdr->FetchFrom(FreeMapSector);
-    bitHdr->Print(FALSE);
+    bitHdr->Print(printContent);
 
     printf("Directory file header:\n");
     dirHdr->FetchFrom(DirectorySector);
-    dirHdr->Print(FALSE);
+    dirHdr->Print(printContent);
 
     freeMap->FetchFrom(freeMapFile);
     freeMap->Print();
 
     directory->FetchFrom(currentDirFile);
-    directory->Print();
+    directory->Print(printContent);
     sectorAllocateLock.Release();
     delete bitHdr;
     delete dirHdr;
@@ -430,7 +430,7 @@ bool FileSystem::mkdir(char * name){
 }
 
 bool FileSystem::CreateFileOrDir(char * name, int initialSize, int fileType){
-    DEBUG('t', "Enter FileSystem::CreateFileOrDir.\n");
+    DEBUG('f', "Enter FileSystem::CreateFileOrDir.\n");
     sectorAllocateLock.Acquire();
     OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
     Directory * currentDir = new Directory(NumDirEntries);
@@ -466,8 +466,8 @@ bool FileSystem::CreateFileOrDir(char * name, int initialSize, int fileType){
     delete freeMap;
     delete currentDir;
     delete currentDirFile;
-    DEBUG('t', "Leave FileSystem::CreateFileOrDir.\n");
-    return TRUE;
+    DEBUG('f', "Leave FileSystem::CreateFileOrDir with success == %d.\n", success);
+    return success;
 }
 
 // rm dir if empty
@@ -810,17 +810,64 @@ void FileSystem::afterWrite(int headerSector){
     return TRUE;
 }*/
 
-void FileSystem::testConcurrentReadWrite(){
+void funcToTestConcurRW(int arg){
     char testFile[10] = "concurIO";
-    Create(testFile, 256);
-    BitMap * freeMap = new BitMap(NumSectors);
-    freeMap->FetchFrom(freeMapFile);
-    OpenFile * currentDirFile = new OpenFile(currentDirHeaderSector);
-    Directory * currentDir = new Directory(NumDirEntries);
-    currentDir->FetchFrom(currentDirFile);
-    int dstHeaderSector = currentDir->Find(testFile);
-    FileHeader * dstHdr = new FileHeader;
-    dstHdr->FetchFrom(dstHeaderSector);
+    printf("thread %d tried to create file '%s'.\n", currentThread->getTid(), testFile);
+    if (fileSystem->Create(testFile, 256)){
+        printf("thread %d succeeded in creating file '%s'.\n", currentThread->getTid(), testFile);
+    } else {
+        printf("thread %d failed to create file '%s'.\n", currentThread->getTid(), testFile);
+    }
+    OpenFile * openFl = fileSystem->Open(testFile);
+    ASSERT(openFl != NULL);
+    printf("thread %d opened file '%s'.\n", currentThread->getTid(), testFile);
+
+    int bufLen = 250;
+    char buf[250];
+    char ach = 'a', bch = 'b';
+    if (arg == 2){
+        ach = 'c';
+        bch = 'd';
+    }
+    for (int i = 0; i < bufLen; i += 2){
+        buf[i] = ach;
+        buf[i + 1] = bch;
+    }
+    printf("thread %d tried to write file '%s'.\n", currentThread->getTid(), testFile);
+    openFl->Write(buf, bufLen);
+    printf("thread %d wrote file '%s'.\n", currentThread->getTid(), testFile);
+    printf("thread %d yielded.\n", currentThread->getTid());
+    currentThread->Yield();
+    printf("thread %d recovered from yield.\n", currentThread->getTid());
+    for (int i = 0; i < bufLen; i += 2){
+        buf[i] = bch;
+        buf[i + 1] = ach;
+    }
+    printf("thread %d tried to write file '%s'.\n", currentThread->getTid(), testFile);
+    openFl->Write(buf, bufLen);
+    printf("thread %d wrote file '%s'.\n", currentThread->getTid(), testFile);
+    printf("thread %d tried to remove file '%s'.\n", currentThread->getTid(), testFile);
+    if (fileSystem->Remove(testFile)){
+        printf("thread %d succeeded in removing file '%s'.\n", currentThread->getTid(), testFile);
+    } else {
+        printf("thread %d failed to remove file '%s'.\n", currentThread->getTid(), testFile);
+    }
+    delete openFl;
+    printf("thread %d tried to remove file '%s'.\n", currentThread->getTid(), testFile);
+    if (fileSystem->Remove(testFile)){
+        printf("thread %d succeeded in removing file '%s'.\n", currentThread->getTid(), testFile);
+    } else {
+        printf("thread %d failed to remove file '%s'.\n", currentThread->getTid(), testFile);
+    }
+    fileSystem->Print(TRUE);
+}
+void FileSystem::testConcurrentReadWrite(){
+    Thread * t1 = createThread("concurRW 1", 4);
+    Thread * t2 = createThread("concurRW 2", 4);
+    if (t1 == NULL || t2 == NULL)
+        return;
+    t1->Fork(funcToTestConcurRW, 1);
+    t2->Fork(funcToTestConcurRW, 2);
 }
 
     

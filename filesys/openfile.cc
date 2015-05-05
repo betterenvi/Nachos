@@ -197,9 +197,12 @@ OpenFile::WriteAt(char *from, int numBytes, int position)
     hdr->updateLastModifyTime();
     hdr->WriteBack(headerSector);
     //..
-    for (i = firstSector; i <= lastSector; i++)	
+    for (i = firstSector; i <= lastSector; i++)	{
         synchDisk->WriteSector(hdr->ByteToSector(i * SectorSize), 
 					&buf[(i - firstSector) * SectorSize]);
+        // for test concur io
+        currentThread->Yield();
+    }
     fileSystem->afterWrite(headerSector);//..
     delete [] buf;
     return numBytes;
