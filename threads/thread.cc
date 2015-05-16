@@ -387,4 +387,46 @@ void Thread::Awake(){
 
     DEBUG('d', "Thread %d Leave Thread::Awake\n", getTid());
 }
+
+ //return fid
+int Thread::addOpenFileEntry(void * openFile){
+    if (openFile == NULL)
+        return -1;
+    for (int i = OpenFileStartId; i < MaxNumOpenFile; ++i){
+        if (!openFileTable[i].inUse){
+            openFileTable[i].inUse = TRUE;
+            openFileTable[i].openFile = openFile;
+            return i;
+        }
+    }
+    return -1;
+}
+void * Thread::getOpenFile(int fid){
+    if (fid >= MaxNumOpenFile || fid < OpenFileStartId)
+        return NULL;
+    if (!openFileTable[fid].inUse)
+        return NULL;
+    return openFileTable[fid].openFile;
+}
+int Thread::getOpenFileId(void * openFile){
+    for (int i = OpenFileStartId; i < MaxNumOpenFile; ++i){
+        if (openFileTable[i].openFile == openFile){
+            if (openFileTable[i].inUse)
+                return i;
+        }
+    }
+    return -1;
+}   // return fid
+bool Thread::removeOpenFileEntry(void * openFile){
+    for (int i = OpenFileStartId; i < MaxNumOpenFile; ++i){
+        if (openFileTable[i].openFile == openFile){
+            if (openFileTable[i].inUse){
+                openFileTable[i].inUse = FALSE;
+                return TRUE;
+            }
+        }
+    }
+    return FALSE;
+}
+
 #endif

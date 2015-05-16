@@ -44,8 +44,30 @@
 #ifdef USER_PROGRAM
 #include "machine.h"
 #include "addrspace.h"
+//.
+#define MaxNumOpenFile 10
+#define OpenFileStartId 3
+class OpenFileEntry
+{
+public:
+    OpenFileEntry(){inUse = FALSE;}
+    ~OpenFileEntry(){}
+
+    void * openFile;
+    bool inUse;
+};
+//..
 #endif
 
+/*//. open file list
+#include "list.h"
+class OpenFileEntry
+{
+public:
+    int fid;
+    void * openFile;
+};
+//..*/
 // CPU register state to be saved on context switch.  
 // The SPARC and MIPS only need 10 registers, but the Snake needs 18.
 // For simplicity, this is just the max over all architectures.
@@ -134,12 +156,20 @@ class Thread {
 // while executing kernel code.
 
     int userRegisters[NumTotalRegs];	// user-level CPU register state
-
+    //.
+    OpenFileEntry openFileTable[MaxNumOpenFile];
+    //..
   public:
     void SaveUserState();		// save user-level register state
     void RestoreUserState();		// restore user-level register state
 
     AddrSpace *space;			// User code this thread is running.
+    //.
+    int addOpenFileEntry(void * openFile);  //return fid, -1 if failed
+    void *getOpenFile(int fid);
+    int getOpenFileId(void * openFile);
+    bool removeOpenFileEntry(void * openFile);   // return exist
+    //..
 #endif
 };
 

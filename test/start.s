@@ -1,7 +1,7 @@
 /* Start.s 
  *	Assembly language assist for user programs running on top of Nachos.
  *
- *	Since we don't want to pull in the entire C library, we define
+ *	Since we donnot want to pull in the entire C library, we define
  *	what we need for a user program here, namely Start and the system
  *	calls.
  */
