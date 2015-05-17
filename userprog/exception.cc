@@ -147,9 +147,19 @@ void SysCallYieldHandler();
 SpaceId SysCallExecHandler(char *name);
 int SysCallJoinHandler(SpaceId id);   
 */
-
+void ReadStringFromUserAddrSpace(char * startAddr, char * into){
+  char ch;
+  int i = 0;
+  do{
+    machine->ReadMem(startAddr + i, 1, &ch);
+    into[i] = ch;
+    i += 1;
+  } while (ch != '\0');
+}
 void SysCallCreateHandler(){
-  char * name = (char *) machine->ReadRegister(4);
+  char * startAddr = (char *) machine->ReadRegister(4);
+  char name[FileNameMaxLen + 1];
+  ReadStringFromUserAddrSpace(startAddr, name);
   if (fileSystem->Create(name, INIT_FILE_SIZE)){
     DEBUG('f', "SysCallCreateHandler: succ.\n");
   } else {
@@ -157,11 +167,14 @@ void SysCallCreateHandler(){
   }
 }
 void SysCallOpenHandler(){
-  char * name = (char *) machine->ReadRegister(4);
+  char * startAddr = (char *) machine->ReadRegister(4);
+  char name[FileNameMaxLen + 1];
+  ReadStringFromUserAddrSpace(startAddr, name);
   void * openFile = (void *) fileSystem->Open(name);
   OpenFileId fid = currentThread->addOpenFileEntry(openFile);
   machine->WriteRegister(2, fid);
 }
+// fid = 0, 1, 2?
 void SysCallWriteHandler(){
   char *buffer = (char *) machine->ReadRegister(4);
   int size = (int) machine->ReadRegister(5);
@@ -170,15 +183,22 @@ void SysCallWriteHandler(){
   if (openFile != NULL)
     openFile->Write(buffer, size);
 }
+// fid = 0, 1, 2?
 void SysCallReadHandler(){
   char *buffer = (char *) machine->ReadRegister(4);
   int size = (int) machine->ReadRegister(5);
   OpenFileId fid = (OpenFileId) machine->ReadRegister(6);
+  OpenFile * openFile = (OpenFile *) currentThread->getOpenFile(fid);
   if (openFile != NULL)
-    openFile->Read(buffer, )
+    openFile->Read(buffer, size);
 }
 void SysCallCloseHandler(){
-
+  OpenFileId fid = (OpenFileId) machine->ReadRegister(4);
+  OpenFile * openFile = (OpenFile *) currentThread->getOpenFile(fid);
+  if (openFile != NULL){
+    currentThread->removeOpenFileEntry(openFile);
+    delete openFile;
+  }
 }
 void SysCallForkHandler(){
 
