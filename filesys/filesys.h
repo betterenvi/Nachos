@@ -61,7 +61,7 @@ class FileSystem {
       }
 
     bool Remove(char *name) { return Unlink(name) == 0; }
-
+    bool isStub;
 };
 
 #else // FILESYS
@@ -108,6 +108,7 @@ class FileSystem {
     void testDirOps();
     void testExtensibleFileSize();
     void testConcurrentReadWrite();
+    bool isReal;
     //..
   private:
    OpenFile* freeMapFile;		// Bit map of free disk blocks,

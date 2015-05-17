@@ -106,23 +106,32 @@ ExceptionHandler(ExceptionType which)
 						printf("Value: %d\n",machine->ReadRegister(4));
 						break;
 					case SC_Create:
-            SysCallReadHandler();
+            DEBUG('f', "SysCallCreateHandler\n");
+            SysCallCreateHandler();
             break;
           case SC_Open:
+            SysCallOpenHandler();
             break;
           case SC_Close:
+            SysCallCloseHandler();
             break;
           case SC_Read:
+            SysCallReadHandler();
             break;
           case SC_Write:
+            SysCallWriteHandler();
             break;
           case SC_Exec:
+            SysCallExecHandler();
             break;
           case SC_Join:
+            SysCallJoinHandler();
             break;
           case SC_Fork:
+            SysCallForkHandler();
             break;
           case SC_Yield:
+            SysCallYieldHandler();
             break;
 	 				default:
 	 					break;
@@ -163,6 +172,8 @@ void SysCallCreateHandler(){
   ReadStringFromUserAddrSpace(startAddr, name);
   if (fileSystem->Create(name, INIT_FILE_SIZE)){
     DEBUG('f', "SysCallCreateHandler: succ.\n");
+    /*fileSystem->isStub;
+    fileSystem->isReal;*/
   } else {
     DEBUG('f', "SysCallCreateHandler: fail.\n");
   }
