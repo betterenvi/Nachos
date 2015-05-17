@@ -137,6 +137,7 @@ Print:
 	syscall
 	j	$31
 	.end Print
+
 	
 /* dummy function to keep gcc happy */
         .globl  __main

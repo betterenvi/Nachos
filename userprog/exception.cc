@@ -103,7 +103,7 @@ ExceptionHandler(ExceptionType which)
 	 					currentThread->Finish();
 	 					break;
 					case SC_Print:
-						printf("Value: %d\n",machine->ReadRegister(4));
+						printf("Value: %d\n",(int)machine->ReadRegister(4));
 						break;
 					case SC_Create:
             DEBUG('f', "SysCallCreateHandler\n");
@@ -166,19 +166,34 @@ void ReadStringFromUserAddrSpace(int startAddr, char * into){
     i += 1;
   } while (ch != 0);
 }
+void ReadCharsFromUserAddrSpace(int startAddr, int size, char * into){
+  int ch;
+  for (int i = 0; i < size; ++i){
+    machine->ReadMem(startAddr + i, 1, &ch);
+    into[i] = (char) ch;
+  }
+}
+void WriteCharsIntoUserAddrSpace(int startAddr, int size, char * from){
+  int ch;
+  for (int i = 0; i < size; ++i){
+    ch = (int)from[i];
+    machine->WriteMem(startAddr + i, 1, ch);
+  }
+}
+
 void SysCallCreateHandler(){
   int startAddr = (int) machine->ReadRegister(4);
   char name[FileNameMaxLen + 1];
   ReadStringFromUserAddrSpace(startAddr, name);
   if (fileSystem->Create(name, INIT_FILE_SIZE)){
     DEBUG('f', "SysCallCreateHandler: succ.\n");
-    /*fileSystem->isStub;
-    fileSystem->isReal;*/
   } else {
     DEBUG('f', "SysCallCreateHandler: fail.\n");
   }
 }
 void SysCallOpenHandler(){
+  /*fileSystem->isStub;
+  fileSystem->isReal;*/
   int startAddr = (int) machine->ReadRegister(4);
   char name[FileNameMaxLen + 1];
   ReadStringFromUserAddrSpace(startAddr, name);
@@ -188,21 +203,31 @@ void SysCallOpenHandler(){
 }
 // fid = 0, 1, 2?
 void SysCallWriteHandler(){
-  char *buffer = (char *) machine->ReadRegister(4);
+  int bufferAddr = (int) machine->ReadRegister(4);
   int size = (int) machine->ReadRegister(5);
   OpenFileId fid = (OpenFileId) machine->ReadRegister(6);
   OpenFile *openFile = (OpenFile *) currentThread->getOpenFile(fid);
-  if (openFile != NULL)
-    openFile->Write(buffer, size);
+  if (openFile != NULL){
+    char * content = new char[size];
+    ReadCharsFromUserAddrSpace(bufferAddr, size, content);
+    openFile->Write(content, size);
+    delete content;
+  }
 }
 // fid = 0, 1, 2?
 void SysCallReadHandler(){
-  char *buffer = (char *) machine->ReadRegister(4);
+  int bufferAddr = (int) machine->ReadRegister(4);
   int size = (int) machine->ReadRegister(5);
   OpenFileId fid = (OpenFileId) machine->ReadRegister(6);
   OpenFile * openFile = (OpenFile *) currentThread->getOpenFile(fid);
-  if (openFile != NULL)
-    openFile->Read(buffer, size);
+  if (openFile != NULL){
+    char * content = new char[size];
+    int numRead = openFile->Read(content, size);
+    WriteCharsIntoUserAddrSpace(bufferAddr, numRead, content);
+    delete content;
+    machine->WriteRegister(2, numRead);
+  }
+  machine->WriteRegister(2, -1);
 }
 void SysCallCloseHandler(){
   OpenFileId fid = (OpenFileId) machine->ReadRegister(4);
