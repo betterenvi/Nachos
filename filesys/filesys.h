@@ -61,7 +61,20 @@ class FileSystem {
       }
 
     bool Remove(char *name) { return Unlink(name) == 0; }
+    //.
     bool isStub;
+    bool Copy(char * src, int size, char * dst){
+      Create(dst, size);
+      OpenFile * srcOpenFile = Open(src);
+      OpenFile * dstOpenFile = Open(dst);
+      char * buffer = new char[size];
+      srcOpenFile->Read(buffer, size);
+      dstOpenFile->Write(buffer, size);
+      delete buffer;
+      delete srcOpenFile;
+      delete dstOpenFile;
+    }
+    //..
 };
 
 #else // FILESYS
@@ -109,6 +122,8 @@ class FileSystem {
     void testExtensibleFileSize();
     void testConcurrentReadWrite();
     bool isReal;
+
+    bool Copy(char * src, int size, char * dst);
     //..
   private:
    OpenFile* freeMapFile;		// Bit map of free disk blocks,

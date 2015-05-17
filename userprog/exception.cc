@@ -28,6 +28,8 @@
 #include "directory.h"
 #include "openfile.h"
 #define INIT_FILE_SIZE 256
+#define IS_FORK 0
+#define IS_EXEC 1
 //..
 
 void TlbMissExceptionHandler(){
@@ -82,7 +84,8 @@ void
 ExceptionHandler(ExceptionType which)
 {
 		int type = machine->ReadRegister(2);
-
+    DEBUG('t', "Thread %d in ExceptionHandler, type = %d\n",
+      currentThread->getTid(), type);
 	 /* if ((which == SyscallException) && (type == SC_Halt)) {
 	DEBUG('a', "Shutdown, initiated by user program.\n");
 	 	interrupt->Halt();
@@ -181,6 +184,24 @@ void WriteCharsIntoUserAddrSpace(int startAddr, int size, char * from){
   }
 }
 
+void TriggerProcess(int arg){
+  switch(arg){
+    case IS_FORK:
+      currentThread->RestoreUserState();
+      break;
+    case IS_EXEC:
+      if (currentThread->space != NULL){
+        currentThread->space->InitRegisters();
+        currentThread->space->RestoreState();
+      }
+      break;
+    default:
+      break;
+  }
+  DEBUG('t', "Thread %d In TriggerProcess.\n",
+    currentThread->getTid());
+  machine->Run();
+}
 void SysCallCreateHandler(){
   int startAddr = (int) machine->ReadRegister(4);
   char name[FileNameMaxLen + 1];
@@ -238,7 +259,18 @@ void SysCallCloseHandler(){
   }
 }
 void SysCallForkHandler(){
-
+  DEBUG('t', "in SysCallForkHandler.\n");
+  Thread * t = createThread("Forked", currentThread->getPriority());
+  if (t == NULL)
+    return;
+  AddrSpace *space = new AddrSpace(t->getTid(), currentThread->space);
+  t->space = space;
+  int userFunc = (int) machine->ReadRegister(4);
+  // Copy machine registers of current thread to new thread
+  t->SaveUserState(); 
+  t->SetUserRegister(PCReg, userFunc);
+  t->SetUserRegister(NextPCReg, userFunc + 4);
+  t->Fork(TriggerProcess, IS_FORK);
 }
 void SysCallYieldHandler(){
 

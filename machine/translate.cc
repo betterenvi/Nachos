@@ -323,10 +323,10 @@ Machine::Translate(int virtAddr, int* physAddr, int size, bool writing)
 
     machine->numPageAccess += 1;
     if (pageUsageTable[pageFrame].space != currentThread->space){
-    	printf("Thread %d hit %d\n", currentThread->getTid(), hit);
-    	printf("%8.8x %8.8x %d\n", (unsigned) pageUsageTable[pageFrame].space, 
+    	DEBUG('t', "Thread %d hit %d\n", currentThread->getTid(), hit);
+    	DEBUG('t', "%8.8x %8.8x %d\n", (unsigned) pageUsageTable[pageFrame].space, 
     		(unsigned) currentThread->space, pageFrame);
-    	ASSERT(FALSE);
+    	//ASSERT(FALSE); this may occur when Fork syscall is used.
     }else{
    // 	printf("equivalent\n");
     }

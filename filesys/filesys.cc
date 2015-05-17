@@ -890,4 +890,14 @@ void FileSystem::testConcurrentReadWrite(){
     }
 }
 
-    
+bool FileSystem::Copy(char * src, int size, char * dst){
+    Create(dst, size);
+    OpenFile * srcOpenFile = Open(src);
+    OpenFile * dstOpenFile = Open(dst);
+    char * buffer = new char[size];
+    srcOpenFile->Read(buffer, size);
+    dstOpenFile->Write(buffer, size);
+    delete buffer;
+    delete srcOpenFile;
+    delete dstOpenFile;
+}

@@ -149,6 +149,33 @@ AddrSpace::AddrSpace(OpenFile *executable, int tid)
    // DumpPageTable();
 }
 
+//. for Fork syscall
+AddrSpace::AddrSpace(int tid, void * fatherSpace_){
+    AddrSpace * fatherSpace = (AddrSpace *)fatherSpace_;
+    numPages = fatherSpace->numPages;
+    pageTable = new TranslationEntry[numPages];                    // for now!
+    for (int i = 0; i < numPages; i++) {
+        pageTable[i].virtualPage = i;   
+        pageTable[i].physicalPage = -1; // not the judge.
+        pageTable[i].valid = FALSE;    // as the judge of whether this page entry is useful
+        pageTable[i].use = FALSE;      //      
+        pageTable[i].dirty = FALSE;
+        pageTable[i].readOnly = FALSE; 
+    }
+    swapFileName = new char[10];
+    swapFileName = my_itoa(tid, swapFileName);
+    //   CreateSwapFile when using fork
+    fileSystem->Copy(fatherSpace->swapFileName, numPages * PageSize, swapFileName);
+    OpenFile * fileHandler = fileSystem->Open(swapFileName);
+    for (int vpn = 0; vpn < numPages; ++vpn){
+        if (fatherSpace->pageTable[vpn].dirty){
+            int fatherppn = fatherSpace->pageTable[vpn].physicalPage;
+            fileHandler->WriteAt(&(machine->mainMemory[fatherppn * PageSize]),
+                PageSize, vpn * PageSize);
+        }
+    }
+    delete fileHandler;
+}
 //----------------------------------------------------------------------
 // AddrSpace::~AddrSpace
 // 	Dealloate an address space.  Nothing for now!

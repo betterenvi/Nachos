@@ -362,6 +362,15 @@ Thread::RestoreUserState()
 	machine->WriteRegister(i, userRegisters[i]);
 }
 
+//.
+bool Thread::SetUserRegister(int regId, int val){
+    if (regId >= 0 && regId < NumTotalRegs){
+        userRegisters[regId] = val;
+        return TRUE;
+    }
+    return FALSE;
+}
+
 void Thread::Suspend(){
     DEBUG('d', "Thread %d Enter Thread::Suspend\n", getTid());
 
