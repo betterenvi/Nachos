@@ -25,6 +25,7 @@
 #include "system.h"
 #include "syscall.h"
 //.
+#include "directory.h"
 #include "openfile.h"
 #define INIT_FILE_SIZE 256
 //..
@@ -147,17 +148,17 @@ void SysCallYieldHandler();
 SpaceId SysCallExecHandler(char *name);
 int SysCallJoinHandler(SpaceId id);   
 */
-void ReadStringFromUserAddrSpace(char * startAddr, char * into){
-  char ch;
+void ReadStringFromUserAddrSpace(int startAddr, char * into){
+  int ch;
   int i = 0;
   do{
     machine->ReadMem(startAddr + i, 1, &ch);
-    into[i] = ch;
+    into[i] = (char) ch;
     i += 1;
-  } while (ch != '\0');
+  } while (ch != 0);
 }
 void SysCallCreateHandler(){
-  char * startAddr = (char *) machine->ReadRegister(4);
+  int startAddr = (int) machine->ReadRegister(4);
   char name[FileNameMaxLen + 1];
   ReadStringFromUserAddrSpace(startAddr, name);
   if (fileSystem->Create(name, INIT_FILE_SIZE)){
@@ -167,7 +168,7 @@ void SysCallCreateHandler(){
   }
 }
 void SysCallOpenHandler(){
-  char * startAddr = (char *) machine->ReadRegister(4);
+  int startAddr = (int) machine->ReadRegister(4);
   char name[FileNameMaxLen + 1];
   ReadStringFromUserAddrSpace(startAddr, name);
   void * openFile = (void *) fileSystem->Open(name);
