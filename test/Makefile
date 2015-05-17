@@ -35,7 +35,7 @@ CPP = gcc -E -m32
 INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR)
 
-all: halt shell matmult sort sort10 fileop thread
+all: halt shell matmult sort print sort10 fileop thread 
 
 start.o: start.s ../userprog/syscall.h
 	$(CPP) $(CPPFLAGS) start.c > strt.s
@@ -59,6 +59,12 @@ sort.o: sort.c
 sort: sort.o start.o
 	$(LD) $(LDFLAGS) start.o sort.o -o sort.coff
 	../bin/coff2noff sort.coff sort
+
+print.o: print.c
+	$(CC) $(CFLAGS) -c print.c
+print: print.o start.o
+	$(LD) $(LDFLAGS) start.o print.o -o print.coff
+	../bin/coff2noff print.coff print
 
 sort10.o: sort10.c
 	$(CC) $(CFLAGS) -c sort10.c

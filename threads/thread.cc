@@ -19,7 +19,6 @@
 #include "switch.h"
 #include "synch.h"
 #include "system.h"
-
 #define STACK_FENCEPOST 0xdeadbeef	// this is put at the top of the
 					// execution stack, for detecting 
 					// stack overflows
@@ -79,6 +78,8 @@ Thread::~Thread()
     //CQY
     if (stack != NULL)
 	DeallocBoundedArray((char *) stack, StackSize * sizeof(int));
+    
+    tidManager->awakeJoinThreads(tid);
 }
 
 char* Thread::getStatusName(){

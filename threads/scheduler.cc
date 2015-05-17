@@ -101,9 +101,12 @@ void
 Scheduler::Run (Thread *nextThread)
 {
     Thread *oldThread = currentThread;
-    
+    DEBUG('t',"Thread %d in Scheduler::Run old %d ?= next %d\n",
+        currentThread->getTid(), oldThread->getTid(), nextThread->getTid());
 #ifdef USER_PROGRAM			// ignore until running user programs 
     if (currentThread->space != NULL) {	// if this thread is a user program,
+        DEBUG('t', "Thread %d in Scheduler::Run SaveUserState.\n", 
+            currentThread->getTid());
         currentThread->SaveUserState(); // save the user's CPU registers
 	currentThread->space->SaveState();
     }
@@ -138,6 +141,8 @@ Scheduler::Run (Thread *nextThread)
     
 #ifdef USER_PROGRAM
     if (currentThread->space != NULL) {		// if there is an address space
+        DEBUG('t', "Thread %d in Scheduler::Run after switch.\n",
+            currentThread->getTid());
         currentThread->RestoreUserState();     // to restore, do it.
 	currentThread->space->RestoreState();
     }

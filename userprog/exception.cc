@@ -84,8 +84,6 @@ void
 ExceptionHandler(ExceptionType which)
 {
 		int type = machine->ReadRegister(2);
-    DEBUG('t', "Thread %d in ExceptionHandler, type = %d\n",
-      currentThread->getTid(), type);
 	 /* if ((which == SyscallException) && (type == SC_Halt)) {
 	DEBUG('a', "Shutdown, initiated by user program.\n");
 	 	interrupt->Halt();
@@ -96,6 +94,8 @@ ExceptionHandler(ExceptionType which)
 
 	switch(which){
 			case SyscallException:
+        DEBUG('t', "Thread %d in ExceptionHandler, type = %d\n",
+          currentThread->getTid(), type);
 				switch(type){
 					case SC_Halt:
 						DEBUG('a', "Shutdown, initiated by user program.\n");
@@ -106,6 +106,8 @@ ExceptionHandler(ExceptionType which)
 	 					currentThread->Finish();
 	 					break;
 					case SC_Print:
+            DEBUG('p', "In thread %d \"%s\" ", 
+              currentThread->getTid(), currentThread->getName());
 						printf("Value: %d\n",(int)machine->ReadRegister(4));
 						break;
 					case SC_Create:
@@ -273,11 +275,42 @@ void SysCallForkHandler(){
   t->Fork(TriggerProcess, IS_FORK);
 }
 void SysCallYieldHandler(){
-
+  currentThread->Yield();
 }   
 void SysCallExecHandler(){
+  DEBUG('s', "Thread %d in SysCallExecHandler.\n", currentThread->getTid());
+  int startAddr = (int) machine->ReadRegister(4);
+  char filename[FileNameMaxLen + 1];
+  ReadStringFromUserAddrSpace(startAddr, filename);
+  DEBUG('s', "filename: %s.\n", filename);
 
+  OpenFile *executable = fileSystem->Open(filename);
+  DEBUG('s', "0\n");
+  if (executable == NULL) {
+    DEBUG('s', "Unable to open file %s\n", filename);
+    machine->WriteRegister(2, -1);
+    return;
+  }
+  DEBUG('s', "1\n");
+
+  Thread * t = createThread("ExecThread", currentThread->getPriority());
+  DEBUG('s', "2\n");
+  AddrSpace * space = new AddrSpace(executable, t->getTid());    
+  DEBUG('s', "3\n");
+  t->space = space;
+  delete executable;
+  machine->WriteRegister(2, t->getTid());
+  DEBUG('s', "Thread %d bef t->Fork in SysCallExecHandler.\n",
+    currentThread->getTid());
+  t->Fork(TriggerProcess, IS_EXEC);
+  DEBUG('s', "Thread %d Leave SysCallExecHandler.\n", 
+    currentThread->getTid());
 }
 void SysCallJoinHandler(){
-
+  DEBUG('s', "Thread %d in SysCallJoinHandler.\n", currentThread->getTid());
+  int tid = (int) machine->ReadRegister(4);
+  if (tidManager->addToJoinTable(tid)){//join succ
+    interrupt->SetLevel(IntOff); 
+    currentThread->Sleep();
+  }
 }   

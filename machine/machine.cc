@@ -275,8 +275,8 @@ void Machine::CachePageEntryInTLB(unsigned int vpn){
         //printf("valid\n");
 
         if (pageUsageTable[pageTable[vpn].physicalPage].space != currentThread->space){
-            printf("Space Error Here\n");
-            ASSERT(FALSE);
+            /*printf("Space Error Here\n");
+            ASSERT(FALSE);*/
         }
         machine->numPageHit += 1;
     }

@@ -249,12 +249,21 @@ Cleanup()
 }
 
 Thread* createThread(char* name, int priorityVal){
+    DEBUG('t', "in createThread\n");
     Thread* t = new Thread(name, priorityVal);
    // printf("pri:%d %d\n", priorityVal, t->getPriority());
+
+    DEBUG('t', "bef genId in createThread\n");
     int tid = tidManager->genId();
+    DEBUG('t', "bef set %d in createThread\n", tid);
+
     if (tid == -1)
         return NULL;
     t->setTid(tid);
+    DEBUG('t', "bef add in createThread\n");
+
     tidManager->addThread(t);
+    DEBUG('t', "leave createThread\n");
+
     return t;
 }
